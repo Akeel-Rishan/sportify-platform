@@ -1,0 +1,151 @@
+erDiagram
+    TENANTS ||--o| BUSINESSES : owns
+    TENANTS ||--o{ TENANT_USERS : has
+    USERS ||--o{ TENANT_USERS : joins
+    TENANT_USERS ||--o{ USER_ROLES : receives
+    ROLES ||--o{ USER_ROLES : assigned
+    ROLES ||--o{ ROLE_PERMISSIONS : grants
+    PERMISSIONS ||--o{ ROLE_PERMISSIONS : defines
+    TENANT_USERS ||--o{ STAFF_ASSIGNMENTS : assigned_to
+    LOCATIONS ||--o{ STAFF_ASSIGNMENTS : staffed_by
+    TENANT_USERS ||--o{ TENANT_INVITATIONS : invites
+    ROLES ||--o{ TENANT_INVITATIONS : requested_role
+
+    BUSINESSES ||--o| BUSINESS_PROFILES : profile
+    BUSINESSES ||--o{ LOCATIONS : operates
+    BUSINESSES ||--o{ BUSINESS_SPORTS : offers
+    SPORTS ||--o{ BUSINESS_SPORTS : selected
+    LOCATIONS ||--o{ RESOURCES : contains
+    BUSINESS_SPORTS ||--o{ RESOURCES : configures
+    RESOURCES ||--o{ RESOURCE_FEATURES : has
+    LOCATIONS ||--o{ OPERATING_HOURS : schedules
+    RESOURCES o|--o{ OPERATING_HOURS : overrides
+    LOCATIONS ||--o{ HOLIDAYS : observes
+    LOCATIONS ||--o{ AVAILABILITY_BLOCKS : blocks
+    RESOURCES o|--o{ AVAILABILITY_BLOCKS : resource_block
+    RESOURCES ||--o{ PRICING_RULES : priced_by
+
+    TENANTS {
+      number tenant_id PK
+      varchar public_id UK
+      varchar tenant_code UK
+      varchar status
+      varchar timezone_name
+    }
+    USERS {
+      number user_id PK
+      varchar email_normalized UK
+      varchar password_hash
+      varchar account_status
+    }
+    TENANT_USERS {
+      number membership_id PK
+      number tenant_id FK
+      number user_id FK
+      varchar membership_status
+    }
+    ROLES {
+      number role_id PK
+      number tenant_id FK
+      varchar role_code
+      varchar role_name
+    }
+    PERMISSIONS {
+      number permission_id PK
+      varchar permission_code UK
+    }
+    ROLE_PERMISSIONS {
+      number tenant_id PK,FK
+      number role_id PK,FK
+      number permission_id PK,FK
+    }
+    USER_ROLES {
+      number tenant_id PK,FK
+      number membership_id PK,FK
+      number role_id PK,FK
+    }
+    BUSINESSES {
+      number business_id PK
+      number tenant_id FK,UK
+      varchar business_name
+      varchar business_status
+    }
+    BUSINESS_PROFILES {
+      number business_profile_id PK
+      number tenant_id FK
+      number business_id FK,UK
+      varchar city
+      varchar district
+    }
+    LOCATIONS {
+      number location_id PK
+      number tenant_id FK
+      number business_id FK
+      varchar location_code
+      varchar city
+    }
+    SPORTS {
+      number sport_id PK
+      varchar sport_code UK
+      varchar sport_name
+    }
+    BUSINESS_SPORTS {
+      number tenant_id PK,FK
+      number business_id PK,FK
+      number sport_id PK,FK
+    }
+    RESOURCES {
+      number resource_id PK
+      number tenant_id FK
+      number business_id FK
+      number location_id FK
+      number sport_id FK
+      varchar resource_code
+      varchar resource_type
+    }
+    RESOURCE_FEATURES {
+      number resource_feature_id PK
+      number tenant_id FK
+      number resource_id FK
+      varchar feature_code
+    }
+    OPERATING_HOURS {
+      number operating_hour_id PK
+      number tenant_id FK
+      number location_id FK
+      number resource_id FK
+      number day_of_week
+    }
+    HOLIDAYS {
+      number holiday_id PK
+      number tenant_id FK
+      number location_id FK
+      date holiday_date
+    }
+    AVAILABILITY_BLOCKS {
+      number availability_block_id PK
+      number tenant_id FK
+      number location_id FK
+      number resource_id FK
+      timestamp starts_at_utc
+      timestamp ends_at_utc
+    }
+    PRICING_RULES {
+      number pricing_rule_id PK
+      number tenant_id FK
+      number resource_id FK
+      number hourly_rate
+      varchar currency_code
+    }
+    STAFF_ASSIGNMENTS {
+      number staff_assignment_id PK
+      number tenant_id FK
+      number membership_id FK
+      number location_id FK
+    }
+    TENANT_INVITATIONS {
+      number invitation_id PK
+      number tenant_id FK
+      number role_id FK
+      varchar email_normalized
+    }

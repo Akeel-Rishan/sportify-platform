@@ -1,0 +1,17 @@
+flowchart TD
+ A[SPORTIFY landing] --> B[Register owner]
+ B --> C[Validate and create account]
+ C --> D[Verify email]
+ D --> E[Create tenant and owner membership]
+ E --> F[Business profile]
+ F --> G[Select sports]
+ G --> H[Create branch]
+ H --> I[Add resources]
+ I --> J[Set operating hours]
+ J --> K[Set hourly pricing and booking rules]
+ K --> L[Upload branding]
+ L --> M[Preview website]
+ M --> N{Required setup complete?}
+ N -->|No| F
+ N -->|Yes| O[Publish SPORTIFY subdomain]
+ O --> P[Business dashboard]

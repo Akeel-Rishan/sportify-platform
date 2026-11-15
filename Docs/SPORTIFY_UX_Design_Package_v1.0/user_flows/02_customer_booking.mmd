@@ -1,0 +1,18 @@
+flowchart TD
+ A[Open tenant website] --> B[Select sport]
+ B --> C[Select branch if applicable]
+ C --> D[Select facility]
+ D --> E[Choose date]
+ E --> F[View availability]
+ F --> G[Choose time and duration]
+ G --> H[Review calculated price]
+ H --> I{Slot available?}
+ I -->|No| F
+ I -->|Yes| J[Create 10-minute hold]
+ J --> K[Enter name and mobile; email optional]
+ K --> L[Choose enabled payment preference]
+ L --> M[Confirm reservation]
+ M --> N{Hold valid and reservation succeeds?}
+ N -->|No| F
+ N -->|Yes| O[Create confirmed booking]
+ O --> P[Show booking reference]

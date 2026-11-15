@@ -1,0 +1,10 @@
+flowchart TD
+ A[Find booking] --> B[Select cancel]
+ B --> C[Enter mandatory reason]
+ C --> D[Check permission and branch scope]
+ D --> E{Authorized and cancellable?}
+ E -->|No| F[Show error]
+ E -->|Yes| G[Confirm cancellation]
+ G --> H[Mark cancelled and release slots]
+ H --> I[Write cancellation and audit history]
+ I --> J[Handle refund separately if applicable]

@@ -1,0 +1,158 @@
+erDiagram
+    TENANTS ||--o{ CUSTOMERS : owns
+    TENANTS ||--o{ BOOKINGS : owns
+    BUSINESSES ||--o{ BOOKINGS : receives
+    CUSTOMERS ||--o{ BOOKINGS : places
+    BOOKING_HOLDS ||--o{ BOOKING_HOLD_ITEMS : contains
+    BOOKING_HOLDS ||--o| BOOKINGS : converted_to
+    BOOKINGS ||--|{ BOOKING_ITEMS : contains
+    LOCATIONS ||--o{ BOOKING_ITEMS : location
+    RESOURCES ||--o{ BOOKING_ITEMS : reserved
+    BOOKING_HOLD_ITEMS ||--o{ RESOURCE_SLOT_RESERVATIONS : temporarily_reserves
+    BOOKING_ITEMS o|--o{ RESOURCE_SLOT_RESERVATIONS : permanently_reserves
+    BOOKINGS ||--o{ BOOKING_CANCELLATIONS : cancellation_history
+    BOOKINGS ||--o{ PAYMENTS : receives
+    BUSINESSES ||--o| BUSINESS_PAYMENT_SETTINGS : configures
+    TENANTS ||--o{ PAYMENT_WEBHOOK_EVENTS : receives_gateway_events
+    PAYMENTS ||--o{ PAYMENT_TRANSACTIONS : gateway_attempts
+    PAYMENTS ||--o{ REFUNDS : refunded_by
+    SUBSCRIPTION_PLANS ||--o{ SUBSCRIPTIONS : selected
+    SUBSCRIPTIONS ||--o{ SUBSCRIPTION_INVOICES : billed_by
+    SUBSCRIPTION_INVOICES ||--o{ SUBSCRIPTION_PAYMENTS : paid_by
+
+    CUSTOMERS {
+      number customer_id PK
+      number tenant_id FK
+      varchar public_id
+      varchar full_name
+      varchar mobile_e164
+    }
+    BOOKINGS {
+      number booking_id PK
+      number tenant_id FK
+      number business_id FK
+      number customer_id FK
+      number source_hold_id FK
+      varchar booking_reference
+      varchar booking_status
+      number total_amount
+    }
+    BOOKING_ITEMS {
+      number booking_item_id PK
+      number tenant_id FK
+      number booking_id FK
+      number resource_id FK
+      timestamp starts_at_utc
+      timestamp ends_at_utc
+      number duration_minutes
+      number line_total
+    }
+    BOOKING_HOLDS {
+      number hold_id PK
+      number tenant_id FK
+      varchar hold_token_hash UK
+      varchar hold_status
+      timestamp expires_at_utc
+    }
+    BOOKING_HOLD_ITEMS {
+      number hold_item_id PK
+      number tenant_id FK
+      number hold_id FK
+      number resource_id FK
+      timestamp starts_at_utc
+      timestamp ends_at_utc
+    }
+    RESOURCE_SLOT_RESERVATIONS {
+      number tenant_id PK,FK
+      number resource_id PK,FK
+      timestamp slot_start_utc PK
+      number booking_item_id FK
+      number hold_item_id FK
+    }
+    BOOKING_CANCELLATIONS {
+      number cancellation_id PK
+      number tenant_id FK
+      number booking_id FK
+      varchar cancellation_reason
+      timestamp cancelled_at_utc
+    }
+    PAYMENTS {
+      number payment_id PK
+      number tenant_id FK
+      number booking_id FK
+      varchar payment_method
+      number amount
+      varchar payment_status
+    }
+    PAYMENT_TRANSACTIONS {
+      number payment_transaction_id PK
+      number tenant_id FK
+      number payment_id FK
+      varchar provider_code
+      varchar transaction_status
+    }
+    REFUNDS {
+      number refund_id PK
+      number tenant_id FK
+      number payment_id FK
+      number amount
+      varchar refund_status
+    }
+    BUSINESS_PAYMENT_SETTINGS {
+      number business_payment_settings_id PK
+      number tenant_id FK
+      number business_id FK
+      varchar bank_name
+    }
+    PAYMENT_WEBHOOK_EVENTS {
+      number webhook_event_id PK
+      number tenant_id FK
+      varchar provider_event_id
+      varchar processing_status
+    }
+    RECURRING_BOOKING_SERIES {
+      number recurring_series_id PK
+      number tenant_id FK
+      number customer_id FK
+      number resource_id FK
+      date series_start_date
+      varchar series_status
+    }
+    SUBSCRIPTION_PLANS {
+      number plan_id PK
+      varchar plan_code UK
+      number price_amount
+    }
+    SUBSCRIPTIONS {
+      number subscription_id PK
+      number tenant_id FK
+      number plan_id FK
+      varchar subscription_status
+    }
+    SUBSCRIPTION_INVOICES {
+      number subscription_invoice_id PK
+      number tenant_id FK
+      number subscription_id FK
+      number amount_due
+      varchar invoice_status
+    }
+    SUBSCRIPTION_PAYMENTS {
+      number subscription_payment_id PK
+      number tenant_id FK
+      number subscription_invoice_id FK
+      number amount
+    }
+    LOCATIONS {
+      number location_id PK
+      number tenant_id FK
+      number business_id FK
+    }
+    RESOURCES {
+      number resource_id PK
+      number tenant_id FK
+      number location_id FK
+    }
+    BUSINESSES {
+      number business_id PK
+      number tenant_id FK
+    }

@@ -1,0 +1,14 @@
+flowchart TD
+ A[Staff sign in] --> B[Today's bookings]
+ B --> C[Select authorized branch]
+ C --> D[Open calendar / New booking]
+ D --> E[Select sport and resource]
+ E --> F[Select date and time]
+ F --> G[Server checks availability]
+ G --> H{Available?}
+ H -->|No| F
+ H -->|Yes| I[Find or add customer]
+ I --> J[Review price]
+ J --> K[Set payment status / record receipt]
+ K --> L[Confirm booking]
+ L --> M[Calendar and public availability update]

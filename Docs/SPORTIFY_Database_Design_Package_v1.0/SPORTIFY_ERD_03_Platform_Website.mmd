@@ -1,0 +1,209 @@
+erDiagram
+    USERS ||--o{ AUTH_SESSIONS : authenticates
+    USERS ||--o{ EMAIL_VERIFICATION_TOKENS : verifies
+    USERS ||--o{ PASSWORD_RESET_TOKENS : resets
+    USERS ||--o{ PLATFORM_ADMINS : may_be
+    TENANTS ||--o{ SUBSCRIPTIONS : subscribes
+    TENANTS ||--o{ PAYMENT_WEBHOOK_EVENTS : receives_gateway_events
+    SUBSCRIPTION_PLANS ||--o{ SUBSCRIPTIONS : selected
+    SUBSCRIPTION_PLANS ||--o{ SUBSCRIPTION_ENTITLEMENTS : defines
+    TENANTS ||--o{ SUPPORT_TICKETS : raises
+    TENANT_USERS ||--o{ SUPPORT_TICKETS : opens
+    PLATFORM_ADMINS o|--o{ SUPPORT_TICKETS : assigned
+    BUSINESSES ||--o| WEBSITE_SETTINGS : publishes
+    WEBSITE_THEMES ||--o{ WEBSITE_SETTINGS : styles
+    BUSINESSES ||--o{ WEBSITE_MEDIA : owns
+    TENANTS ||--o{ DOMAINS : maps
+    DOMAINS ||--o{ DOMAIN_VERIFICATIONS : verifies
+    NOTIFICATION_TEMPLATES o|--o{ NOTIFICATIONS : templates
+    USERS o|--o{ NOTIFICATIONS : recipient_user
+    BOOKINGS o|--o{ NOTIFICATIONS : booking_event
+    NOTIFICATIONS ||--o{ NOTIFICATION_LOGS : delivery_attempts
+    TENANTS o|--o{ OUTBOX_EVENTS : emits
+    TENANTS o|--o{ JOB_QUEUE : schedules
+    TENANTS o|--o{ AUDIT_LOGS : records
+    USERS o|--o{ AUDIT_LOGS : actor
+    BUSINESSES ||--o| MARKETPLACE_LISTINGS : listed_as
+    MARKETPLACE_LISTINGS ||--o{ REVIEWS : receives
+    REVIEWS ||--o| REVIEW_RESPONSES : answered_by
+    BUSINESSES ||--o{ ONBOARDING_PROGRESS : tracks
+
+    USERS {
+      number user_id PK
+      varchar email_normalized UK
+      varchar password_hash
+    }
+    AUTH_SESSIONS {
+      number session_id PK
+      number user_id FK
+      varchar token_hash UK
+      timestamp expires_at_utc
+    }
+    PLATFORM_ADMINS {
+      number platform_admin_id PK
+      number user_id FK
+      varchar admin_role_code
+    }
+    SUBSCRIPTION_PLANS {
+      number plan_id PK
+      varchar plan_code UK
+      number monthly_price
+    }
+    SUBSCRIPTION_ENTITLEMENTS {
+      number plan_id PK,FK
+      varchar feature_code PK
+      number limit_value
+    }
+    SUBSCRIPTIONS {
+      number subscription_id PK
+      number tenant_id FK
+      number plan_id FK
+      varchar subscription_status
+    }
+    SUBSCRIPTION_INVOICES {
+      number subscription_invoice_id PK
+      number tenant_id FK
+      number subscription_id FK
+      varchar invoice_number
+    }
+    SUBSCRIPTION_PAYMENTS {
+      number subscription_payment_id PK
+      number tenant_id FK
+      number subscription_invoice_id FK
+    }
+    WEBSITE_THEMES {
+      number theme_id PK
+      varchar theme_code UK
+    }
+    WEBSITE_SETTINGS {
+      number website_id PK
+      number tenant_id FK
+      number business_id FK
+      number theme_id FK
+      varchar subdomain_slug UK
+      varchar website_status
+    }
+    WEBSITE_MEDIA {
+      number website_media_id PK
+      number tenant_id FK
+      number business_id FK
+      varchar object_key UK
+    }
+    DOMAINS {
+      number domain_id PK
+      number tenant_id FK
+      varchar hostname UK
+      varchar domain_status
+    }
+    DOMAIN_VERIFICATIONS {
+      number domain_verification_id PK
+      number tenant_id FK
+      number domain_id FK
+      varchar token_hash UK
+    }
+    NOTIFICATION_TEMPLATES {
+      number notification_template_id PK
+      number tenant_id FK
+      varchar template_code
+      varchar channel
+      varchar language_code
+    }
+    NOTIFICATIONS {
+      number notification_id PK
+      number tenant_id FK
+      number booking_id FK
+      varchar recipient_address
+      varchar notification_status
+    }
+    NOTIFICATION_LOGS {
+      number notification_log_id PK
+      number tenant_id FK
+      number notification_id FK
+      varchar delivery_status
+    }
+    OUTBOX_EVENTS {
+      number outbox_event_id PK
+      number tenant_id FK
+      varchar event_type
+      varchar event_status
+    }
+    JOB_QUEUE {
+      number job_id PK
+      number tenant_id FK
+      varchar job_type
+      varchar job_status
+    }
+    IDEMPOTENCY_KEYS {
+      number idempotency_id PK
+      number tenant_id FK
+      varchar operation_scope
+      varchar idempotency_key
+    }
+    AUDIT_LOGS {
+      number audit_log_id PK
+      number tenant_id FK
+      number actor_user_id FK
+      varchar action_code
+    }
+    SUPPORT_TICKETS {
+      number support_ticket_id PK
+      number tenant_id FK
+      number assigned_platform_admin_id FK
+      varchar ticket_status
+    }
+    MARKETPLACE_LISTINGS {
+      number marketplace_listing_id PK
+      number tenant_id FK
+      number business_id FK
+      varchar listing_slug UK
+    }
+    REVIEWS {
+      number review_id PK
+      number tenant_id FK
+      number marketplace_listing_id FK
+      number booking_id FK
+      number customer_id FK
+      number rating
+    }
+    REVIEW_RESPONSES {
+      number review_response_id PK
+      number tenant_id FK
+      number review_id FK
+      number responder_membership_id FK
+    }
+    ONBOARDING_PROGRESS {
+      number onboarding_progress_id PK
+      number tenant_id FK
+      number business_id FK
+      varchar step_code
+    }
+    BUSINESSES {
+      number business_id PK
+      number tenant_id FK
+    }
+    TENANTS {
+      number tenant_id PK
+      varchar tenant_name
+    }
+    TENANT_USERS {
+      number membership_id PK
+      number tenant_id FK
+      number user_id FK
+    }
+    BOOKINGS {
+      number booking_id PK
+      number tenant_id FK
+      varchar booking_reference
+      varchar booking_status
+    }
+    PAYMENT_WEBHOOK_EVENTS {
+      number webhook_event_id PK
+      number tenant_id FK
+      varchar provider_event_id
+      varchar processing_status
+    }
+    PLATFORM_SETTINGS {
+      varchar setting_key PK
+      clob setting_value
+      varchar value_type
+    }

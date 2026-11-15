@@ -1,0 +1,15 @@
+flowchart TD
+ A[Super Admin sign in] --> B[Platform overview]
+ B --> C[Search and open tenant]
+ C --> D[Review tenant and plan]
+ D --> E{Action}
+ E -->|Assign plan| F[Select plan and dates]
+ E -->|Extend trial| G[Set new trial end]
+ E -->|Suspend| H[Confirm reason]
+ E -->|Reactivate| I[Confirm action]
+ F --> J[Save subscription and entitlements]
+ G --> J
+ H --> K[Update tenant status and audit]
+ I --> K
+ J --> L[Audit and updated tenant view]
+ K --> L

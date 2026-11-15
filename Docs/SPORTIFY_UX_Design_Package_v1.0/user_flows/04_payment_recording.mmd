@@ -1,0 +1,9 @@
+flowchart TD
+ A[Open booking] --> B[Review outstanding amount and receipts]
+ B --> C[Record payment]
+ C --> D[Enter amount, method, date and optional reference]
+ D --> E[Validate amount and permission]
+ E --> F[Save receipt]
+ F --> G[Recalculate payment status]
+ G --> H[Write audit event]
+ H --> I[Show updated payment status]
