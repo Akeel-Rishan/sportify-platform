@@ -1,40 +1,42 @@
 # SPORTIFY documentation
 
-Current stage, 20 November 2026: **Step 02 foundation awaiting user verification**. A static web foundation, minimal API process and idle worker exist. Business workflows and Oracle are not connected. The Step 01 baseline below remains the requirements reference; see [progress](planning/progress.md) for actual checks and outstanding browser verification.
+Current stage, 20 November 2026: **Step 03 quality foundation awaiting user verification**. Environment validation, lint/format checks, focused tests and a CI workflow now accompany the static web foundation, minimal API process and idle worker. Business workflows and Oracle are not connected. The Step 01 baseline below remains the requirements reference; see [progress](planning/progress.md) for executed checks and limitations.
 
 The workspace already uses `Docs/`. Keep that spelling in paths and links, including on case-sensitive Linux systems; it is the existing equivalent of the requested `docs/` directory. Original uploads remain in place. There is no `docs/source/` directory.
 
 ## Working baseline
 
-| Document | Purpose |
-|---|---|
-| [MVP scope](planning/mvp-scope.md) | First-release capabilities, actors, workflows and boundaries |
-| [Requirements traceability](planning/requirements-traceability.md) | Stable requirements, source sections, ownership and verification |
-| [Decision register](planning/decision-register.md) | Established direction, conflicts and unapproved recommendations |
-| [Development roadmap](planning/development-roadmap.md) | Dependency-ordered steps and completion gates |
-| [Definition of done](quality/definition-of-done.md) | Evidence required to call work complete |
-| [Product quality bar](design/product-quality-bar.md) | Concrete visual, responsive, accessibility and localization standards |
-| [Progress and audit evidence](planning/progress.md) | Repository inventory, checks, review checklist and next-step prerequisites |
-| [Project working instructions](../CLAUDE.md) | Rules for subsequent implementation steps |
-| [Toolchain](architecture/toolchain.md) | Pinned versions, compatibility, module boundaries and ARM64 evidence |
-| [Local setup](development/local-setup.md) | Install, develop, build and stop the scaffold |
+| Document                                                           | Purpose                                                                    |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| [MVP scope](planning/mvp-scope.md)                                 | First-release capabilities, actors, workflows and boundaries               |
+| [Requirements traceability](planning/requirements-traceability.md) | Stable requirements, source sections, ownership and verification           |
+| [Decision register](planning/decision-register.md)                 | Established direction, conflicts and unapproved recommendations            |
+| [Development roadmap](planning/development-roadmap.md)             | Dependency-ordered steps and completion gates                              |
+| [Definition of done](quality/definition-of-done.md)                | Evidence required to call work complete                                    |
+| [Product quality bar](design/product-quality-bar.md)               | Concrete visual, responsive, accessibility and localization standards      |
+| [Progress and audit evidence](planning/progress.md)                | Repository inventory, checks, review checklist and next-step prerequisites |
+| [Project working instructions](../CLAUDE.md)                       | Rules for subsequent implementation steps                                  |
+| [Toolchain](architecture/toolchain.md)                             | Pinned versions, compatibility, module boundaries and ARM64 evidence       |
+| [Local setup](development/local-setup.md)                          | Install, develop, build and stop the scaffold                              |
 
 ## Source register
 
+Step 03 guides: [environment configuration](development/environment-configuration.md), [testing and commands](development/testing.md), and [CI checks](quality/ci-checks.md).
+
 The short source codes below are used with exact section numbers in the planning documents. They name supplied documents, not external verification of their claims.
 
-| Code | Source and location | Reading evidence |
-|---|---|---|
-| PRD | [Master product requirements](01-product-requirements-document.md.pdf) | All 51 pages read in this conversation |
-| MVP | [MVP scope and business workflows](02-mvp-scope-business-workflows.md.pdf) | All 29 pages read |
-| ARCH | [Technical architecture](03-technical-architecture.md.pdf) | All 53 pages read |
-| SCHEMA | [Oracle schema overview](04-oracle-database-schema.md.pdf) | All 8 pages read |
-| DB | [Detailed database specification](SPORTIFY_Database_Design_Package_v1.0/SPORTIFY_Database_Schema_Specification.md) | Full Markdown read |
-| SQL-001 | [Bootstrap DDL and seeds](SPORTIFY_Database_Design_Package_v1.0/001_sportify_schema.sql) | Full SQL read; 61 table definitions; not executed against Oracle |
-| SQL-002 | [Schema verification queries](SPORTIFY_Database_Design_Package_v1.0/002_verify_schema.sql) | Full SQL read; not executed against Oracle |
-| API | [API specification](SPORTIFY_API_Contract_Package_v1.0/SPORTIFY_API_Specification_v1.0.md) and [PDF edition](SPORTIFY_API_Contract_Package_v1.0/SPORTIFY_API_Specification_v1.0.pdf) | Full Markdown and 21-page PDF reviewed |
-| OAS | [OpenAPI contract](SPORTIFY_API_Contract_Package_v1.0/openapi.yaml) | All operations and components reviewed; 101 operations, 78 paths, 100 schemas |
-| UX | [UX research, flows and wireframes](SPORTIFY_UX_Design_Package_v1.0/SPORTIFY_UX_Research_User_Flows_Wireframes_v1.0.md) and [PDF edition](SPORTIFY_UX_Design_Package_v1.0/SPORTIFY_UX_Research_User_Flows_Wireframes_v1.0.pdf) | Full Markdown and 12-page PDF reviewed; 16 wireframes |
+| Code    | Source and location                                                                                                                                                                                                            | Reading evidence                                                              |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| PRD     | [Master product requirements](01-product-requirements-document.md.pdf)                                                                                                                                                         | All 51 pages read in this conversation                                        |
+| MVP     | [MVP scope and business workflows](02-mvp-scope-business-workflows.md.pdf)                                                                                                                                                     | All 29 pages read                                                             |
+| ARCH    | [Technical architecture](03-technical-architecture.md.pdf)                                                                                                                                                                     | All 53 pages read                                                             |
+| SCHEMA  | [Oracle schema overview](04-oracle-database-schema.md.pdf)                                                                                                                                                                     | All 8 pages read                                                              |
+| DB      | [Detailed database specification](SPORTIFY_Database_Design_Package_v1.0/SPORTIFY_Database_Schema_Specification.md)                                                                                                             | Full Markdown read                                                            |
+| SQL-001 | [Bootstrap DDL and seeds](SPORTIFY_Database_Design_Package_v1.0/001_sportify_schema.sql)                                                                                                                                       | Full SQL read; 61 table definitions; not executed against Oracle              |
+| SQL-002 | [Schema verification queries](SPORTIFY_Database_Design_Package_v1.0/002_verify_schema.sql)                                                                                                                                     | Full SQL read; not executed against Oracle                                    |
+| API     | [API specification](SPORTIFY_API_Contract_Package_v1.0/SPORTIFY_API_Specification_v1.0.md) and [PDF edition](SPORTIFY_API_Contract_Package_v1.0/SPORTIFY_API_Specification_v1.0.pdf)                                           | Full Markdown and 21-page PDF reviewed                                        |
+| OAS     | [OpenAPI contract](SPORTIFY_API_Contract_Package_v1.0/openapi.yaml)                                                                                                                                                            | All operations and components reviewed; 101 operations, 78 paths, 100 schemas |
+| UX      | [UX research, flows and wireframes](SPORTIFY_UX_Design_Package_v1.0/SPORTIFY_UX_Research_User_Flows_Wireframes_v1.0.md) and [PDF edition](SPORTIFY_UX_Design_Package_v1.0/SPORTIFY_UX_Research_User_Flows_Wireframes_v1.0.pdf) | Full Markdown and 12-page PDF reviewed; 16 wireframes                         |
 
 Database diagrams: [core](SPORTIFY_Database_Design_Package_v1.0/SPORTIFY_ERD_01_Core.mmd), [booking and payments](SPORTIFY_Database_Design_Package_v1.0/SPORTIFY_ERD_02_Booking_Payments.mmd), [platform and website](SPORTIFY_Database_Design_Package_v1.0/SPORTIFY_ERD_03_Platform_Website.mmd).
 
@@ -52,12 +54,12 @@ All 21 uploaded files are present. The four required PDFs total 141 pages; all s
 
 Use these labels consistently:
 
-| Label | Meaning |
-|---|---|
-| Source requirement | Statement found in a named source section; it can still conflict with another source |
-| Established baseline | Direction explicitly confirmed by the user's Step 01 request; listed as D-IDs |
-| Proposed resolution | Recommendation for an open Q-ID; not approved and not a license to implement it |
-| Approved decision | A later resolution with recorded user approval, date and affected requirements; no Q-ID has this status yet |
+| Label                | Meaning                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Source requirement   | Statement found in a named source section; it can still conflict with another source                                |
+| Established baseline | Direction explicitly confirmed by the user's Step 01 request; listed as D-IDs                                       |
+| Proposed resolution  | Recommendation for an open Q-ID; not approved and not a license to implement it                                     |
+| Approved decision    | A later resolution with recorded user approval, date and affected requirements; no Q-ID has this status yet         |
 | Implemented behavior | Working code with linked verification evidence; Step 02 covers foundation processes only, not business requirements |
 
 The traceability file owns requirement IDs and implementation status; the decision register owns reconciliation; the roadmap owns step gates; progress owns audit evidence. Cross-reference these rather than maintaining competing copies of their status.

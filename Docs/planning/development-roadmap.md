@@ -1,8 +1,8 @@
 # MVP development roadmap
 
-Current status: **Step 02 awaiting user verification**. Step 03 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01.
+Current status: **Step 03 quality foundation awaiting user verification**. Step 04 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
 
-The later Step 02 prompt moves lint/format/test infrastructure and CI to Step 03 and excludes environment validation, Oracle and business functionality from Step 02. It supersedes the earlier Step 02 wording and immediate next-step scope below. Preserve the remaining product dependency plan as a baseline; follow the user's next scoped prompt before implementing Step 03 or moving the later Oracle/auth steps. No new step is implicitly authorized here.
+The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. No later step is authorized here.
 
 All steps follow the [definition of done](../quality/definition-of-done.md), [product quality bar](../design/product-quality-bar.md) and [decision register](decision-register.md). Audit, authorization, accessibility, localization and relevant tests accompany each feature; they are not a final-phase backlog.
 
@@ -23,7 +23,15 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Requirements:** REQ-047, REQ-052, REQ-057, REQ-064.
 - **Status:** Awaiting user verification; executable foundation checks passed, browser verification outstanding.
 
-## Step 03 — Oracle schema and connection foundation
+## Step 03 — Environment and quality foundation
+
+- **Objective:** Establish safe configuration boundaries and reproducible local/PR quality checks.
+- **Dependencies:** Existing Step 02 scaffold; unchanged runtime/framework versions.
+- **Outputs:** Per-app schemas/loaders, server-only web boundary, ESLint/Prettier, focused Node tests and coverage, read-only GitHub Actions workflow and development guides.
+- **Verification gate:** Frozen install, full `pnpm check`, scoped coverage thresholds, real development/production startup and safe failure, controlled lint failure, hygiene and CI configuration review. Remote CI and browser checks must be distinguished from local execution.
+- **Status:** Awaiting user verification; see [progress](progress.md). Step 04 has not started.
+
+## Deferred Oracle schema and connection foundation (previous Step 03 baseline)
 
 - **Objective:** Establish a tested Oracle persistence boundary before business features.
 - **Dependencies:** Step 02; approved relevant schema decisions (Q-01, Q-03, Q-08, Q-11, Q-14, Q-15, Q-17, Q-18); actual target ATP staging access and version/connectivity details supplied securely when needed.

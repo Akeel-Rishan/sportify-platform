@@ -1,13 +1,13 @@
 # Local development
 
-Step 02 uses Node 22.22.0 and pnpm 10.34.9. Run commands from the repository root. Use the existing `Docs/` spelling on case-sensitive systems.
+Step 03 retains Node 22.22.0 and pnpm 10.34.9. Run commands from the repository root. Use the existing `Docs/` spelling on case-sensitive systems. See [environment configuration](environment-configuration.md) and [testing](testing.md) for the added startup and quality boundaries.
 
 ## Clean checkout
 
 1. Install/select Node 22.22.0 with your preferred runtime manager. On Unix with nvm installed, `nvm install` and `nvm use` read `.nvmrc`; Windows runtime-manager commands differ. This project does not change system configuration.
 2. Confirm `node --version`. Run `pnpm --version` if pnpm exists. Otherwise use `npx --yes pnpm@10.34.9` wherever the commands below say `pnpm`. No global installation is required.
 3. Run `pnpm install --frozen-lockfile`.
-4. Run `pnpm typecheck` and `pnpm build`. These commands work before generated shared outputs or Next.js route types exist.
+4. Run `pnpm check` for format, lint, typecheck, tests and production build. `pnpm test:coverage` adds scoped coverage gates. These commands work before generated shared outputs or Next.js route types exist.
 5. Run `pnpm dev`. Open http://localhost:3000. Each application has a readable process label. Ctrl+C stops the applications; the runner also stops siblings if an application exits.
 
 ## Independent applications
@@ -33,7 +33,7 @@ Unix shell:
 PORT=4100 pnpm dev:api
 ```
 
-Scope this override to the API terminal; do not set it globally. Remove it afterwards with `Remove-Item Env:PORT` in PowerShell or `unset PORT` on Unix. No `.env` loader is installed in this step.
+Scope this override to the API terminal; do not set it globally. Remove it afterwards with `Remove-Item Env:PORT` in PowerShell or `unset PORT` on Unix. API/worker development loads application-relative `.env.local` then `.env`, with existing process values taking precedence. Tests/production with an explicit mode skip those files. No real env file is required; optional safe examples are provided.
 
 For a web port override, invoke Next directly through its local workspace command: `pnpm --filter @sportify/web exec next dev --port 3100`.
 
@@ -56,7 +56,7 @@ Run the start commands in separate terminals. API/worker run compiled JavaScript
 - **Missing package dist/types:** run `pnpm build:packages`. Root build/typecheck already do the necessary ordering. New runtime consumers must declare `workspace:*` dependencies; no relative imports across applications.
 - **Install permission/network errors:** retry from a permitted terminal/network; do not alter machine security settings or commit registry credentials. Approved native install scripts are limited to esbuild and sharp.
 - **Production web not built:** run `pnpm build`; development output alone is not a production build. Avoid running web dev and production build simultaneously against the same `.next` directory.
-- **Shared-package edits:** the entry points are empty today. When they contain consumed code, rebuild them after editing; root dev builds them once at startup, not continuously.
+- **Shared-package edits:** validation now contains consumed code. Rebuild shared packages after editing; development/watch-test startup builds them once, not continuously.
 - **Hydration warning with an extra `<html style="display: none">`:** on 20 November, a direct request to the development server returned HTTP 200 and `<html lang="en">` without that style. The layout has no root-style mutation, browser branching or changing data. This points to browser-side injection, but the responsible extension/script is not identified. Open the same local URL in a Guest profile or an Incognito window with extensions not permitted there. If the warning disappears, disable extensions for localhost individually to find the injector, then reload. If it persists in an extension-free profile, capture the new hydration diff and compare View Page Source with the Elements root node. Do not add `suppressHydrationWarning` as a fix for a hidden root: suppressing the warning does not remove the injected style. See the [Next.js hydration guidance](https://nextjs.org/docs/messages/react-hydration-error).
 
-Generated output, dependencies, logs, local environment files and wallets are ignored. Do not add real credentials. Oracle connectivity, environment validation, health routes, tests/lint/CI and all business workflows are future work.
+Generated output, dependencies, logs, test reports, coverage, local environment files and wallets are ignored. Do not add real credentials. Environment validation and quality checks now exist; Oracle connectivity, health routes, deployment and all business workflows remain future work. Local tests do not demonstrate a remote GitHub Actions pass.

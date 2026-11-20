@@ -1,0 +1,19 @@
+**/node_modules/
+**/.next/
+**/dist/
+**/coverage/
+**/test-results/
+**/next-env.d.ts
+**/AGENTS.md
+pnpm-lock.yaml
+tmp/
+**/*.pdf
+# Immutable reference packages are not authored application code.
+Docs/SPORTIFY_*_Package_v1.0/
+# Preserve existing Step 01 documents; format only new/changed authored docs.
+CLAUDE.md
+Docs/design/
+Docs/quality/definition-of-done.md
+Docs/planning/decision-register.md
+Docs/planning/mvp-scope.md
+Docs/planning/requirements-traceability.md

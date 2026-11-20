@@ -1,6 +1,51 @@
 # SPORTIFY progress
 
-## Current status: Step 02 awaiting user verification
+## Current status: Step 03 awaiting user verification
+
+Updated 20 November 2026. Step 03 environment and quality configuration is implemented and the local checks below passed on Windows x64. **Step 04 has not started.** No commit, push, remote settings change, Oracle connection or business feature was performed. Earlier step records below are historical snapshots.
+
+### Step 03 delivered
+
+- API and worker have pure, typed Zod schemas and app-relative development env loaders. Process values override `.env.local`, then `.env`, then absent defaults. Injected production/test modes skip local files. Empty or malformed supplied values fail safely without printing them.
+- Web has an explicit empty public allowlist and a `server-only` configuration boundary. No unused service variables, second web dotenv loader or runtime secrets were added to shared tooling.
+- Root ESLint flat config covers Next/React/accessibility, typed TypeScript, promise handling and practical import/config boundaries. Prettier covers authored source/config/documentation while uploaded references remain excluded and unchanged.
+- One Vitest Node runner provides 41 environment and lifecycle cases, isolated temporary fixtures, fake worker timers, ephemeral real Nest listeners and reliable teardown. Coverage includes executable startup files; scoped thresholds protect the environment modules.
+- Import-safe API creation/startup and worker lifecycle functions permit focused tests. API closes Nest resources on listen failure. Independent development scripts build shared dependencies first.
+- Type-aware linting exposed a relative TypeScript config path that failed through pnpm symlinks. Shared tooling now owns self-contained strict defaults; the root baseline extends them. Runtime module settings and existing framework versions are preserved.
+- Read-only GitHub Actions workflow runs on PRs and pushes to `main`, with verified commit-pinned actions, lockfile-based dependency-store caching, timeout/concurrency and test diagnostics. It has no deployment or external-service credentials.
+- Guides: [environment](../development/environment-configuration.md), [testing](../development/testing.md), [local setup](../development/local-setup.md), [CI](../quality/ci-checks.md), and [toolchain](../architecture/toolchain.md). Original Oracle roadmap requirements are retained as deferred prerequisites, not treated as implemented Step 03 work.
+
+### Step 03 verification evidence
+
+Commands used `npx --yes pnpm@10.34.9` because global pnpm is absent. The installed Node 22.22.0 and framework pins were not upgraded.
+
+| Check                  | Actual result                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prerequisite scaffold  | Root typecheck and production build passed before edits                                                                                                                                                                                                                                                                                                     |
+| Installation           | Updated dependency installation and final frozen-lockfile installation passed with strict peer validation; lockfile up to date                                                                                                                                                                                                                              |
+| Full quality command   | `pnpm check` passed: format check, zero-warning lint, all workspace typechecks, non-watch tests and all production builds                                                                                                                                                                                                                                   |
+| Tests                  | 5 files, 41 cases passed; no Oracle/cloud/email service or fixed automated-test port required                                                                                                                                                                                                                                                               |
+| Coverage               | Environment schemas/loaders and shared parser: 100% statements, branches, functions and lines, exceeding 95/90 scoped gates. Overall: 82.85% statements, 87.09% branches, 88.23% functions, 81.81% lines; executable main files remain in the report                                                                                                        |
+| Controlled failure     | Temporary worker `any` violation made ESLint exit 1 with `no-explicit-any`; proof source was removed and the subsequent full check passed                                                                                                                                                                                                                   |
+| Development runtime    | Root `dev` launched labeled web/API/worker. Web `/` returned 200 with the foundation content; API port 4000 returned 404 for `/` and `/api/v1/bookings`; worker reported idle                                                                                                                                                                               |
+| Production runtime     | Built workspace starts launched web on 3000, API with injected production mode/port 4100, and compiled idle worker. Web returned 200; unimplemented API routes returned 404                                                                                                                                                                                 |
+| Safe startup rejection | Direct built API/worker runs from both root and each application directory rejected synthetic invalid PORT/NODE_ENV with exit 1, variable/rule errors and no supplied-value echo or startup activity                                                                                                                                                        |
+| Shutdown               | Ctrl+C stopped development and production process groups. Production worker logged SIGINT and timer cleanup; listening ports closed afterward and no matching application Node processes remained. Unit tests exercised both installed signal handlers and removed timers/listeners. Windows runner interruption exits were 1, not claimed successful exits |
+| CI configuration       | YAML parsed; referenced root scripts exist; all action pins have verified release commits. No remote Actions run was triggered or observed                                                                                                                                                                                                                  |
+| Web interface          | Foundation page returned 200 in development and production. TSX/CSS edits are formatting only; no new screen, font download, diagnostics or product behavior. Phone/desktop browser, keyboard and hydration checks were not performed in this step                                                                                                          |
+| Source preservation    | SHA-256 comparison confirmed all 21 uploaded source files unchanged. No real local env file or credential was created; examples are trackable and generated output/test artifacts remain ignored. Final `git diff --check` passed; no generated output or deliberate failure source is included in the reviewable changes                                   |
+
+### Step 03 limitations and user verification
+
+ESLint 9 emits an upstream support/deprecation warning. It remains the declared-compatible version for the current React/accessibility/import plugin peers; no peer override or audit suppression was used. See toolchain evidence. Dependency security audit, remote Ubuntu CI, ARM64 execution, POSIX signal delivery, browser visual/hydration verification and future injectable Nest test transforms remain unverified. Local Node tests are not Oracle integration or a security/accessibility certification.
+
+- [ ] Use the pinned frozen install, then run `pnpm check` and `pnpm test:coverage`.
+- [ ] Run `pnpm dev`; inspect the foundation page at phone/desktop widths and keyboard focus, including extension-free hydration behavior.
+- [ ] Confirm the API returns 404, the worker stays idle and Ctrl+C stops the group.
+- [ ] Review the CI workflow; observe its first remote run when changes are intentionally pushed. No push is performed here.
+- [ ] Review Step 03 before supplying the next scoped prompt. All unresolved Q-IDs remain open; Step 04 and Oracle implementation remain pending.
+
+## Historical Step 02 record — awaiting user verification
 
 Updated 20 November 2026. The requested monorepo foundation is implemented and the executable checks below passed on Windows x64. **Step 03 is pending and has not started.** Browser visual/keyboard verification remains outstanding; no ARM64 or Oracle test result is claimed. The Step 01 audit below is retained as historical evidence, not the current repository inventory.
 
@@ -17,22 +62,22 @@ Updated 20 November 2026. The requested monorepo foundation is implemented and t
 
 Commands used the exact `npx --yes pnpm@10.34.9` fallback because pnpm is not globally installed. Global Node/npm or system configuration was not changed. The original scaffold run occurred on 16 November; final checks were repeated on 20 November.
 
-| Check | Actual result |
-|---|---|
-| Initial dependency installation | Passed on 16 November, all eight workspace projects resolved; no peer errors |
-| `install --frozen-lockfile` | Passed again on 20 November; lockfile up to date, resolution skipped |
-| Clean generated-output verification | Removed only known `.next`, `dist` and web incremental output; root `typecheck` then `build` passed without prior generated package/route output |
-| Build order and strict checking | Shared config builds before consumers; four shared packages build before root typecheck. All seven non-root workspace build/typecheck commands passed |
-| Windows command correction | Initial single-quoted package filter matched nothing; changed to escaped double quotes and verified the command builds all four shared packages |
-| Internal exports | Three shared JavaScript entry points load and declarations exist; all apps resolve the workspace tooling JSON; config root runtime import fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` as intended |
-| Development runtime | Earlier `pnpm dev` started labeled web/API/worker; web `/` returned 200, API default 4000 returned 404 for `/` and `/api/v1/health`, worker reported idle. No API connection is implied by the web page |
-| Built production runtime | Repeated 20 November with workspace `start` scripts: web port 3000 `/` returned 200; API `PORT=4100` `/` and `/api/v1/bookings` returned 404; compiled worker remained idle |
-| Invalid API port | `PORT=invalid` failed clearly with exit code 1, without echoing the input/environment |
-| Interactive shutdown | Ctrl+C stopped development and production groups; worker logged SIGINT and timer cleanup. Ports 3000/4000/4100 were closed afterward. Windows runner reports exit 1 on interruption; this is not a successful exit-code claim |
-| SIGTERM/platform limitation | Both signal handlers are present and share cleanup; actual POSIX SIGTERM behavior was not tested on Linux. Windows forced termination can bypass handlers; verify on deployment target |
-| Interface | HTTP content and CSS/semantic structure reviewed. Palette contrast calculated earlier at 6.39:1 or greater against main background in light mode and 7.98:1 or greater in dark mode. This is not full accessibility conformance |
-| Browser verification | Not completed: prior browser host was unavailable; latest automatic approval review rejected inspecting an existing Chrome window showing unrelated GitHub/sign-in content. No phone/desktop screenshot, overflow, keyboard or Lighthouse pass is claimed |
-| Repository hygiene | Reviewed 82 source/document files; 83 local links resolve; all eight manifests private, external direct dependencies exact-pinned and internal dependencies `workspace:*`. Targeted secret-pattern scan found no suspected matches. Ignore checks cover dependencies/build output/incremental files/logs/environment/wallets; source uploads have no Git changes. `git diff --check` passed; Git emitted only local LF-to-CRLF notices. No commit/push or unrelated source edits |
+| Check                               | Actual result                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Initial dependency installation     | Passed on 16 November, all eight workspace projects resolved; no peer errors                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `install --frozen-lockfile`         | Passed again on 20 November; lockfile up to date, resolution skipped                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Clean generated-output verification | Removed only known `.next`, `dist` and web incremental output; root `typecheck` then `build` passed without prior generated package/route output                                                                                                                                                                                                                                                                                                                                 |
+| Build order and strict checking     | Shared config builds before consumers; four shared packages build before root typecheck. All seven non-root workspace build/typecheck commands passed                                                                                                                                                                                                                                                                                                                            |
+| Windows command correction          | Initial single-quoted package filter matched nothing; changed to escaped double quotes and verified the command builds all four shared packages                                                                                                                                                                                                                                                                                                                                  |
+| Internal exports                    | Three shared JavaScript entry points load and declarations exist; all apps resolve the workspace tooling JSON; config root runtime import fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` as intended                                                                                                                                                                                                                                                                                 |
+| Development runtime                 | Earlier `pnpm dev` started labeled web/API/worker; web `/` returned 200, API default 4000 returned 404 for `/` and `/api/v1/health`, worker reported idle. No API connection is implied by the web page                                                                                                                                                                                                                                                                          |
+| Built production runtime            | Repeated 20 November with workspace `start` scripts: web port 3000 `/` returned 200; API `PORT=4100` `/` and `/api/v1/bookings` returned 404; compiled worker remained idle                                                                                                                                                                                                                                                                                                      |
+| Invalid API port                    | `PORT=invalid` failed clearly with exit code 1, without echoing the input/environment                                                                                                                                                                                                                                                                                                                                                                                            |
+| Interactive shutdown                | Ctrl+C stopped development and production groups; worker logged SIGINT and timer cleanup. Ports 3000/4000/4100 were closed afterward. Windows runner reports exit 1 on interruption; this is not a successful exit-code claim                                                                                                                                                                                                                                                    |
+| SIGTERM/platform limitation         | Both signal handlers are present and share cleanup; actual POSIX SIGTERM behavior was not tested on Linux. Windows forced termination can bypass handlers; verify on deployment target                                                                                                                                                                                                                                                                                           |
+| Interface                           | HTTP content and CSS/semantic structure reviewed. Palette contrast calculated earlier at 6.39:1 or greater against main background in light mode and 7.98:1 or greater in dark mode. This is not full accessibility conformance                                                                                                                                                                                                                                                  |
+| Browser verification                | Not completed: prior browser host was unavailable; latest automatic approval review rejected inspecting an existing Chrome window showing unrelated GitHub/sign-in content. No phone/desktop screenshot, overflow, keyboard or Lighthouse pass is claimed                                                                                                                                                                                                                        |
+| Repository hygiene                  | Reviewed 82 source/document files; 83 local links resolve; all eight manifests private, external direct dependencies exact-pinned and internal dependencies `workspace:*`. Targeted secret-pattern scan found no suspected matches. Ignore checks cover dependencies/build output/incremental files/logs/environment/wallets; source uploads have no Git changes. `git diff --check` passed; Git emitted only local LF-to-CRLF notices. No commit/push or unrelated source edits |
 
 ### Step 02 limitations and next boundary
 
@@ -56,27 +101,27 @@ Date: 15 November 2026. **Step 01 status: awaiting user review.** Steps 02–13 
 
 ## Repository findings before changes
 
-| Area inspected | Actual finding |
-|---|---|
-| Workspace | `sportify-platform`, with `Docs/` source uploads and an empty `tmp/` directory from earlier reading work |
-| Instructions | No AGENTS.md or CLAUDE.md found in the workspace or checked ancestor chain: drive root, Users, user home, Desktop and project root; no nested instruction files found in the inventory |
-| Source files | 21 uploaded files: 6 PDFs, 3 Markdown specifications, 2 SQL scripts, 1 OpenAPI YAML, 3 ERDs and 6 flow diagrams |
-| Git | No repository detected: both `git rev-parse --show-toplevel` and `git status --short` reported “not a git repository.” No Git initialization, commit or push performed |
-| Application | No existing application code, package manifests, lockfiles, build configuration or infrastructure files found |
-| Tests and validators | No tests, CI configuration or documentation validation command available |
-| Existing work | Source-only project, not an existing implementation. Original files inventoried and hashed before writes |
-| Path convention | Retained `Docs/` rather than creating/reorganizing a competing lowercase directory; original sources not moved |
+| Area inspected       | Actual finding                                                                                                                                                                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Workspace            | `sportify-platform`, with `Docs/` source uploads and an empty `tmp/` directory from earlier reading work                                                                               |
+| Instructions         | No AGENTS.md or CLAUDE.md found in the workspace or checked ancestor chain: drive root, Users, user home, Desktop and project root; no nested instruction files found in the inventory |
+| Source files         | 21 uploaded files: 6 PDFs, 3 Markdown specifications, 2 SQL scripts, 1 OpenAPI YAML, 3 ERDs and 6 flow diagrams                                                                        |
+| Git                  | No repository detected: both `git rev-parse --show-toplevel` and `git status --short` reported “not a git repository.” No Git initialization, commit or push performed                 |
+| Application          | No existing application code, package manifests, lockfiles, build configuration or infrastructure files found                                                                          |
+| Tests and validators | No tests, CI configuration or documentation validation command available                                                                                                               |
+| Existing work        | Source-only project, not an existing implementation. Original files inventoried and hashed before writes                                                                               |
+| Path convention      | Retained `Docs/` rather than creating/reorganizing a competing lowercase directory; original sources not moved                                                                         |
 
 ## Source reading and artifact availability
 
 All four required documents were read completely earlier in this conversation. Step 01 rechecked their identity and full-page text extraction using an already cached PDF reader without installing dependencies. No empty text pages were found. This is content/readability evidence, not visual-layout or application verification.
 
-| Required source | Pages | Extracted characters | SHA-256 at audit |
-|---|---:|---:|---|
-| PRD | 51 | 63,111 | `ac9a68cc3b2beaa5f3a8ed098b0267b8a260812dcb18e802c5daad5e979bcba1` |
-| MVP | 29 | 39,402 | `9834f63d77d2e4223a8b34c5d3c96ca58b8b240979d31407e17670c792c5cd71` |
-| ARCH | 53 | 62,107 | `a1b6109f94d039572a94b7cae53dfb1b1b9d5fa2733b67db7e7152add5cd2509` |
-| SCHEMA | 8 | 9,435 | `b238af4a65a4c059cbeeee8f2d6c16fb7a2bc3b5fb469526d3f4017797a7a228` |
+| Required source | Pages | Extracted characters | SHA-256 at audit                                                   |
+| --------------- | ----: | -------------------: | ------------------------------------------------------------------ |
+| PRD             |    51 |               63,111 | `ac9a68cc3b2beaa5f3a8ed098b0267b8a260812dcb18e802c5daad5e979bcba1` |
+| MVP             |    29 |               39,402 | `9834f63d77d2e4223a8b34c5d3c96ca58b8b240979d31407e17670c792c5cd71` |
+| ARCH            |    53 |               62,107 | `a1b6109f94d039572a94b7cae53dfb1b1b9d5fa2733b67db7e7152add5cd2509` |
+| SCHEMA          |     8 |                9,435 | `b238af4a65a4c059cbeeee8f2d6c16fb7a2bc3b5fb469526d3f4017797a7a228` |
 
 Exact source links and supplemental packages are in the [documentation index](../README.md#source-register). The detailed DB specification, complete SQL, API/OAS, UX and all ERDs/user flows were also read in this conversation. The API and UX PDF comparisons found formatting/header differences, not additional substantive requirements. The UX package includes 16 low-fidelity wireframes and six flows; these are not implemented screens or validated field research.
 
@@ -91,17 +136,17 @@ OpenAPI parsed with the existing YAML parser: 78 paths, 101 operations and 100 s
 
 ## Completed Step 01 outputs
 
-| File | Work completed |
-|---|---|
-| [Docs/README.md](../README.md) | Index, source register, precedence, decision/implementation labels |
-| [mvp-scope.md](mvp-scope.md) | Included/excluded capabilities, actors, workflows, rules and pilot/commercial boundaries |
-| [requirements-traceability.md](requirements-traceability.md) | REQ-001–064 with source sections, owner, intended verification and Not started status |
-| [decision-register.md](decision-register.md) | D-01–12 established directions and Q-01–23 open, explicitly unapproved recommendations |
-| [development-roadmap.md](development-roadmap.md) | Steps 01–13 in requested dependency order with outputs and verification gates |
-| [definition-of-done.md](../quality/definition-of-done.md) | Real Oracle evidence, frontend/backend/security/localization/accessibility/deployment gates |
-| [product-quality-bar.md](../design/product-quality-bar.md) | Concrete calendar/form/financial, responsive, accessibility and three-script standards |
-| [progress.md](progress.md) | This audit, evidence, unresolved items and review checklist |
-| [CLAUDE.md](../../CLAUDE.md) | Concise project working instructions and stop-after-requested-step rule |
+| File                                                         | Work completed                                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| [Docs/README.md](../README.md)                               | Index, source register, precedence, decision/implementation labels                          |
+| [mvp-scope.md](mvp-scope.md)                                 | Included/excluded capabilities, actors, workflows, rules and pilot/commercial boundaries    |
+| [requirements-traceability.md](requirements-traceability.md) | REQ-001–064 with source sections, owner, intended verification and Not started status       |
+| [decision-register.md](decision-register.md)                 | D-01–12 established directions and Q-01–23 open, explicitly unapproved recommendations      |
+| [development-roadmap.md](development-roadmap.md)             | Steps 01–13 in requested dependency order with outputs and verification gates               |
+| [definition-of-done.md](../quality/definition-of-done.md)    | Real Oracle evidence, frontend/backend/security/localization/accessibility/deployment gates |
+| [product-quality-bar.md](../design/product-quality-bar.md)   | Concrete calendar/form/financial, responsive, accessibility and three-script standards      |
+| [progress.md](progress.md)                                   | This audit, evidence, unresolved items and review checklist                                 |
+| [CLAUDE.md](../../CLAUDE.md)                                 | Concise project working instructions and stop-after-requested-step rule                     |
 
 All nine files are new. No prior baseline documents were replaced. No application code, manifests, infrastructure, database instances or remote services were changed. No package versions were chosen, dependencies installed or test framework introduced during Step 01.
 
