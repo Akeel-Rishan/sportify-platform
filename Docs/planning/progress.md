@@ -1,6 +1,53 @@
 # SPORTIFY progress
 
-## Current status: Step 03 awaiting user verification
+## Current status: Step 04 awaiting user verification
+
+Updated 20 November 2026. Step 04 API conventions and operational endpoints are implemented and locally verified on Windows x64. **Step 05 is pending.** Oracle, identity, tenancy and business workflows remain unimplemented. No commit, push, deployment, remote infrastructure/settings change or remote CI execution was performed. Earlier step sections below are historical snapshots.
+
+### Step 04 delivered
+
+- One production/test `configureApp()` applies `/api/v1`, early request context, safe exception filtering, success wrapping and global Zod DTO validation. Existing Nest 11.2.10 / Express 5.2.1 and runtime/framework pins are preserved.
+- Shared framework-independent response/error/health contracts are consumed through `workspace:*`. Browser contracts expose no Nest classes or runtime environment.
+- Cryptographic server-owned UUIDs precede default body parsing. A private request-local symbol supplies the same header/body/error/completion ID; incoming IDs are ignored.
+- Response handling preserves explicit statuses, HEAD/204/304 semantics, non-JSON bypasses and approved safe error messages/protocol headers. Undefined ordinary payloads become null. No arbitrary property-name envelope detection or exception forwarding is used.
+- DTOs reject unknown/invalid fixed shapes without implicit coercion. Public details are bounded and schema-aware paths redact arbitrary client record keys, submitted values and custom messages.
+- JSON request logs use monotonic durations, route templates and one finish/close record, including detectable aborts. Default error events expose only a fixed classification and request ID; no request bodies, raw URLs, headers or identities are logged.
+- HealthModule provides no-store process liveness and application-only readiness with tested startup/destruction state and injected unavailability. It makes no database check and exposes no public toggle.
+- HTTP fixtures use ephemeral ports, test-only controllers and the same configuration as production. Production excludes tests. A scoped existing-TypeScript transform preserves API decorator metadata under Vitest. See [conventions](../api/conventions.md), [errors](../api/errors.md), [health/readiness](../api/health-and-readiness.md) and [testing](../development/testing.md).
+
+### Step 04 verification evidence
+
+Commands used `npx --yes pnpm@10.34.9` and existing Node 22.22.0. Development-only Express declarations are pinned to 5.0.6. No competing validator, logger or runner was installed.
+
+| Check               | Actual result                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Baseline            | Existing `pnpm check` passed before edits, including all 41 prior cases and production builds                                                                                                                                                                                                                                                                                                                        |
+| Installation        | Updated install and final frozen-lockfile install passed; existing ESLint 9 support warning remains documented                                                                                                                                                                                                                                                                                                       |
+| Final quality/build | `pnpm check` passed format validation, zero-warning lint, all workspace typechecks, non-watch tests and production builds                                                                                                                                                                                                                                                                                            |
+| Tests               | 9 files, 85 tests passed: 49 unit/startup and 36 real HTTP integration cases. Applications close in teardown; no Oracle/cloud/email service is required                                                                                                                                                                                                                                                              |
+| HTTP coverage       | Health/readiness, one prefix, exact envelopes, 201, undefined/null, HEAD/204/304, redirect/file/raw bypass, already-sent response, safe status mappings/protocol headers, nested/unknown DTO fields, strict booleans, parser 400/413, conflict and generic 500                                                                                                                                                       |
+| Correlation/logging | Incoming ID rejection, distinct/concurrent contexts, header/body/error/completion matching, safe route templates, secret-sentinel redaction, single completion and client disconnect all passed using captured structured sinks                                                                                                                                                                                      |
+| Readiness           | 200 after bootstrap; injected unavailable service returns 503 while liveness stays 200; no-store and false state before bootstrap/after destruction verified                                                                                                                                                                                                                                                         |
+| Coverage command    | `pnpm test:coverage` passed: 90.54% statements, 86.20% branches, 93.61% functions, 91.45% lines overall. Environment schemas/loaders/shared parser remain 100%, passing their scoped thresholds; startup entry points remain reported                                                                                                                                                                                |
+| Built API           | Direct compiled entry point in production mode on port 4000 started. Health/ready returned exact safe 200 payloads; unknown route returned normalized 404. Three distinct IDs matched headers, bodies and captured JSON logs, without query/header sentinels                                                                                                                                                         |
+| Shutdown            | Ctrl+C stopped the built API and closed port 4000. Windows runner interruption exit was 1, not claimed as a successful exit code or proof of POSIX signal delivery; lifecycle state cleanup is separately tested                                                                                                                                                                                                     |
+| Production boundary | Built JavaScript has no test module/controller, proof route or sentinel; AppModule imports only HealthModule. Tests are typechecked but excluded from production output                                                                                                                                                                                                                                              |
+| CI and preservation | Workflow YAML/scripts validated; CI includes HTTP suites automatically. Pre-edit hashes show all authored web files/source uploads unchanged. The baseline-regenerated Next declaration was restored to its initial tracked version. Maintained UTF-8 text and local links checked; real env files and generated outputs remain excluded; final `git diff --check` passed and no application Node processes remained |
+
+Intermediate lint errors and a formatting failure were corrected before the final full check passed. A Windows-default-encoding edit in maintained documentation was repaired to UTF-8 and checked; source uploads were untouched.
+
+### Step 04 limitations and user verification
+
+Readiness covers application initialization only. Real Oracle readiness must become a required condition when Oracle integration is implemented. No booking/payment/commercial readiness, auth, tenant resolution, idempotency, rate limiting, proxy trust or load-balancer draining is established here. Upstream correlation, restricted diagnostics and background context propagation require later policies. Low-level Node HTTP parser failures before Express receives a request are outside this pipeline.
+
+Remote CI, Linux/ARM64 execution and POSIX signal delivery were not performed. Browser inspection was not performed for this backend-only step; web source is unchanged and its production build passed. The earlier browser/hydration follow-up remains separate. All unresolved Q-IDs remain open.
+
+- [ ] Run frozen install, `pnpm check` and `pnpm test:coverage` with the pinned toolchain.
+- [ ] Start the built API; verify health, readiness and safe 404, and compare X-Request-ID with each JSON body and log.
+- [ ] Confirm no-store probe responses and Ctrl+C shutdown. Review [readiness scope](../api/health-and-readiness.md) before operational use.
+- [ ] Review Step 04 and provide the next scoped prompt. Step 05 and database implementation remain pending.
+
+## Historical Step 03 record — awaiting user verification
 
 Updated 20 November 2026. Step 03 environment and quality configuration is implemented and the local checks below passed on Windows x64. **Step 04 has not started.** No commit, push, remote settings change, Oracle connection or business feature was performed. Earlier step records below are historical snapshots.
 

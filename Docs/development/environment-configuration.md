@@ -1,6 +1,6 @@
 # Environment configuration
 
-Step 03 validates only configuration currently consumed by the scaffold. No Oracle, email, OCI, authentication or API URL variable is required. Configuration errors name the variable and its rule, without echoing values or dumping environment objects.
+The application validates only configuration currently consumed by the scaffold. No Oracle, email, OCI, authentication or API URL variable is required. Configuration errors name the variable and its rule, without echoing values or dumping environment objects.
 
 | Application | Variable                   | Absent default              | Accepted explicit values                                    |
 | ----------- | -------------------------- | --------------------------- | ----------------------------------------------------------- |
@@ -52,4 +52,4 @@ Unix equivalent:
 NODE_ENV=development PORT=4100 pnpm dev:api
 ```
 
-If startup fails, read the named variable rule and correct the source with highest precedence. An invalid explicitly supplied value does not fall back to a valid file/default. Remove temporary terminal overrides after use. Nonconfiguration startup failures retain a generic safe message; this step does not implement centralized API error handling.
+If startup fails, read the named variable rule and correct the source with highest precedence. An invalid explicitly supplied value does not fall back to a valid file/default. Remove temporary terminal overrides after use. Nonconfiguration startup failures retain a generic safe message; HTTP request errors now use the [Step 04 safe error conventions](../api/errors.md); startup errors remain separate from HTTP responses.

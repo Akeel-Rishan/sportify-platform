@@ -1,8 +1,8 @@
 # MVP development roadmap
 
-Current status: **Step 03 quality foundation awaiting user verification**. Step 04 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
+Current status: **Step 04 API conventions awaiting user verification**. Step 05 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
 
-The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. No later step is authorized here.
+The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. No later step is authorized here.
 
 All steps follow the [definition of done](../quality/definition-of-done.md), [product quality bar](../design/product-quality-bar.md) and [decision register](decision-register.md). Audit, authorization, accessibility, localization and relevant tests accompany each feature; they are not a final-phase backlog.
 
@@ -40,7 +40,15 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Requirements:** REQ-001–002, REQ-048–051, REQ-063.
 - **Status:** Not started.
 
-## Step 04 — Authentication, tenancy and authorization
+## Step 04 — API conventions and operational endpoints
+
+- **Objective:** Establish versioned transport contracts, safe errors, correlation, request logs, runtime DTO validation and application-only liveness/readiness.
+- **Dependencies:** Step 03 tooling and existing Nest/Express adapter. No external service or identity decision is required for these transport foundations.
+- **Outputs:** Shared contracts, one production/test configuration function, centralized pipeline, health module, focused unit/HTTP suites and API guides.
+- **Verification gate:** Root quality/build checks, coverage, real HTTP parser/error/correlation/status/logging/readiness cases and built API health/readiness/shutdown. Record actual results in progress.
+- **Status:** Awaiting user verification; local checks passed (see progress). Step 05 remains pending.
+
+## Deferred authentication, tenancy and authorization (previous Step 04 baseline)
 
 - **Objective:** Establish trustworthy identity, membership, branch scope and platform separation.
 - **Dependencies:** Steps 02–03; Q-08, Q-15, Q-17–18 and applicable Q-23 decisions.

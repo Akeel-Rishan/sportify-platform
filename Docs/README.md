@@ -1,6 +1,6 @@
 # SPORTIFY documentation
 
-Current stage, 20 November 2026: **Step 03 quality foundation awaiting user verification**. Environment validation, lint/format checks, focused tests and a CI workflow now accompany the static web foundation, minimal API process and idle worker. Business workflows and Oracle are not connected. The Step 01 baseline below remains the requirements reference; see [progress](planning/progress.md) for executed checks and limitations.
+Current stage, 20 November 2026: **Step 04 API foundation awaiting user verification**. The API now has versioned response/error conventions, server-owned request IDs, safe structured logs, runtime DTO validation and application-only health/readiness endpoints. Step 03 quality tooling, static web foundation and idle worker remain in place. Business workflows and Oracle are not connected. The Step 01 baseline below remains the requirements reference; see [progress](planning/progress.md) for executed checks and limitations.
 
 The workspace already uses `Docs/`. Keep that spelling in paths and links, including on case-sensitive Linux systems; it is the existing equivalent of the requested `docs/` directory. Original uploads remain in place. There is no `docs/source/` directory.
 
@@ -18,6 +18,8 @@ The workspace already uses `Docs/`. Keep that spelling in paths and links, inclu
 | [Project working instructions](../CLAUDE.md)                       | Rules for subsequent implementation steps                                  |
 | [Toolchain](architecture/toolchain.md)                             | Pinned versions, compatibility, module boundaries and ARM64 evidence       |
 | [Local setup](development/local-setup.md)                          | Install, develop, build and stop the scaffold                              |
+
+API guides: [conventions](api/conventions.md), [safe errors](api/errors.md), and [health/readiness](api/health-and-readiness.md).
 
 ## Source register
 

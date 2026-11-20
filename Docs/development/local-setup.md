@@ -1,6 +1,6 @@
 # Local development
 
-Step 03 retains Node 22.22.0 and pnpm 10.34.9. Run commands from the repository root. Use the existing `Docs/` spelling on case-sensitive systems. See [environment configuration](environment-configuration.md) and [testing](testing.md) for the added startup and quality boundaries.
+Step 04 retains Node 22.22.0 and pnpm 10.34.9. Run commands from the repository root. Use the existing `Docs/` spelling on case-sensitive systems. See [environment configuration](environment-configuration.md) and [testing](testing.md) for the added startup and quality boundaries.
 
 ## Clean checkout
 
@@ -59,4 +59,4 @@ Run the start commands in separate terminals. API/worker run compiled JavaScript
 - **Shared-package edits:** validation now contains consumed code. Rebuild shared packages after editing; development/watch-test startup builds them once, not continuously.
 - **Hydration warning with an extra `<html style="display: none">`:** on 20 November, a direct request to the development server returned HTTP 200 and `<html lang="en">` without that style. The layout has no root-style mutation, browser branching or changing data. This points to browser-side injection, but the responsible extension/script is not identified. Open the same local URL in a Guest profile or an Incognito window with extensions not permitted there. If the warning disappears, disable extensions for localhost individually to find the injector, then reload. If it persists in an extension-free profile, capture the new hydration diff and compare View Page Source with the Elements root node. Do not add `suppressHydrationWarning` as a fix for a hidden root: suppressing the warning does not remove the injected style. See the [Next.js hydration guidance](https://nextjs.org/docs/messages/react-hydration-error).
 
-Generated output, dependencies, logs, test reports, coverage, local environment files and wallets are ignored. Do not add real credentials. Environment validation and quality checks now exist; Oracle connectivity, health routes, deployment and all business workflows remain future work. Local tests do not demonstrate a remote GitHub Actions pass.
+Generated output, dependencies, logs, test reports, coverage, local environment files and wallets are ignored. Do not add real credentials. Environment validation and quality checks now exist; The API now serves application-only health/readiness and shared HTTP conventions; Oracle connectivity, deployment and all business workflows remain future work. See [API conventions](../api/conventions.md). Local tests do not demonstrate a remote GitHub Actions pass.

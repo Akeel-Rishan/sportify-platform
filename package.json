@@ -22,7 +22,8 @@
     "test": "pnpm build:packages && vitest run",
     "test:watch": "pnpm build:packages && vitest",
     "test:coverage": "pnpm build:packages && vitest run --coverage",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "test:http": "pnpm build:packages && vitest run apps/api/test"
   },
   "devDependencies": {
     "@types/node": "22.20.5",

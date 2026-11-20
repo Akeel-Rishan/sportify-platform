@@ -2,7 +2,7 @@
 
 A multi-tenant indoor sports booking and business management platform for Sri Lanka.
 
-**Current stage: Step 03 quality and configuration foundation.** The web application displays a static foundation page. The API starts without business routes. The separate worker is explicitly idle. Validated startup configuration, lint/format/unit checks and pull-request CI are configured. Oracle, authentication, tenant routing and booking workflows are not connected.
+**Current stage: Step 04 API transport foundation.** The web application displays a static foundation page. The API exposes versioned health/readiness routes, safe response envelopes, request IDs and structured logs. The separate worker is explicitly idle. Validated startup configuration, lint/format/unit checks and pull-request CI are configured. Oracle, authentication, tenant routing and booking workflows are not connected.
 
 ## Prerequisites and installation
 
@@ -36,16 +36,16 @@ npx --yes pnpm@10.34.9 dev
 | `pnpm --filter @sportify/api start`    | Run compiled API (`PORT` override supported)                                                     |
 | `pnpm --filter @sportify/worker start` | Run compiled idle worker                                                                         |
 
-The API returns HTTP 404 for unimplemented routes, including `/`; no health or business endpoint exists yet. Run production starts after `pnpm build`. Stop with Ctrl+C. No global Next.js, Nest CLI or TypeScript compiler is needed.
+The API serves `/api/v1/health` and `/api/v1/ready`. Unimplemented routes, including `/`, return a safe HTTP 404 envelope; no business endpoint exists yet. Run production starts after `pnpm build`. Stop with Ctrl+C. No global Next.js, Nest CLI or TypeScript compiler is needed.
 
 ## Workspace
 
 - `apps/web`, `apps/api`, `apps/worker`: independent application processes.
-- `packages/shared-types`, `api-contracts`: empty framework-independent entry points for future agreed contracts. `packages/validation` supplies the shared environment parser without reading process state or files.
+- `packages/shared-types`: an empty framework-independent entry point for future agreed types. `packages/api-contracts` exports transport response/error and health contracts. `packages/validation` supplies the shared environment parser without reading process state or files.
 - `packages/shared-config`: tooling-only TypeScript configuration; no runtime configuration or secrets.
 - `database/`, `infra/`: documented future work directories; no database/deployment implementation.
 - `Docs/`: preserved source documents and working specifications; keep this exact casing on Linux.
 
-Quality commands: `pnpm lint`, `pnpm lint:fix`, `pnpm format:check`, `pnpm format`, `pnpm test`, `pnpm test:watch`, `pnpm test:coverage`, and `pnpm check`. `check` stops on failures in format, lint, typecheck, tests or build. CI runs tests with coverage; it does not deploy or require cloud/database secrets.
+Quality commands: `pnpm lint`, `pnpm lint:fix`, `pnpm format:check`, `pnpm format`, `pnpm test`, `pnpm test:watch`, `pnpm test:coverage`, `pnpm test:http`, and `pnpm check`. `check` stops on failures in format, lint, typecheck, tests or build. CI runs tests with coverage; it does not deploy or require cloud/database secrets.
 
-See [local setup](Docs/development/local-setup.md), [environment configuration](Docs/development/environment-configuration.md), [testing](Docs/development/testing.md), [CI checks](Docs/quality/ci-checks.md), [toolchain evidence](Docs/architecture/toolchain.md), [progress](Docs/planning/progress.md) and the [documentation index](Docs/README.md).
+See [API conventions](Docs/api/conventions.md), [health/readiness](Docs/api/health-and-readiness.md), [local setup](Docs/development/local-setup.md), [environment configuration](Docs/development/environment-configuration.md), [testing](Docs/development/testing.md), [CI checks](Docs/quality/ci-checks.md), [toolchain evidence](Docs/architecture/toolchain.md), [progress](Docs/planning/progress.md) and the [documentation index](Docs/README.md).

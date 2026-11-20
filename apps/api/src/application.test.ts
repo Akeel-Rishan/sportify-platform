@@ -15,7 +15,7 @@ it('rejects invalid configuration before constructing Nest or listening', async 
   expect(create).not.toHaveBeenCalled();
 });
 it('creates an import-safe real Nest application with injected config and closes it', async () => {
-  app = await createApiApplication({ NODE_ENV: 'test', PORT: 4000 });
+  app = await createApiApplication({ NODE_ENV: 'test', PORT: 4000 }, () => {});
   await app.listen(0, '127.0.0.1');
   const url = await app.getUrl();
   expect((await fetch(url)).status).toBe(404);
