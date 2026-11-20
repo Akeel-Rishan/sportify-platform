@@ -54,7 +54,7 @@ IDs `REQ-001` onward are permanent: do not reuse or renumber them. Business beha
 | REQ-046 | ARCH §13.2; API §10 | Async verification/invitation email; notification failure cannot cancel booking | Notifications / Auth | Provider failure and retry, persisted booking and secret-safe delivery logs | Not started |
 | REQ-047 | ARCH §§4–5; user's technical direction | pnpm TypeScript monorepo, Next.js, NestJS modular monolith and separate worker | Foundation | [Step 02 evidence](progress.md): pinned compatibility metadata, frozen installation, clean build/typecheck and independent processes | Verified for scaffold; awaiting user verification |
 | REQ-048 | ARCH §§7.2–7.4 | Restricted Oracle runtime account, parameterized SQL, TLS and pooled connections | Database | Actual ATP TLS/grant/bind checks; API max 8 + worker max 2, aggregate session budget | Not started |
-| REQ-049 | ARCH §7.5; SCHEMA §2; DB §2 | Consistent UTC persistence and venue-local presentation; resolve timestamp conflict | Database / Time | Every new pooled session UTC, round-trip/grid tests on Oracle; Q-01, Q-06 | Not started |
+| REQ-049 | ARCH §7.5; SCHEMA §2; DB §2 | Consistent TIMESTAMP(6) UTC persistence and venue-local presentation; Step 05 direction confirmed | Database / Time | Every new pooled session UTC, round-trip/grid tests on Oracle; Q-01, Q-06 | Not started |
 | REQ-050 | DB §§5, 7, 11; SCHEMA §9 | Tenant-aware FKs, decimal money, retained history and versioned migrations | Database | Oracle bootstrap, constraints/indexes, cross-tenant negative tests and migration checksums | Not started |
 | REQ-051 | API §§2.6, 3.3, 11.1 | Opaque public IDs and permission mappings align schema/API | Database / API | Migration/backfill constraints and every endpoint guard tested; Q-14, Q-18 | Not started |
 | REQ-052 | ARCH §9; API §§2, 7, 12 | Versioned REST, safe envelopes, runtime DTO validation and maintained OpenAPI | API / Contracts | OpenAPI 3.1 lint/validation, runtime contract examples and frontend types; Q-18 | Not started |
@@ -72,3 +72,18 @@ IDs `REQ-001` onward are permanent: do not reuse or renumber them. Business beha
 | REQ-064 | PRD §§22.4, 27; ARCH §§8.7, 16.3 | Protect customer data, redact secrets and define retention/access handling | Security / Operations | Negative access tests, redacted logs/exports and documented retention; Q-23 | Not started |
 
 Source-level counts, YAML parsing and documentation checks do not verify any of these runtime requirements. Evidence is recorded in [progress](progress.md); step allocation is in the [roadmap](development-roadmap.md).
+
+## Step 05 database design coverage
+
+Design evidence only; all Oracle enforcement, concurrency, grants and business workflow results remain unexecuted. D-13 fixes the explicit timestamp direction; other Q-IDs are review proposals, not approved implementations. The existing runtime status column is not promoted by documentation checks. Step 04 transport-only evidence remains in progress and does not complete the broader security/OpenAPI/monitoring requirements.
+
+| Requirements | Design evidence | Remaining verification |
+| --- | --- | --- |
+| REQ-001-007, REQ-034, REQ-048-051 | [Dictionary](../database/data-dictionary.md), [relationships](../database/relationships-and-constraints.md), public UUIDs, invitation branches, session scope and exact-string IDs | Actual target DDL, tenant/global-identity negatives, grants and driver/session tests |
+| REQ-009-017, REQ-035-038 | [Disposition](../database/mvp-table-scope.md), [index plan](../database/index-plan.md), relational schedules/pricing/host routing and snapshots | Accept overnight/buffer/API amendments; real configuration/publishing/media workflows |
+| REQ-018-028 | [Booking invariants](../database/booking-invariants.md), [operational replay](../database/operational-data.md), exact slot PK/XOR/resource-safe FKs | Parallel Oracle hold/confirmation/expiry/cancellation/maintenance/idempotency tests |
+| REQ-029-033, REQ-039-043 | [Financial rules](../database/financial-rules.md), separate ledgers, term/feature snapshots and status formulas | Product partial/refund/zero-value/lifecycle approval; actual reconciliation and entitlement races |
+| REQ-044-046, REQ-059, REQ-064 | [Operational data](../database/operational-data.md), scoped audit/notifications, outbox/jobs/leases | Security review of reconstruction/redaction/retention and real worker/provider crash handling |
+| REQ-048-050, REQ-061-063 | [Migration strategy](../database/migration-strategy.md), [verification plan](../database/verification-plan.md) | Actual ATP provisioning, execution/recovery/backup tests; no Oracle test marked passed |
+
+The [three new MVP ERDs](../database/README.md) and repeatable structural checker support review only. They do not replace the required future tests or supersede the preserved source uploads without acceptance.

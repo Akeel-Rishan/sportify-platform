@@ -2,7 +2,7 @@
 
 Status: **awaiting user review**. Source codes resolve in the [source register](../README.md#source-register). Requirement IDs resolve in [traceability](requirements-traceability.md); step numbers resolve in the [roadmap](development-roadmap.md).
 
-Established D-IDs reflect the user's confirmed Step 01 baseline. All Q-IDs below are **Open — proposed resolution, not approved**. This register does not silently override a source. To close a Q-ID, record the user's decision, date, affected contracts/migrations/requirements and verification evidence. No Q-ID has been approved in this step.
+Established D-IDs reflect the user's confirmed Step 01 baseline. Q-IDs remain **open for their stated policy/implementation or verification gates**; proposals are not approvals. Explicitly confirmed subparts (such as D-13 timestamp direction) are identified separately. This register does not silently override a source. To close a Q-ID, record the user's decision, date, affected contracts/migrations/requirements and verification evidence. No Q-ID has been approved in this step.
 
 ## Established direction
 
@@ -20,10 +20,13 @@ Established D-IDs reflect the user's confirmed Step 01 baseline. All Q-IDs below
 | D-10 | Database jobs/outbox, OCI Object Storage, Docker ARM64, Nginx and Cloudflare | User technical direction; ARCH §§11–15. No initial Redis or Kafka |
 | D-11 | Preserve financial/booking history and require verified recovery before commercial operations | User baseline; MVP §§6.7, 9.7, 11; ARCH §17. Concrete commercial recovery route remains Q-13 |
 | D-12 | Step 01 changes documentation only and stops for user review | User Step 01. No scaffolding, dependency installation/version selection, infrastructure edits, commits or pushes |
+| D-13 | Step 05 database design uses NUMBER identity/internal keys, UUID public IDs, TIMESTAMP(6) UTC instants, UTC sessions, IANA zones with Colombo default, NUMBER(12,2)/currency, tenant-aware composite FKs and restricted runtime accounts | Explicit confirmed architectural direction in the user's Step 05 prompt. This fixes the timestamp representation direction of Q-01; it does not approve new policy proposals or establish Oracle execution evidence |
 
 ## Open reconciliation and design questions
 
 ### Q-01 — Timestamp representation
+
+Step 05 clarification: the user's confirmed direction explicitly selects TIMESTAMP(6) stored as UTC and UTC session initialization. That representation is established, not still an open recommendation. Exact target/driver binding, precision, session lifecycle and real Oracle verification remain open; no runtime result is claimed.
 
 - **Evidence:** ARCH §7.5 recommends `TIMESTAMP WITH TIME ZONE`; SCHEMA §2, DB §2 and SQL-001 use `TIMESTAMP(6)` with a UTC-only convention and `LOCALTIMESTAMP` defaults. DB explains the slot primary-key constraint as the reason.
 - **Impact:** Driver binding, pool initialization and date conversion can otherwise shift persisted reservations. REQ-013, REQ-049, REQ-050.
@@ -45,6 +48,8 @@ Established D-IDs reflect the user's confirmed Step 01 baseline. All Q-IDs below
 - **Gate:** Step 03 needs a target Oracle environment and restricted connection access. This does not block Step 02 foundation planning.
 
 ### Q-04 — Maintenance concurrency and locking order
+
+Step 05 refinement: the latest concrete proposal is the short tenant-row admission mutex and fixed ordering in [booking invariants](../database/booking-invariants.md). It supersedes the earlier unaccepted preference below for finer-grained admission gates. The coarse design is explicit, unmeasured and requires acceptance/load testing before implementation.
 
 - **Evidence:** DB §6.3 locks a resource before stale-hold cleanup; §6.4 locks a hold for conversion. API §§6.2–6.5 mirrors this. MVP §6.8 forbids maintenance overriding bookings. No complete common lock order covers resource/hold/booking/tenant/branch-block and schedule mutations.
 - **Impact:** Resource→hold versus hold→resource paths can deadlock; a branch-wide block or schedule change can race new holds. REQ-015, REQ-018–020, REQ-026, REQ-042.
@@ -187,3 +192,25 @@ Established D-IDs reflect the user's confirmed Step 01 baseline. All Q-IDs below
 ## Review priority
 
 For Step 02, review the established baseline and roadmap; there is no missing source input blocking foundation work. Before Step 03, prioritize Q-01, Q-03, Q-08, Q-11, Q-14, Q-15, Q-17 and Q-18 because they affect persistent structures or identity. Before the booking engine, resolve Q-04–Q-10, Q-16 and Q-19. Financial/product details must be settled before their owning steps. Future execution evidence remains mandatory even after a decision is approved.
+
+## Step 05 design review
+
+The explicit Step 05 prompt supersedes historical step numbers in earlier Q-ID gates: this step designs only; actual Oracle execution and later feature activation require separate authorization. The [database package](../database/README.md) is the concrete review proposal. None of the recommendations below is silently approved; D-13 records only explicit user architecture.
+
+| Question | Source conflict/gap and impact | Proposed resolution / concrete design | Gate |
+| --- | --- | --- | --- |
+| Q-01 / Q-03 | ARCH 7.5 used zoned timestamps; schema PDF lists account creation before ATP; broad bootstrap has duplicate PLATFORM_ADMINS PK/UK and redundant HOLIDAYS index | D-13 fixes UTC plain timestamp direction; provision ATP before accounts. Target 19c-compatible design, verify actual release. Omit duplicate key/index in new MVP baseline; retain source uploads. [Migration strategy](../database/migration-strategy.md) | Representation explicit; target/compiler/execution verification still mandatory |
+| Q-12 | Catalog creates 61 tables, including excluded features | Proposed MVP-only baseline includes 52 source tables, excludes nine; add exactly two justified association/snapshot tables. [Disposition](../database/mvp-table-scope.md) | Structural approval before executable baseline |
+| Q-04 | Source create locks resource first while conversion locks hold first; no exclusion mechanism for maintenance | Shared tenant admission mutex, then fixed sorted subscription/location/resource/hold/booking/payment order. Maintenance rejects overlapping active holds/bookings, never becomes a third slot owner. [Transactions](../database/booking-invariants.md) | Lock protocol acceptance and real races before booking implementation; throughput unmeasured |
+| Q-05 / Q-06 | No immutable buffer occupancy snapshots; open-hours CHECK can accept missing times as UNKNOWN; API permits one weekday interval | Explicit non-null conditional checks, quarter-hour buffer snapshots and occupied instants; proposed SEGMENT_NO for overnight segments. Oracle partially-null unique keys already enforce equal remaining key components, so no null-uniqueness workaround is assumed. [Constraints](../database/relationships-and-constraints.md) | Accept buffer/overnight policy and deliberate API schema change before schedule migration/routes |
+| Q-07 | Confirmation pricing versus already-quoted hold | Protect committed hold quote; snapshot price-rule ID, rate, currency, buffers/policy; start-time hourly rule and half-up line rounding. [Booking](../database/booking-invariants.md) | Policy acceptance before pricing/hold workflows |
+| Q-08 / Q-14 | Sessions lack audience/active membership; API-addressable tables lack public UUIDs | Session audience + all-or-none membership/user FK; explicit public IDs listed in dictionary, associations keep composite PKs. [Dictionary](../database/data-dictionary.md) | Shape acceptance before migration/auth; cookie/proxy trust remains separate |
+| Q-09 / Q-11 | Hash-only tokens cannot be reconstructed for async email/replay; notification tenant is required even for pre-tenant account mail; nullable scope can bypass log FK | Proposed external-key deterministic purpose-separated HMAC token derivation with record UUID/key version and stored digest only. Scoped platform/tenant notification/log records with non-null normalized scope FK; global/email-only templates. Outbox enqueue is atomic; jobs use fenced leases. [Operations](../database/operational-data.md) | Security/operational schema review before implementation; key access/rotation must be tested |
+| Q-17 | Invitation branch list exists in API but no pending assignment storage | Add INVITATION_LOCATIONS composite PK and tenant-safe invitation/location FKs; recheck every role/branch on acceptance and create STAFF_ASSIGNMENTS atomically. No owner invite expansion. | Structural approval before staff schema/auth linking |
+| Q-10 | Source term rows do not preserve assigned plan limits; suspended current term omitted from unique-current index | Add immutable subscription term/feature snapshots, proposed SCHEDULED future-renewal state, include SUSPENDED among current rows, tenant-gated overlap/date checks. [Finance](../database/financial-rules.md) | Structural/lifecycle acceptance before subscription migrations; no automatic billing |
+| Q-02 / Q-20 / Q-22 | Three active payment labels versus five source states; OTHER method/sport extra; refund versus collection/outstanding ambiguity | Propose full venue settlement/refund only, zero-value PAID/no receipt, no overpayment/recollection after refund/cancellation; document all five derived states and precedence. Restrict venue methods to three; seed eight named sports. Separate service-date value, receipt-date collection and refund-date net reporting. [Finance](../database/financial-rules.md) | Product decision before finance workflow; partial labels remain dormant, not approved |
+| Q-19 | Retry key lacks proven owner/lease; original-envelope replay conflicts with fresh Step 04 request IDs | Add owner scope/type, execution state/fencing, safe payload/status cache; re-authorize replay and reconstruct current request envelope. No raw bearer credential persisted. | Security/shape acceptance before idempotency implementation; numeric TTL remains Q-23 |
+| Q-21 | Holiday deactivation has no status; booking preference/policy snapshots absent; invoice number URL omits tenant while key is tenant-qualified | Add holiday status and relational booking preference/policy snapshots. Require tenant-qualified invoice resolution or separately approve global invoice numbering. Proposed no automatic customer merges/account links; staff may select an authorized existing customer. Published website edits stay direct as MVP states; no draft-version subsystem added. | Schema review before affected migrations; approve customer matching and invoice route before endpoints |
+| Q-23 / Q-13 | Numeric retention, retry timing, trial/grace/access and operational recovery policy not supplied | Record explicit owners/gates; no purge until retention accepted, bounded source retry count 5 proposed, durations/TTL remain configuration to approve. No guessed legal compliance, commercial plan prices or recovery result. | Retention/security before affected jobs; recovery before destructive/commercial work |
+
+Execution blockers are structural proposal acceptance, exact target capabilities/privileges and reviewed executable migrations. Feature-specific gates can follow in their owning step if no incompatible schema assumption is committed: trial/grace durations, permission mapping, customer matching, invoice addressing, retention, abuse thresholds and provider policy. A conditional design can be reviewed now; it is not unconditional permission to deploy or run the broad bootstrap.

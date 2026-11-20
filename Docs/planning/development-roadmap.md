@@ -1,8 +1,8 @@
 # MVP development roadmap
 
-Current status: **Step 04 API conventions awaiting user verification**. Step 05 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
+Current status: **Step 05 database design awaiting user review**. Step 06 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
 
-The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. No later step is authorized here.
+The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. The explicit Step 05 prompt assigns database design only; earlier UI/auth/Oracle implementation milestones remain deferred. No later step is authorized here.
 
 All steps follow the [definition of done](../quality/definition-of-done.md), [product quality bar](../design/product-quality-bar.md) and [decision register](decision-register.md). Audit, authorization, accessibility, localization and relevant tests accompany each feature; they are not a final-phase backlog.
 
@@ -57,7 +57,15 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Requirements:** REQ-002–008, REQ-044, REQ-046, REQ-051–052, REQ-064.
 - **Status:** Not started.
 
-## Step 05 — UI foundation
+## Step 05 - MVP database design
+
+- **Objective:** Establish the reviewable MVP dictionary, relationships, constraints and migration design without database execution.
+- **Dependencies:** Supplied MVP/architecture/schema/API sources and explicit Step 05 confirmed architectural direction.
+- **Outputs:** [Database package](../database/README.md), full catalog disposition, proposed exact dictionary/constraints, transactions/finance/operations/index/migration designs, three ERDs and read-only structural checker; decision/traceability evidence updated.
+- **Verification gate:** Complete catalog/column coverage, compatible tenant-safe FK keys, slot XOR/resource consistency, consistent statuses/lock protocol, index/dependency/ERD/link checks and unchanged source/app artifacts. Oracle tests remain future work.
+- **Status:** Awaiting user review. No provisioning, DDL, database connection or Step 06 implementation.
+
+## Deferred UI foundation (previous Step 05 baseline)
 
 - **Objective:** Establish reusable visual and interaction foundations for four application experiences.
 - **Dependencies:** Step 04 identity/navigation boundaries and approved [quality bar](../design/product-quality-bar.md).

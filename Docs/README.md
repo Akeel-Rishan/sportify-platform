@@ -1,6 +1,6 @@
 # SPORTIFY documentation
 
-Current stage, 20 November 2026: **Step 04 API foundation awaiting user verification**. The API now has versioned response/error conventions, server-owned request IDs, safe structured logs, runtime DTO validation and application-only health/readiness endpoints. Step 03 quality tooling, static web foundation and idle worker remain in place. Business workflows and Oracle are not connected. The Step 01 baseline below remains the requirements reference; see [progress](planning/progress.md) for executed checks and limitations.
+Current stage, 20 November 2026: **Step 05 MVP database design awaiting user review**. The [database design package](database/README.md) defines the proposed MVP boundary, dictionary, constraints, transactions, financial rules, migration design and three ERDs. Oracle has not been provisioned or tested. Steps 01-04 remain the runnable application foundation; business workflows are not implemented. See [progress](planning/progress.md) for actual evidence and review gates.
 
 The workspace already uses `Docs/`. Keep that spelling in paths and links, including on case-sensitive Linux systems; it is the existing equivalent of the requested `docs/` directory. Original uploads remain in place. There is no `docs/source/` directory.
 

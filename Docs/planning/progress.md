@@ -1,6 +1,48 @@
 # SPORTIFY progress
 
-## Current status: Step 04 awaiting user verification
+## Current status: Step 05 awaiting user review
+
+Updated 20 November 2026. Step 05 delivers the proposed MVP database design package; **Step 06 remains pending**. No Oracle provisioning, account creation, connection, DDL/DML execution, migration framework or business feature was performed. No commit, push, deployment or remote infrastructure change was made. Prior step records below remain historical evidence.
+
+### Step 05 design delivered
+
+- [Database index](../database/README.md) records actual sources found/missing, conservative Oracle 19c compatibility target and official evidence. All 61 source catalog tables have dispositions: 52 required, nine deferred. Proposed INVITATION_LOCATIONS and SUBSCRIPTION_FEATURE_SNAPSHOTS bring the review design to 54 tables.
+- [Dictionary](../database/data-dictionary.md) covers 607 exact columns with datatypes, nullability/defaults, meanings, validation, immutability and table ownership/lifecycle/sensitivity. [Relationships](../database/relationships-and-constraints.md) defines 472 named proposed/source constraints, including 93 FKs with matching parent keys.
+- [Booking design](../database/booking-invariants.md) separates slot PK/XOR/resource guarantees from application invariants, defines UTC/local/overnight/buffer/price snapshots and one locking protocol, and provides five transactional pseudocode workflows with maintenance exclusion and complete rollback.
+- [Finance](../database/financial-rules.md) defines separate ledgers, exact decimal calculations, full/partial summary precedence, zero-value/cancellation/refund/void behavior and manual subscription/entitlement history. Unapproved product policies remain explicit proposals.
+- [Operations](../database/operational-data.md) defines outbox-to-job atomic enqueue, fenced worker leases, scoped notifications/audit/idempotency, hash-only credential reconstruction proposal and safe payload/retention boundaries.
+- [Index plan](../database/index-plan.md) distinguishes 256 key/index access paths and workload reasons, omitting a redundant HOLIDAYS index and duplicate PLATFORM_ADMINS unique key. [Migration strategy](../database/migration-strategy.md) establishes ATP-before-accounts, one MVP-only baseline/ledger, session-level serialization, checksums, PL/SQL-aware execution and partial-DDL recovery without rollback promises.
+- Three MVP Mermaid ERDs and [future verification plan](../database/verification-plan.md) accompany a read-only standard-library checker at `database/design/verify-design.py`. Decisions/traceability/roadmap/index are updated; only explicit user architecture becomes D-13, not approval of new policy proposals.
+
+### Step 05 verification evidence
+
+| Check                   | Actual result                                                                                                                                                                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sources                 | Read 29-page MVP, 53-page architecture and eight-page schema overview PDFs, full detailed schema/API Markdown, supplied SQL and ERDs, OpenAPI identifier schemas and current planning/quality instructions                      |
+| Artifact inventory      | Both named SQL files and three ERDs exist; source bootstrap statically contains 61 tables, 361 named constraints and 90 explicit indexes. No executable repository migrations/grants or actual ATP evidence exists              |
+| Structural checker      | Passed catalog/disposition coverage, 54 dictionaries/607 column definitions and source-column preservation; all 93 FKs have exact compatible parent keys; tenant-owned rows have non-null tenant keys                           |
+| Reservation structure   | Verified exact tenant/resource/slot PK, explicit XOR owner branches and both tenant/item/resource owner FKs; enforcement/race tests remain future Oracle work                                                                   |
+| Index/dependency checks | All FKs have a leading index/key path, exact duplicate key/index expressions are rejected, dependency order is acyclic apart from two explained optional self-FKs; registry is explicitly first                                 |
+| ERDs                    | All three rendered with temporary Mermaid CLI 11.12.0 in isolated headless Chrome and were visually inspected; included tables/edges/column types were cross-checked against Markdown. Render outputs are ignored tmp files     |
+| Links/requirements      | Local Markdown targets/anchors and referenced REQ IDs/ranges resolve; review links identify policy gates rather than silently approving them                                                                                    |
+| Semantic review         | Reviewed NULL/UNKNOWN conditional checks, nullable scope FK bypass, UUID/large NUMBER boundaries, one lock hierarchy, immutable prices, partial-status conflict, retry/token secrecy, separate finance and partial-DDL recovery |
+
+Final repository formatting and `git diff --check` passed. SHA-256 comparison confirmed all 21 source uploads and 69 application/shared-package files unchanged; temporary render/parser outputs remain ignored. No real credentials, executable migration or generated application output was added.
+
+The local PDF reader was installed only into ignored tmp and renderer dependencies only into npm's temporary cache; no application dependency or global runtime was changed. The transient renderer emitted a legacy Puppeteer support warning; this is not an application dependency/security audit result. Intermediate checker failures exposed a column-name regex omission and broken/missing draft anchors; those were corrected before passing.
+
+### Step 05 remaining gates and review
+
+The package is ready for design review, not unconditionally ready for database execution. Accept structural additions, lock/maintenance strategy, overnight/buffer/API amendments, protected quote policy, financial/zero-value policy, scoped operations/token reconstruction and subscription snapshots first. Actual target release/charset/privileges and a reviewed executable MVP baseline are execution prerequisites. Customer matching, invoice routing, trial/grace/retention/replay/backoff values and permission/provider policies remain named feature-specific gates.
+
+All DBV-01 through DBV-26 Oracle tests are unexecuted: no constraint/transaction/concurrency/query-plan/TLS/driver/grant/recovery pass is claimed. Application tests/builds were not rerun for documentation-only edits; Step 04's 85-case results remain historical. Existing web/application behavior is preserved. No commercial or production readiness is established.
+
+- [ ] Review the 52 included/nine deferred table boundary and two proposed additions.
+- [ ] Review the dictionary/ERDs and [decision proposals](decision-register.md#step-05-design-review), especially locking, overnight/buffers, financial scope and token security.
+- [ ] Run `python database/design/verify-design.py` and inspect the three Mermaid diagrams.
+- [ ] Accept/revise the design and provide the next scoped prompt before implementation. Do not run the original broad bootstrap as an approved MVP migration.
+
+## Historical Step 04 record — awaiting user verification
 
 Updated 20 November 2026. Step 04 API conventions and operational endpoints are implemented and locally verified on Windows x64. **Step 05 is pending.** Oracle, identity, tenancy and business workflows remain unimplemented. No commit, push, deployment, remote infrastructure/settings change or remote CI execution was performed. Earlier step sections below are historical snapshots.
 
