@@ -1,0 +1,7 @@
+-- DESIGN EXAMPLE ONLY. Intentionally contains NO executable GRANT statements.
+-- Business objects do not exist in Step 06.
+-- Each reviewed future migration must list specific schema-qualified objects,
+-- per-runtime SELECT/INSERT/UPDATE/DELETE or wrapper EXECUTE needs and any
+-- narrower column UPDATE grants. No ALL, ANY, grant option, owner credentials,
+-- ledger-write access or blanket cross-schema grants for runtimes.
+-- Review API versus worker duties separately and verify negative access.

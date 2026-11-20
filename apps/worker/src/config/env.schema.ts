@@ -1,3 +1,4 @@
+import { parseDatabaseConfig, type DatabaseConfig } from '@sportify/database';
 import { nodeEnvSchema, parseEnvironment, type Environment } from '@sportify/validation';
 import { z } from 'zod';
 
@@ -8,4 +9,9 @@ export function parseWorkerEnv(environment: Environment): WorkerEnv {
   return parseEnvironment(workerEnvSchema, environment, {
     NODE_ENV: 'expected development, test or production; empty values are invalid',
   });
+}
+
+export type WorkerConfig = WorkerEnv & { database: DatabaseConfig };
+export function parseWorkerConfig(environment: Environment): WorkerConfig {
+  return { ...parseWorkerEnv(environment), database: parseDatabaseConfig(environment, 'worker') };
 }

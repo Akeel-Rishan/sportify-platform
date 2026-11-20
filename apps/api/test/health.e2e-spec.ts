@@ -2,6 +2,7 @@ import { afterEach, expect, it } from 'vitest';
 import type { ApiResponse, HealthResponse, ReadinessResponse } from '@sportify/api-contracts';
 import { httpFixture } from './support/http-fixture.js';
 import { ReadinessService } from '../src/modules/health/readiness.service.js';
+import { vi } from 'vitest';
 
 let fixture: Awaited<ReturnType<typeof httpFixture>> | undefined;
 afterEach(async () => {
@@ -9,11 +10,11 @@ afterEach(async () => {
   fixture = undefined;
 });
 
-it('reports safe liveness and initialized application-only readiness with no-store', async () => {
+it('reports safe liveness and initialized application-and-Oracle readiness with no-store', async () => {
   fixture = await httpFixture();
   for (const [path, expected] of [
     ['health', { status: 'ok', service: 'sportify-api' }],
-    ['ready', { status: 'ready', scope: 'application' }],
+    ['ready', { status: 'ready', scope: 'application-and-oracle' }],
   ] as const) {
     const response = await fetch(`${fixture.url}/api/v1/${path}`);
     const body = (await response.json()) as ApiResponse<HealthResponse | ReadinessResponse>;
@@ -33,10 +34,12 @@ it('reports safe liveness and initialized application-only readiness with no-sto
 it('returns a safe 503 for injected unavailable readiness while liveness remains 200', async () => {
   class Unavailable extends ReadinessService {
     override isReady() {
-      return false;
+      return Promise.resolve(false);
     }
   }
-  fixture = await httpFixture(new Unavailable());
+  fixture = await httpFixture(
+    new Unavailable({ check: () => Promise.resolve(false), stopAccepting: () => {} }),
+  );
   const response = await fetch(`${fixture.url}/api/v1/ready`);
   const body = (await response.json()) as ApiResponse<never>;
   expect(response.status).toBe(503);
@@ -50,11 +53,31 @@ it('returns a safe 503 for injected unavailable readiness while liveness remains
 });
 
 it('marks readiness unavailable before bootstrap and after module destruction', async () => {
-  const state = new ReadinessService();
-  expect(state.isReady()).toBe(false);
+  const state = new ReadinessService({
+    check: () => Promise.resolve(true),
+    stopAccepting: () => {},
+  });
+  expect(await state.isReady()).toBe(false);
   fixture = await httpFixture(state);
-  expect(state.isReady()).toBe(true);
+  expect(await state.isReady()).toBe(true);
   await fixture.app.close();
   fixture = undefined;
-  expect(state.isReady()).toBe(false);
+  expect(await state.isReady()).toBe(false);
+});
+
+it('observes injected dependency outage and recovery over real HTTP without affecting liveness', async () => {
+  let now = 0;
+  const dependency = { check: vi.fn().mockResolvedValue(true), stopAccepting: vi.fn() };
+  fixture = await httpFixture(new ReadinessService(dependency, () => now));
+  expect((await fetch(`${fixture.url}/api/v1/ready`)).status).toBe(200);
+  dependency.check.mockRejectedValueOnce(new Error('PRIVATE_ORACLE_PASSWORD_ENDPOINT_SENTINEL'));
+  now = 1000;
+  const response = await fetch(`${fixture.url}/api/v1/ready`);
+  expect(response.status).toBe(503);
+  expect(response.headers.get('cache-control')).toBe('no-store');
+  expect(await response.text()).not.toContain('PRIVATE_ORACLE');
+  expect((await fetch(`${fixture.url}/api/v1/health`)).status).toBe(200);
+  now = 2000;
+  expect((await fetch(`${fixture.url}/api/v1/ready`)).status).toBe(200);
+  expect(JSON.stringify(fixture.records)).not.toContain('PRIVATE_ORACLE');
 });

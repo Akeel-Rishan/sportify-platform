@@ -50,3 +50,11 @@ For failures, run the failing command or a focused `pnpm exec vitest run path/to
 ## Future suites
 
 Oracle integration belongs to an explicit later step, runs against actual isolated Oracle, and proves constraints/transactions/concurrency with separate connections. No mock or SQLite result substitutes for it. Browser end-to-end and accessibility suites will exercise real connected workflows separately; their tooling is not installed here. No business feature, deployment, database migration or cloud service is required by the current suite.
+
+## Step 06 Oracle boundary tests
+
+`pnpm test` and `pnpm test:coverage` include `packages/database/src/**/*.test.ts`, API readiness unit/real-HTTP tests and worker lifecycle tests. Driver mocks are explicitly unit tests: no real Oracle query/transaction/TLS evidence is implied. Environment loader tests inject isolated placeholder credentials, retain process/file precedence and skip local files in test/production. HTTP fixtures use production configureApp and inject readiness state; production application tests inject a fake database factory and close all applications/pools. Fake timers/listeners are restored. No production test controller, endpoint or database-health toggle was added.
+
+The real suite is explicitly invoked as `pnpm test:oracle` (or separate `pnpm oracle:connectivity` / `pnpm oracle:privileges`), excluded from normal tests/checks/PR CI. It fails prerequisites with exit 1 instead of skipping when target designation or secrets are absent. See [live requirements, safe checks and pending fixture/outage gates](../database/oracle-verification.md). No runtime DDL rights or business mutations are allowed for tests. Transaction persistence remains pending until an approved owner-created disposable fixture and cleanup protocol exist.
+
+The mTLS follow-up adds wallet configuration failures (missing/empty/relative/NUL paths or missing password), real temporary-file metadata/readability preflight tests (missing, empty, directory versus regular file) and exact forwarding of walletLocation/walletPassword to the mocked driver. Dummy wallet files contain authored non-certificate text and are removed after tests. These checks do not parse actual wallet material or prove decryption/TLS/Oracle behavior. A normal build/PR test run never requires a real wallet or credentials.

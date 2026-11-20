@@ -1,6 +1,6 @@
 # Environment configuration
 
-The application validates only configuration currently consumed by the scaffold. No Oracle, email, OCI, authentication or API URL variable is required. Configuration errors name the variable and its rule, without echoing values or dumping environment objects.
+Step 06 adds required Oracle runtime configuration to API and worker. Email, OCI, authentication and frontend API URL configuration remain deferred. Configuration errors name the variable and its rule, without echoing values or dumping environment objects.
 
 | Application | Variable                   | Absent default              | Accepted explicit values                                    |
 | ----------- | -------------------------- | --------------------------- | ----------------------------------------------------------- |
@@ -53,3 +53,24 @@ NODE_ENV=development PORT=4100 pnpm dev:api
 ```
 
 If startup fails, read the named variable rule and correct the source with highest precedence. An invalid explicitly supplied value does not fall back to a valid file/default. Remove temporary terminal overrides after use. Nonconfiguration startup failures retain a generic safe message; HTTP request errors now use the [Step 04 safe error conventions](../api/errors.md); startup errors remain separate from HTTP responses.
+
+## Step 06 server-only Oracle variables
+
+API/worker executable loaders now return base configuration plus `database`, parsed before allocating resources. Base NODE_ENV/PORT parsers remain independently testable. The same process > .env.local > .env precedence applies to Oracle values. Missing credentials fail startup; ordinary builds/tests require no real secrets. Do not copy owner/ADMIN credentials into either app. Placeholders in examples deliberately cannot establish a real connection.
+
+| Variable                 | API / worker rule and absent default                                                                            |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| ORACLE_USER              | Required exact SPORTIFY_API / SPORTIFY_WORKER respectively                                                      |
+| ORACLE_PASSWORD          | Required nonempty protected password, maximum 1024 characters; never returned to HTTP/logs                      |
+| ORACLE_WALLET_DIRECTORY  | Required absolute directory containing a readable, nonempty regular ewallet.pem; outside the checkout           |
+| ORACLE_WALLET_PASSWORD   | Required nonempty separately supplied instance-wallet decryption password, maximum 1024 characters              |
+| ORACLE_CONNECT_STRING    | Required option-free `tcps://host:port/service`, valid port 1-65535 from the actual mTLS connection information |
+| ORACLE_SCHEMA_OWNER      | Fixed allowlisted SPORTIFY_SCHEMA_OWNER; default same; no arbitrary SQL identifier                              |
+| ORACLE_POOL_MIN          | Integer 0 through maximum; default 0                                                                            |
+| ORACLE_POOL_MAX          | API 1-8 default 8; worker 1-2 default 2                                                                         |
+| ORACLE_POOL_INCREMENT    | Integer 1 through maximum; default 1                                                                            |
+| ORACLE_POOL_IDLE_SECONDS | Integer 10-3600; default 60                                                                                     |
+| ORACLE_QUEUE_TIMEOUT_MS  | Integer 100-5000; default 1500                                                                                  |
+| ORACLE_CALL_TIMEOUT_MS   | Integer 100-5000; default 1500 per round-trip                                                                   |
+
+No ORACLE variable is public or belongs in NEXT_PUBLIC/shared-config. Config objects hold secrets in process memory: never serialize them into props, logs or diagnostic dumps. No password/descriptor values appear in validation errors. The user-selected mTLS implementation requires protected wallet material; wallet setup and [driver evidence](../database/secure-connectivity.md) are documented without a walletless fallback or second config branch. Production must inject credentials externally. [Rotation](../../database/provisioning/README.md) recreates pools through process restart. Live verification has its own explicit designation/password variables documented in [Oracle verification](../database/oracle-verification.md); those are not app config.

@@ -1,6 +1,48 @@
 # SPORTIFY progress
 
-## Current status: Step 05 awaiting user review
+## Current status: Step 06 awaiting user verification; live gate incomplete
+
+Updated 20 November 2026. Step 06 adds local account preparation/connectivity code only. **Live Oracle provisioning and verification are BLOCKED**: the user has selected required mTLS and reports creating an Always Free development instance, but exact database identity/status, protected wallet and runtime account credentials have not been verified. No database/cloud/network action, account/password change, business object, migration, commit, push or deployment was performed by the agent. Step 07 remains pending and is not authorized. Step 05 product/schema proposals retain their review gates.
+
+### Step 06 implementation
+
+- Private server-only `@sportify/database`, pinned node-oracledb 26.0.0 / type declarations 26.0.1, compiled CommonJS/Node16 exports, web import boundary and dependency-ordered builds.
+- User-selected Thin mTLS supersedes the earlier walletless assumption: required absolute wallet directory and separate password, pre-allocation ewallet.pem readability/regular-file/nonempty checks, strict certificate/DN matching, option-free TCPS strings and safe configuration errors. Only this selected mode is implemented; no Thick/native dependency added.
+- One pool per process, API max 8 / worker 2, finite queue/connect/call/drain budgets; minimum zero deliberately separates pool initialization from a working connection claim. Per-checkout rollback/UTC reset, scoped parameterized calls, explicit transactions, safe cleanup classification, exact NUMBER strings and explicit timestamp projections. Nested/parallel/detached connection misuse is rejected; no arbitrary write retry.
+- API readiness now requires a real runtime-pool SELECT/session check, coalesces concurrent probes and caches outcomes for 1 second. Liveness remains process-only. Request IDs, safe 503/no-store and the responsive web foundation are preserved. Worker remains idle, without HTTP/jobs.
+- SQLcl runbook prepares locked no-authentication accounts with narrowly required direct privileges and finite owner quota, then hidden password prompts/manual unlock and read-only catalog postconditions. Scripts refuse existing accounts, document non-atomic DDL and require operator-reviewed recovery; they were not run.
+- Explicit process-environment-only connectivity and privilege commands verify target/identities, UTC, exact binds/conversions, release after failure and restricted grants when authorized. Missing designation/credentials fails instead of skipping; normal tests/PR CI never call a live target.
+
+### Step 06 verification evidence
+
+Baseline `pnpm check` completed through format/lint/typecheck, 85 tests and all production builds before edits. The following table records initial Step 06 checks before the mTLS follow-up; current mTLS results follow below:
+
+| Check                            | Actual result                                                                                                                                                                                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dependency resolution            | Exact driver/type pins installed; frozen-lockfile installation passed for all nine workspace projects. Driver optional install-check script remains unapproved; no native/client setup                                                        |
+| `pnpm check`                     | Passed formatting, lint with zero warnings, strict typechecking, 12 files / 133 tests and all production builds, including unchanged web                                                                                                      |
+| `pnpm test:coverage`             | Passed existing coverage gates: 92.41% statements, 87.59% branches, 89.24% functions, 93.07% lines overall; database package 95.28% statements / 92.06% branches / 95.87% lines. Source main executable paths remain uncovered by Vitest      |
+| Compiled API harness             | Real ephemeral HTTP using compiled production factory with explicitly mocked database: health/ready 200, unknown route 404, injected dependency failure 503, matching request IDs/completion logs, no-store and pool lifecycle cleanup passed |
+| Compiled worker harness          | Explicitly mocked pool: idle start, stop acceptance and idempotent close passed; no HTTP server. Direct built API/worker main processes with isolated missing-credential environments both exited 1 with safe prerequisite errors             |
+| Live-command prerequisite guards | Both compiled-package CLI tools invoked in isolated environments without target designation: exit 1 and clear prerequisite message before any connection. This verifies fail-closed behavior, **not** a passed live Oracle suite              |
+| Step 05 structural checker       | Read-only `python database/design/verify-design.py` passed dictionaries/FKs/slot/index/dependency/ERD/local-link checks; source SQL/uploads unchanged                                                                                         |
+| Target-dependent execution       | **BLOCKED / NOT RUN:** SQLcl provisioning/authentication/postconditions, TLS/Oracle queries and privileges, real-pool HTTP readiness, remote outage/recovery, persistent transaction fixture, Linux ARM64 and POSIX/load-balancer behavior    |
+
+Early type/lint failures and one missing standalone-tool workspace dependency exposed by the compiled harness were corrected before passing. No framework upgrades, disabled checks or production test routes were introduced. Final diff review found no web/source-upload changes, production test endpoints, broad lint suppressions, disabled tests, raw secret logging or insecure TLS settings. Generated Next declarations were restored to the clean starting state; build outputs/logs/reports and environment/wallet paths remain ignored. Normal repository Git whitespace checks and final documentation formatting passed.
+
+### mTLS follow-up verification
+
+User selected required mTLS for a changing laptop IP and reported database creation. Before this follow-up, all 133 existing tests passed. Added required wallet configuration, safe metadata preflight, pool wallet forwarding, separate secret documentation and isolated file fixtures. Final follow-up `pnpm check` passed formatting, zero-warning lint, strict typechecking, 13 files / 143 tests and all production builds. `pnpm test:coverage` passed: 92.59% statements, 87.87% branches, 89.47% functions and 93.23% lines overall; database package 95.65% statements and 96.19% lines. Compiled API/worker lifecycle/HTTP checks passed with explicit mocks; isolated missing-configuration mains and live-tool prerequisite guards exited 1 before connection as expected. No real Oracle test is represented by these mocks. The generated Next declaration was unchanged from this follow-up's starting state, and existing uncommitted work was preserved. No actual wallet/password/descriptor was read or printed, and no secret file was created. Dependencies/pins/lockfile were unchanged by this follow-up; the preceding frozen installation evidence still applies. Final documentation formatting, local links and whitespace were reviewed.
+
+### Step 06 remaining gates and user checklist
+
+1. Review [privilege matrix](../database/account-and-privilege-model.md), [secure mode/evidence](../database/secure-connectivity.md) and [SQLcl runbook](../../database/provisioning/README.md).
+2. Verify the actual authorized development/pilot ATP identity/status and supply its protected instance-wallet directory/password and separate runtime credentials through a secure local/deployment mechanism, never chat. The selected mode is mTLS; no connection has been attempted.
+3. Operator executes reviewed preparation/authentication/postconditions and records target version/quota/PUBLIC-grant review; rerun explicit [Oracle tools](../database/oracle-verification.md). No provisioning has been performed by this agent.
+4. Verify built API/worker with actual runtime pools, live readiness outage/recovery, session/privilege behavior and shutdown. Transaction persistence needs an approved disposable owner-created fixture; Linux ARM64/POSIX/load-balancer checks remain unexecuted.
+5. Confirm local web foundation remains unchanged. Do not begin business tables or Step 07 until the next explicit prompt and required gates.
+
+## Historical Step 05: awaiting user review
 
 Updated 20 November 2026. Step 05 delivers the proposed MVP database design package; **Step 06 remains pending**. No Oracle provisioning, account creation, connection, DDL/DML execution, migration framework or business feature was performed. No commit, push, deployment or remote infrastructure change was made. Prior step records below remain historical evidence.
 

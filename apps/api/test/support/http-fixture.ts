@@ -141,7 +141,12 @@ class ProofController {
 @Module({})
 class HttpTestModule {}
 
-export async function httpFixture(readiness: ReadinessService = new ReadinessService()) {
+export async function httpFixture(
+  readiness: ReadinessService = new ReadinessService({
+    check: () => Promise.resolve(true),
+    stopAccepting: () => {},
+  }),
+) {
   const records: RequestLogRecord[] = [];
   const events = new EventEmitter();
   const app = await NestFactory.create<NestExpressApplication>(

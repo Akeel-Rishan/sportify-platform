@@ -5,5 +5,5 @@ export interface HealthResponse {
 
 export interface ReadinessResponse {
   status: 'ready';
-  scope: 'application';
+  scope: 'application-and-oracle';
 }

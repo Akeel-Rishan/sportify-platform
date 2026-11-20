@@ -14,8 +14,8 @@ export class HealthController {
 
   @Get('ready')
   @Header('Cache-Control', 'no-store')
-  ready(): ReadinessResponse {
-    if (!this.readiness.isReady()) throw new ApplicationError('SERVICE_UNAVAILABLE');
-    return { status: 'ready', scope: 'application' };
+  async ready(): Promise<ReadinessResponse> {
+    if (!(await this.readiness.isReady())) throw new ApplicationError('SERVICE_UNAVAILABLE');
+    return { status: 'ready', scope: 'application-and-oracle' };
   }
 }

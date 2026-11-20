@@ -1,12 +1,12 @@
 import { resolve } from 'node:path';
 import { config } from 'dotenv';
 import { EnvironmentError, type Environment } from '@sportify/validation';
-import { parseWorkerEnv, type WorkerEnv } from './env.schema.js';
+import { parseWorkerConfig, type WorkerConfig } from './env.schema.js';
 
 export function loadWorkerEnv(
   injected: Environment = process.env,
   applicationDirectory = resolve(__dirname, '../..'),
-): WorkerEnv {
+): WorkerConfig {
   const environment = { ...injected };
   if (environment.NODE_ENV === undefined || environment.NODE_ENV === 'development') {
     for (const filename of ['.env.local', '.env']) {
@@ -23,5 +23,5 @@ export function loadWorkerEnv(
       }
     }
   }
-  return parseWorkerEnv(environment);
+  return parseWorkerConfig(environment);
 }

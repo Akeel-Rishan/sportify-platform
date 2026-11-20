@@ -108,7 +108,22 @@ export default [
         },
       },
     },
-    rules: { 'boundaries/no-client-server-config': 'error' },
+    rules: {
+      'boundaries/no-client-server-config': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '@sportify/database',
+            '@sportify/database/*',
+            '@sportify/web',
+            '@sportify/api',
+            '@sportify/worker',
+            '@sportify/*/src/**',
+          ],
+        },
+      ],
+    },
   },
   prettier,
 ];

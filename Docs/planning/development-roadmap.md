@@ -1,8 +1,8 @@
 # MVP development roadmap
 
-Current status: **Step 05 database design awaiting user review**. Step 06 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
+Current status: **Step 06 local connectivity awaiting user verification; live Oracle gate incomplete**. Step 05 design review gates remain; Step 07 and business implementation are pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
 
-The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. The explicit Step 05 prompt assigns database design only; earlier UI/auth/Oracle implementation milestones remain deferred. No later step is authorized here.
+The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. The explicit Step 05 prompt assigns database design only; earlier UI/auth/Oracle implementation milestones remain deferred. The scoped Step 06 prompt now authorizes account preparation/connectivity only, as recorded below; business implementation remains deferred.
 
 All steps follow the [definition of done](../quality/definition-of-done.md), [product quality bar](../design/product-quality-bar.md) and [decision register](decision-register.md). Audit, authorization, accessibility, localization and relevant tests accompany each feature; they are not a final-phase backlog.
 
@@ -74,7 +74,13 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Requirements:** REQ-053–056.
 - **Status:** Not started.
 
-## Step 06 — Onboarding and business configuration
+## Step 06 - Account preparation and secure Oracle connectivity (scoped prompt)
+
+- **Scope:** Operator SQLcl scripts/runbook, separate owner/API/worker identities, server-only Thin connection package, configuration, pools/UTC/transaction helpers, Oracle-required readiness and explicit verification tools.
+- **Status:** Local implementation awaiting user verification; the user selected mTLS and reports creating the development instance, but exact target identity, protected wallet and runtime credentials remain unverified, so account provisioning/live Oracle verification remains BLOCKED. No business tables or migration runner.
+- **Gate:** Local quality/build checks plus actual target confirmation, provisioning postconditions, TLS/session/privilege and real readiness verification. Driver mocks are not Oracle evidence. Stop here; Step 07 is not authorized.
+
+## Deferred onboarding and business configuration (historical Step 06)
 
 - **Objective:** Enable owners to save/resume business, sports, branch, facility, schedule, pricing and branding setup.
 - **Dependencies:** Steps 03–05; Q-05–06, Q-16, Q-18, Q-21–23 decisions needed for these contracts.

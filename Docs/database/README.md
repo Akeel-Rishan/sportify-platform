@@ -1,6 +1,6 @@
 # SPORTIFY MVP database design
 
-**Step 05: awaiting user review. Design only.** No Oracle instance, account, migration execution, driver connection or business feature was created. Existing Steps 01-04 and web application are preserved. This folder is the working MVP design; uploaded documents remain immutable historical inputs.
+**Step 05 design: awaiting user review. Step 06 adds local connectivity/provisioning artifacts; live gate remains BLOCKED.** The user reports creating an Always Free mTLS development instance. No account provisioning, migration execution, actual driver connection or business feature was performed by the agent. Existing Steps 01-04 and web application are preserved. This folder is the working MVP design; uploaded documents remain immutable historical inputs.
 
 ## Document ownership
 
@@ -47,3 +47,7 @@ Official references consulted on 20 November 2026:
 The [Step 05 decision register](../planning/decision-register.md#step-05-design-review) distinguishes explicit user direction from recommendations. Approve/revise MVP additions, locking/maintenance, buffers/overnight contract, protected hold pricing, partial/refund/zero-value policy, token reconstruction, scoped operational records and subscription history before dependent DDL/workflows. Trial/grace/retention/retry timing and customer matching remain named policy gates; no guessed value is a commercial approval.
 
 This package is ready for design review. It is **not yet unconditionally ready to execute database implementation**: accept structural/security blockers, verify actual target capabilities and prepare reviewed migrations first. All Oracle tests remain unexecuted. Step 06 is not started.
+
+## Step 06 implementation links
+
+[Accounts/privileges](account-and-privilege-model.md), [secure connection mode](secure-connectivity.md), [pool/session/transactions](connection-pooling.md), [Oracle verification gates](oracle-verification.md), and [operator provisioning](../../database/provisioning/README.md). The earlier source/missing-artifact inventory describes Step 05; local account scripts and driver code now exist, while actual ATP execution, business baseline and migration runner remain absent.

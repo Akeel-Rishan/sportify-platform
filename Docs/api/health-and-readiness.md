@@ -2,60 +2,63 @@
 
 ## Liveness
 
-`GET /api/v1/health` returns 200 and checks this API process only:
+`GET /api/v1/health` returns process-only HTTP 200 with no database operation:
 
 ```json
 {
   "success": true,
   "data": { "status": "ok", "service": "sportify-api" },
-  "requestId": "4b68fda1-4273-4aca-b3e0-6a0b7b154351"
+  "requestId": "<server-generated UUID>"
 }
 ```
 
-It does not call external services or reveal environment names, versions, hostnames, internal paths or configuration. Both endpoints are currently unauthenticated; future authentication must retain a deliberate probe policy.
+## Oracle-required readiness (Step 06)
 
-## Application readiness
-
-`GET /api/v1/ready` returns 200 once the application has bootstrapped:
+`GET /api/v1/ready` returns HTTP 200 only after Nest initialization and a successful runtime-pool probe with a UTC session:
 
 ```json
 {
   "success": true,
-  "data": { "status": "ready", "scope": "application" },
-  "requestId": "4b68fda1-4273-4aca-b3e0-6a0b7b154351"
+  "data": { "status": "ready", "scope": "application-and-oracle" },
+  "requestId": "<server-generated UUID>"
 }
 ```
 
-The injected ReadinessService starts false, becomes true at `onApplicationBootstrap`, and becomes false at `onModuleDestroy`. Normal `listen()` completes initialization before accepting HTTP traffic. A service reporting unavailable produces 503:
+The probe runs a bound SELECT from DUAL, checks its value and SESSIONTIMEZONE after the checkout UTC reset, and releases the connection. It verifies connectivity/session state, not business tables, authorization, booking/payment workflows or commercial readiness. Oracle is now a required implemented dependency; the earlier application-only response is superseded.
+
+Before initialization, after shutdown starts, or on a database/probe failure, return HTTP 503:
 
 ```json
 {
   "success": false,
-  "error": { "code": "SERVICE_UNAVAILABLE", "message": "The service is temporarily unavailable." },
-  "requestId": "4b68fda1-4273-4aca-b3e0-6a0b7b154351"
+  "error": {
+    "code": "SERVICE_UNAVAILABLE",
+    "message": "The service is temporarily unavailable."
+  },
+  "requestId": "<server-generated UUID>"
 }
 ```
 
-Liveness remains independent. Tests inject an unavailable service; there is no public toggle or fake dependency-health environment flag. Startup/shutdown state and failure responses are tested, but full load-balancer draining, proxy configuration and POSIX signal delivery are not implemented/proven here.
+Both routes are unauthenticated and set `Cache-Control: no-store`, including failures; HEAD contains no body. Fresh X-Request-ID matches body/completion/error records. No username, target, version, wallet path, raw driver error or internal diagnostics are exposed. Internal dependency events carry fixed classifications only; coalesced pool probes are process events, while HTTP completion/error events retain their own request IDs.
 
-**Oracle is not implemented or checked.** This response establishes application-only readiness, not booking, payment, tenant or commercial readiness. When Oracle integration is implemented, a real bounded Oracle readiness check must become a required condition before this endpoint can report ready. Do not substitute a mock or hardcoded healthy database flag.
+Simultaneous probes share one check. Both success and failure are cached for **1 second after completion**, measured monotonically. This bounds health pressure but permits up to one second of stale readiness; recovery is reevaluated after expiry. No public toggle or environment fake-health switch exists. Tests inject the dependency explicitly.
 
-Both endpoints set `Cache-Control: no-store`, including unavailable/error responses. They return the same fresh `X-Request-ID` in their response envelope and structured logs. HEAD responses contain no body. Early parser errors also use the standard safe envelope and no-store policy.
+Invalid configuration fails before allocation. Pool initialization errors fail startup safely without retry; minimum-zero pools can initialize without Oracle, so `/health` can remain live and `/ready` returns 503 until an actual probe succeeds. Connection/queue/call budgets and 5-second shutdown drain are documented in [pool lifecycle](../database/connection-pooling.md). These are per-operation driver limits, not a proven end-to-end network SLA or full load-balancer drain. Readiness is marked unavailable before pool shutdown and does not become healthy again if an in-flight check finishes during shutdown.
 
-## Local verification
+## Verification
 
-After a production build, run the API in a separate terminal:
+After operator provisioning and secure runtime setup:
 
 ```sh
 pnpm build
 pnpm --filter @sportify/api start
 ```
 
-Use `npx --yes pnpm@10.34.9` in place of pnpm if it is not installed. Windows and Unix can use Node's built-in fetch:
+Use `npx --yes pnpm@10.34.9` instead of pnpm if necessary. From another terminal, Windows and Unix can use:
 
 ```sh
 node -e "fetch('http://localhost:4000/api/v1/health').then(async r => console.log(r.status, r.headers.get('x-request-id'), await r.json()))"
 node -e "fetch('http://localhost:4000/api/v1/ready').then(async r => console.log(r.status, r.headers.get('cache-control'), await r.json()))"
 ```
 
-An unimplemented route returns normalized 404. Ctrl+C stops the API. Never add a production error-demo route to verify the filter; use the [HTTP integration suites](../development/testing.md).
+API `/` remains a safe 404. Ctrl+C stops the process. Do not start production and development APIs simultaneously on 4000. [Local HTTP tests](../development/testing.md) use injected database state and real Nest HTTP; they do not prove Oracle availability. [Explicit live suite and operator outage checks](../database/oracle-verification.md) remain BLOCKED until a designated target/mode and secure credentials exist. No Oracle provisioning or live connection was executed locally.

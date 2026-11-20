@@ -21,3 +21,11 @@ wallet/
 tmp/
 .DS_Store
 Thumbs.db
+
+# Oracle client configuration and wallet containers stay outside source.
+*wallet*.zip
+*Wallet*.zip
+*.jks
+tnsnames.ora
+sqlnet.ora
+ojdbc.properties

@@ -1,12 +1,12 @@
 import { resolve } from 'node:path';
 import { config } from 'dotenv';
 import { EnvironmentError, type Environment } from '@sportify/validation';
-import { parseApiEnv, type ApiEnv } from './env.schema.js';
+import { parseApiConfig, type ApiConfig } from './env.schema.js';
 
 export function loadApiEnv(
   injected: Environment = process.env,
   applicationDirectory = resolve(__dirname, '../..'),
-): ApiEnv {
+): ApiConfig {
   const environment = { ...injected };
   if (environment.NODE_ENV === undefined || environment.NODE_ENV === 'development') {
     for (const filename of ['.env.local', '.env']) {
@@ -23,5 +23,5 @@ export function loadApiEnv(
       }
     }
   }
-  return parseApiEnv(environment);
+  return parseApiConfig(environment);
 }

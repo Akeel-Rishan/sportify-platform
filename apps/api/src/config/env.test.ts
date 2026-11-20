@@ -1,10 +1,26 @@
 import { mkdtempSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { parseApiEnv } from './env.schema.js';
-import { loadApiEnv } from './env.js';
+import { loadApiEnv as rawLoadApiEnv } from './env.js';
 
+const databaseEnvironment = {
+  ORACLE_USER: 'SPORTIFY_API',
+  ORACLE_PASSWORD: 'unit-only-password',
+  ORACLE_CONNECT_STRING: 'tcps://unit.invalid:1521/unit',
+  ORACLE_WALLET_DIRECTORY: resolve('unit-wallet-not-loaded'),
+  ORACLE_WALLET_PASSWORD: 'unit-only-wallet-secret',
+};
+function loadApiEnv(injected?: Parameters<typeof rawLoadApiEnv>[0], directory?: string) {
+  return rawLoadApiEnv(
+    injected === undefined ? undefined : { ...databaseEnvironment, ...injected },
+    directory,
+  );
+}
+beforeEach(() => {
+  for (const [key, value] of Object.entries(databaseEnvironment)) vi.stubEnv(key, value);
+});
 const directories: string[] = [];
 afterEach(() => {
   for (const directory of directories.splice(0))

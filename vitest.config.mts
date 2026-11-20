@@ -29,7 +29,7 @@ export default defineConfig({
     environment: 'node',
     include: [
       'apps/{api,worker}/src/**/*.test.ts',
-      'packages/validation/src/**/*.test.ts',
+      'packages/{validation,database}/src/**/*.test.ts',
       'apps/api/test/**/*.e2e-spec.ts',
     ],
     clearMocks: true,
@@ -40,8 +40,12 @@ export default defineConfig({
     outputFile: { junit: 'test-results/unit.xml' },
     coverage: {
       provider: 'v8',
-      include: ['apps/{api,worker}/src/**/*.ts', 'packages/validation/src/environment.ts'],
-      exclude: ['**/*.test.ts'],
+      include: [
+        'apps/{api,worker}/src/**/*.ts',
+        'packages/validation/src/environment.ts',
+        'packages/database/src/**/*.ts',
+      ],
+      exclude: ['**/*.test.ts', '**/browser.ts'],
       reporter: ['text', 'json-summary', 'html', 'lcov'],
       thresholds: {
         'apps/*/src/config/*.ts': { statements: 95, branches: 90, functions: 95, lines: 95 },

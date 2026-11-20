@@ -1,6 +1,6 @@
 # Local development
 
-Step 04 retains Node 22.22.0 and pnpm 10.34.9. Run commands from the repository root. Use the existing `Docs/` spelling on case-sensitive systems. See [environment configuration](environment-configuration.md) and [testing](testing.md) for the added startup and quality boundaries.
+Step 06 retains Node 22.22.0 and pnpm 10.34.9. Run commands from the repository root. Use the existing `Docs/` spelling on case-sensitive systems. See [environment configuration](environment-configuration.md) and [testing](testing.md) for the added startup and quality boundaries.
 
 ## Clean checkout
 
@@ -8,7 +8,7 @@ Step 04 retains Node 22.22.0 and pnpm 10.34.9. Run commands from the repository 
 2. Confirm `node --version`. Run `pnpm --version` if pnpm exists. Otherwise use `npx --yes pnpm@10.34.9` wherever the commands below say `pnpm`. No global installation is required.
 3. Run `pnpm install --frozen-lockfile`.
 4. Run `pnpm check` for format, lint, typecheck, tests and production build. `pnpm test:coverage` adds scoped coverage gates. These commands work before generated shared outputs or Next.js route types exist.
-5. Run `pnpm dev`. Open http://localhost:3000. Each application has a readable process label. Ctrl+C stops the applications; the runner also stops siblings if an application exits.
+5. Securely configure both restricted Oracle runtime environments following [secure connectivity](../database/secure-connectivity.md) and [provisioning](../../database/provisioning/README.md). Without a designated target, use `pnpm dev:web` independently; API/worker intentionally fail on missing database configuration. Once configured, run `pnpm dev`. Open http://localhost:3000. Each application has a readable process label. Ctrl+C stops the applications; the runner also stops siblings if an application exits.
 
 ## Independent applications
 
@@ -59,4 +59,16 @@ Run the start commands in separate terminals. API/worker run compiled JavaScript
 - **Shared-package edits:** validation now contains consumed code. Rebuild shared packages after editing; development/watch-test startup builds them once, not continuously.
 - **Hydration warning with an extra `<html style="display: none">`:** on 20 November, a direct request to the development server returned HTTP 200 and `<html lang="en">` without that style. The layout has no root-style mutation, browser branching or changing data. This points to browser-side injection, but the responsible extension/script is not identified. Open the same local URL in a Guest profile or an Incognito window with extensions not permitted there. If the warning disappears, disable extensions for localhost individually to find the injector, then reload. If it persists in an extension-free profile, capture the new hydration diff and compare View Page Source with the Elements root node. Do not add `suppressHydrationWarning` as a fix for a hidden root: suppressing the warning does not remove the injected style. See the [Next.js hydration guidance](https://nextjs.org/docs/messages/react-hydration-error).
 
-Generated output, dependencies, logs, test reports, coverage, local environment files and wallets are ignored. Do not add real credentials. Environment validation and quality checks now exist; The API now serves application-only health/readiness and shared HTTP conventions; Oracle connectivity, deployment and all business workflows remain future work. See [API conventions](../api/conventions.md). Local tests do not demonstrate a remote GitHub Actions pass.
+Generated output, dependencies, logs, test reports, coverage, local environment files and wallets are ignored. Do not add real credentials. Environment validation and quality checks now exist; The API now serves shared HTTP conventions and Oracle-required readiness; connectivity code exists, actual Oracle verification is blocked, and deployment/business workflows remain future work. See [API conventions](../api/conventions.md). Local tests do not demonstrate a remote GitHub Actions pass.
+
+## Step 06 database prerequisite
+
+Installation, formatting, static checks, mock-backed tests and production builds work without Oracle. API/worker starts now require their separate credentials and the selected mTLS target and a protected instance wallet. Do not fabricate credentials to claim a working local stack. Development examples live in each app; replace placeholders only in ignored, OS-protected files, preserving any existing files. Production NODE_ENV skips local files. Do not echo environment values to troubleshoot.
+
+`pnpm dev:web` still runs the unchanged responsive foundation independently. Once authorized Oracle configuration exists, use `pnpm dev:api` and `pnpm dev:worker`, or `pnpm dev` for all three; Ctrl+C invokes application shutdown and bounded pool drain. Do not run production API start and dev API simultaneously on port 4000. An occupied port is separate from Oracle readiness; inspect the owning process and stop only the instance you intended to replace.
+
+A valid minimum-zero pool may initialize while Oracle is unavailable: health remains 200, ready is safe 503 until the bounded probe succeeds. Invalid env fails before startup with variable names/rules only. TLS failures require operator confirmation of target access/certificate/mode; never disable verification, open network access or print descriptors as a workaround. A Windows hard kill may bypass cleanup; restart after the operating system releases resources. See [pool lifecycle](../database/connection-pooling.md).
+
+### mTLS follow-up
+
+The user selected Secure access from everywhere with required mTLS for changing laptop IPs. Download/extract the **instance wallet outside the checkout**, following [wallet setup](../database/secure-connectivity.md#instance-wallet-setup). Supply ORACLE_WALLET_DIRECTORY and ORACLE_WALLET_PASSWORD privately to both runtimes, alongside their separate Oracle usernames/passwords. Use the exact mTLS host/port/service in ORACLE_CONNECT_STRING. Never use ADMIN in app envs. Readability validation happens before pool creation; missing/empty/invalid wallet errors name the field without disclosing material or paths. A readable PEM is not proof of a successful handshake. No local secret file has been created or populated by this follow-up.

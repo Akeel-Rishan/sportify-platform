@@ -1,3 +1,4 @@
+import { parseDatabaseConfig, type DatabaseConfig } from '@sportify/database';
 import { nodeEnvSchema, parseEnvironment, type Environment } from '@sportify/validation';
 import { z } from 'zod';
 
@@ -18,4 +19,9 @@ export function parseApiEnv(environment: Environment): ApiEnv {
     NODE_ENV: 'expected development, test or production; empty values are invalid',
     PORT: 'expected an integer from 1 to 65535, with no whitespace or suffix; empty values are invalid',
   });
+}
+
+export type ApiConfig = ApiEnv & { database: DatabaseConfig };
+export function parseApiConfig(environment: Environment): ApiConfig {
+  return { ...parseApiEnv(environment), database: parseDatabaseConfig(environment, 'api') };
 }

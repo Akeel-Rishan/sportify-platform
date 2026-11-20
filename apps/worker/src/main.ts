@@ -2,12 +2,13 @@ import { EnvironmentError } from '@sportify/validation';
 import { loadWorkerEnv } from './config/env.js';
 import { startWorker } from './worker.js';
 
-try {
+async function bootstrap(): Promise<void> {
   const config = loadWorkerEnv();
-  startWorker(config);
-} catch (error: unknown) {
+  await startWorker(config);
+}
+bootstrap().catch((error: unknown) => {
   console.error(
     error instanceof EnvironmentError ? `[worker] ${error.message}` : '[worker] Startup failed.',
   );
   process.exitCode = 1;
-}
+});

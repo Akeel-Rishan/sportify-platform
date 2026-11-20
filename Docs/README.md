@@ -1,6 +1,6 @@
 # SPORTIFY documentation
 
-Current stage, 20 November 2026: **Step 05 MVP database design awaiting user review**. The [database design package](database/README.md) defines the proposed MVP boundary, dictionary, constraints, transactions, financial rules, migration design and three ERDs. Oracle has not been provisioned or tested. Steps 01-04 remain the runnable application foundation; business workflows are not implemented. See [progress](planning/progress.md) for actual evidence and review gates.
+Current stage, 20 November 2026: **Step 06 local Oracle implementation awaiting user verification; live gate BLOCKED**. Account preparation scripts, restricted runtime identities, shared driver/pools, transaction helpers and Oracle-required API readiness are implemented. The user selected mTLS and reports creating the development instance; exact target identity/status, protected wallet and runtime credentials remain unverified. No account provisioning/live Oracle behavior is verified. Step 05 design review gates remain, and business schema/workflows and Step 07 are pending. See [progress](planning/progress.md).
 
 The workspace already uses `Docs/`. Keep that spelling in paths and links, including on case-sensitive Linux systems; it is the existing equivalent of the requested `docs/` directory. Original uploads remain in place. There is no `docs/source/` directory.
 
@@ -65,3 +65,10 @@ Use these labels consistently:
 | Implemented behavior | Working code with linked verification evidence; Step 02 covers foundation processes only, not business requirements |
 
 The traceability file owns requirement IDs and implementation status; the decision register owns reconciliation; the roadmap owns step gates; progress owns audit evidence. Cross-reference these rather than maintaining competing copies of their status.
+
+## Step 06 operations
+
+- [Account/privilege matrix](database/account-and-privilege-model.md) and [SQLcl provisioning runbook](../database/provisioning/README.md).
+- [Secure connectivity and exact official driver references](database/secure-connectivity.md).
+- [Pool/session/transaction ownership and UTC precision](database/connection-pooling.md).
+- [Explicit live verification and remaining gates](database/oracle-verification.md).
