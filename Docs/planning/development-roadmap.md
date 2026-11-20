@@ -1,6 +1,8 @@
 # MVP development roadmap
 
-Status: **awaiting user review**. Only Step 01 has been performed. Step 02 onward is **Not started** and requires a subsequent user prompt. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01.
+Current status: **Step 02 awaiting user verification**. Step 03 onward remains pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01.
+
+The later Step 02 prompt moves lint/format/test infrastructure and CI to Step 03 and excludes environment validation, Oracle and business functionality from Step 02. It supersedes the earlier Step 02 wording and immediate next-step scope below. Preserve the remaining product dependency plan as a baseline; follow the user's next scoped prompt before implementing Step 03 or moving the later Oracle/auth steps. No new step is implicitly authorized here.
 
 All steps follow the [definition of done](../quality/definition-of-done.md), [product quality bar](../design/product-quality-bar.md) and [decision register](decision-register.md). Audit, authorization, accessibility, localization and relevant tests accompany each feature; they are not a final-phase backlog.
 
@@ -16,10 +18,10 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 
 - **Objective:** Establish the minimal pnpm TypeScript monorepo after Step 01 review.
 - **Dependencies:** Reviewed Step 01 baseline and explicit Step 02 instruction. No Oracle credentials needed to begin foundation work.
-- **Outputs:** Proposed then validated Node/pnpm/framework/tool versions and ARM64 compatibility matrix; minimal web/API/worker/shared-package structure; lint/typecheck/build/test entry points; environment variable contract and safe examples. Establish Git only as authorized in the next-step scope; no commit/push without request. Update documentation to reflect actual commands.
-- **Verification gate:** Version/support and ARM64 evidence recorded, clean local install/build/typecheck/lint for created packages, no production secrets. Empty runtime skeletons must not be described as business functionality.
+- **Outputs:** Pinned Node/pnpm/framework/tool versions and ARM64 support evidence; minimal web/API/worker/shared-package structure, install/dev/build/typecheck commands and setup documentation. Existing Git repository preserved; no commit/push requested.
+- **Verification gate:** Frozen install, clean-output build/typecheck, development/production startup and shutdown, package export and hygiene checks. Browser inspection must pass or be explicitly reported unavailable/blocked. ARM64 execution remains untested until performed. Empty runtime skeletons must not be described as business functionality. Actual evidence is in progress.
 - **Requirements:** REQ-047, REQ-052, REQ-057, REQ-064.
-- **Status:** Not started.
+- **Status:** Awaiting user verification; executable foundation checks passed, browser verification outstanding.
 
 ## Step 03 — Oracle schema and connection foundation
 

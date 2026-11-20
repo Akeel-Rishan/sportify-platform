@@ -2,7 +2,7 @@
 
 Status: **awaiting user review**. Source codes link to the [source register](../README.md#source-register). Section numbers refer to the document's numbered headings, not PDF page numbers. SQL sources identify tables; OAS sources identify schemas or routes.
 
-IDs `REQ-001` onward are permanent: do not reuse or renumber them. Every row is **Not started** because no application exists. Intended verification is a future gate, not a passed test. Later statuses may be In progress, Blocked (with reason), Verified (with evidence), or Deferred (only with explicit scope decision). Q-IDs resolve in the [decision register](decision-register.md). Owners are logical modules, not existing code directories.
+IDs `REQ-001` onward are permanent: do not reuse or renumber them. Business behavior remains **Not started**. REQ-047 has scaffold evidence from Step 02; broader deployment, security and API requirements are not complete. Intended verification is a future gate unless evidence is linked. Statuses may be In progress, Blocked (with reason), Verified (with evidence), or Deferred (only with explicit scope decision). Q-IDs resolve in the [decision register](decision-register.md). Owners are logical modules.
 
 | ID | Source and section | Requirement summary | Owning module | Intended verification | Implementation status |
 |---|---|---|---|---|---|
@@ -52,7 +52,7 @@ IDs `REQ-001` onward are permanent: do not reuse or renumber them. Every row is 
 | REQ-044 | MVP §3.1; ARCH §8.7; API §10 | Audit sensitive authentication, booking, payment, staff and admin actions | Audit | Actor/tenant/request/event recorded with change transaction; no ordinary edit API or secrets | Not started |
 | REQ-045 | ARCH §13; API §10 | Durable transactional outbox and database jobs, bounded retries and deduplication | Worker / Notifications | Crash before/after provider send, leases/reclaim, duplicate delivery and delayed cleanup; Q-11 | Not started |
 | REQ-046 | ARCH §13.2; API §10 | Async verification/invitation email; notification failure cannot cancel booking | Notifications / Auth | Provider failure and retry, persisted booking and secret-safe delivery logs | Not started |
-| REQ-047 | ARCH §§4–5; user's technical direction | pnpm TypeScript monorepo, Next.js, NestJS modular monolith and separate worker | Foundation | Step 02 pinned compatibility matrix and minimal workspace checks; no versions selected now | Not started |
+| REQ-047 | ARCH §§4–5; user's technical direction | pnpm TypeScript monorepo, Next.js, NestJS modular monolith and separate worker | Foundation | [Step 02 evidence](progress.md): pinned compatibility metadata, frozen installation, clean build/typecheck and independent processes | Verified for scaffold; awaiting user verification |
 | REQ-048 | ARCH §§7.2–7.4 | Restricted Oracle runtime account, parameterized SQL, TLS and pooled connections | Database | Actual ATP TLS/grant/bind checks; API max 8 + worker max 2, aggregate session budget | Not started |
 | REQ-049 | ARCH §7.5; SCHEMA §2; DB §2 | Consistent UTC persistence and venue-local presentation; resolve timestamp conflict | Database / Time | Every new pooled session UTC, round-trip/grid tests on Oracle; Q-01, Q-06 | Not started |
 | REQ-050 | DB §§5, 7, 11; SCHEMA §9 | Tenant-aware FKs, decimal money, retained history and versioned migrations | Database | Oracle bootstrap, constraints/indexes, cross-tenant negative tests and migration checksums | Not started |

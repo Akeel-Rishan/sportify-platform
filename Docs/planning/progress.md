@@ -1,4 +1,56 @@
-# Step 01 progress and repository audit
+# SPORTIFY progress
+
+## Current status: Step 02 awaiting user verification
+
+Updated 20 November 2026. The requested monorepo foundation is implemented and the executable checks below passed on Windows x64. **Step 03 is pending and has not started.** Browser visual/keyboard verification remains outstanding; no ARM64 or Oracle test result is claimed. The Step 01 audit below is retained as historical evidence, not the current repository inventory.
+
+### Step 02 delivered
+
+- Private pnpm workspace: `apps/web`, `apps/api`, `apps/worker`, and four private `@sportify/*` shared packages. Root scripts provide combined/independent development, topological production builds and strict typechecking.
+- Node 22.22.0 in `.nvmrc`, pnpm 10.34.9 in `packageManager`, exact direct dependencies and a frozen-installable `pnpm-lock.yaml`. Selected Next 16.4.6 / React 19.3.1 / Nest 11.2.10 / TypeScript 5.9.3; compatibility and ARM64 support evidence in [toolchain](../architecture/toolchain.md).
+- One static, semantic foundation page at `/`, local/system fonts, light/dark navy/blue styling, mobile layout rules, focus styles and truthful implementation boundaries. No fake product metrics or business controls.
+- Minimal Nest application: default port 4000, explicit integer port override validation, shutdown hooks, no routes/CORS/database/auth. Separate idle worker with a referenced infrequent timer, no HTTP/external connections and SIGINT/SIGTERM cleanup handlers.
+- Shared type/contract/validation packages have empty compiled JavaScript and declaration exports; tooling config exports only its TypeScript JSON subpath. Existing source documents and all unresolved Q-IDs remain unchanged.
+- Database and infrastructure folders contain explanatory README files only. Root README and [local setup](../development/local-setup.md) describe reproducible commands and limitations. Next generated `apps/web/AGENTS.md`; its version-matched instructions were read and retained.
+
+### Step 02 verification evidence
+
+Commands used the exact `npx --yes pnpm@10.34.9` fallback because pnpm is not globally installed. Global Node/npm or system configuration was not changed. The original scaffold run occurred on 16 November; final checks were repeated on 20 November.
+
+| Check | Actual result |
+|---|---|
+| Initial dependency installation | Passed on 16 November, all eight workspace projects resolved; no peer errors |
+| `install --frozen-lockfile` | Passed again on 20 November; lockfile up to date, resolution skipped |
+| Clean generated-output verification | Removed only known `.next`, `dist` and web incremental output; root `typecheck` then `build` passed without prior generated package/route output |
+| Build order and strict checking | Shared config builds before consumers; four shared packages build before root typecheck. All seven non-root workspace build/typecheck commands passed |
+| Windows command correction | Initial single-quoted package filter matched nothing; changed to escaped double quotes and verified the command builds all four shared packages |
+| Internal exports | Three shared JavaScript entry points load and declarations exist; all apps resolve the workspace tooling JSON; config root runtime import fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` as intended |
+| Development runtime | Earlier `pnpm dev` started labeled web/API/worker; web `/` returned 200, API default 4000 returned 404 for `/` and `/api/v1/health`, worker reported idle. No API connection is implied by the web page |
+| Built production runtime | Repeated 20 November with workspace `start` scripts: web port 3000 `/` returned 200; API `PORT=4100` `/` and `/api/v1/bookings` returned 404; compiled worker remained idle |
+| Invalid API port | `PORT=invalid` failed clearly with exit code 1, without echoing the input/environment |
+| Interactive shutdown | Ctrl+C stopped development and production groups; worker logged SIGINT and timer cleanup. Ports 3000/4000/4100 were closed afterward. Windows runner reports exit 1 on interruption; this is not a successful exit-code claim |
+| SIGTERM/platform limitation | Both signal handlers are present and share cleanup; actual POSIX SIGTERM behavior was not tested on Linux. Windows forced termination can bypass handlers; verify on deployment target |
+| Interface | HTTP content and CSS/semantic structure reviewed. Palette contrast calculated earlier at 6.39:1 or greater against main background in light mode and 7.98:1 or greater in dark mode. This is not full accessibility conformance |
+| Browser verification | Not completed: prior browser host was unavailable; latest automatic approval review rejected inspecting an existing Chrome window showing unrelated GitHub/sign-in content. No phone/desktop screenshot, overflow, keyboard or Lighthouse pass is claimed |
+| Repository hygiene | Reviewed 82 source/document files; 83 local links resolve; all eight manifests private, external direct dependencies exact-pinned and internal dependencies `workspace:*`. Targeted secret-pattern scan found no suspected matches. Ignore checks cover dependencies/build output/incremental files/logs/environment/wallets; source uploads have no Git changes. `git diff --check` passed; Git emitted only local LF-to-CRLF notices. No commit/push or unrelated source edits |
+
+### Step 02 limitations and next boundary
+
+Hydration report investigation, 20 November: the reported root had an extra `style="display: none"` attribute. A temporary development server on port 3100 returned HTTP 200 with `<html lang="en">` and `<body>`; the attribute was absent. Scaffold source inspection found no root mutation, nondeterministic render or client component. The 15 script resource references from that response were checked for the direct `documentElement.style.display = 'none'` pattern without finding it; this limited pattern check does not rule out all injected/framework code. Browser-side modification is the leading hypothesis, not a confirmed extension diagnosis. Documented extension-free isolation in local setup; no layout suppression or claim of a browser hydration pass. Temporary server stopped after inspection.
+
+No Oracle, auth, booking engine, health routes, environment validation framework, CI, lint/format/test infrastructure, deployment or business workflow is implemented. No new unit-test framework or placeholder success script was added. Business requirement completion is not inferred from a successful scaffold build.
+
+The latest Step 02 prompt explicitly places linting, formatting, testing infrastructure and CI in Step 03. That supersedes the earlier roadmap's Step 02 gate and its description of Oracle as the immediate Step 03 task. Step 03 scope must follow the user's next prompt; no Oracle work was started and its existing design requirements remain future work.
+
+Review checklist:
+
+- [ ] Run the pinned frozen install, `typecheck` and `build` locally.
+- [ ] Run `dev` and confirm the foundation page at http://localhost:3000.
+- [ ] Check 360px, tablet and desktop layouts, visible keyboard focus and absence of horizontal overflow.
+- [ ] Confirm API unimplemented routes return 404 and worker reports idle; stop with Ctrl+C.
+- [ ] Provide the next scoped prompt after verification. All Q-01–23 remain open; starting a foundation step does not approve them.
+
+## Historical Step 01 progress and repository audit
 
 Date: 15 November 2026. **Step 01 status: awaiting user review.** Steps 02–13 are **Not started**. No application features have been implemented. This page records audit evidence and next-step readiness; the [roadmap](development-roadmap.md) defines later work.
 

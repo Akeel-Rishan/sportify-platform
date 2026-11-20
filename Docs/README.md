@@ -1,6 +1,6 @@
 # SPORTIFY documentation
 
-Step 01 baseline, 15 November 2026. Status: **awaiting user review**. No application behavior is implemented.
+Current stage, 20 November 2026: **Step 02 foundation awaiting user verification**. A static web foundation, minimal API process and idle worker exist. Business workflows and Oracle are not connected. The Step 01 baseline below remains the requirements reference; see [progress](planning/progress.md) for actual checks and outstanding browser verification.
 
 The workspace already uses `Docs/`. Keep that spelling in paths and links, including on case-sensitive Linux systems; it is the existing equivalent of the requested `docs/` directory. Original uploads remain in place. There is no `docs/source/` directory.
 
@@ -16,6 +16,8 @@ The workspace already uses `Docs/`. Keep that spelling in paths and links, inclu
 | [Product quality bar](design/product-quality-bar.md) | Concrete visual, responsive, accessibility and localization standards |
 | [Progress and audit evidence](planning/progress.md) | Repository inventory, checks, review checklist and next-step prerequisites |
 | [Project working instructions](../CLAUDE.md) | Rules for subsequent implementation steps |
+| [Toolchain](architecture/toolchain.md) | Pinned versions, compatibility, module boundaries and ARM64 evidence |
+| [Local setup](development/local-setup.md) | Install, develop, build and stop the scaffold |
 
 ## Source register
 
@@ -56,6 +58,6 @@ Use these labels consistently:
 | Established baseline | Direction explicitly confirmed by the user's Step 01 request; listed as D-IDs |
 | Proposed resolution | Recommendation for an open Q-ID; not approved and not a license to implement it |
 | Approved decision | A later resolution with recorded user approval, date and affected requirements; no Q-ID has this status yet |
-| Implemented behavior | Working code with linked verification evidence; none exists at this stage |
+| Implemented behavior | Working code with linked verification evidence; Step 02 covers foundation processes only, not business requirements |
 
 The traceability file owns requirement IDs and implementation status; the decision register owns reconciliation; the roadmap owns step gates; progress owns audit evidence. Cross-reference these rather than maintaining competing copies of their status.
