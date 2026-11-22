@@ -1,6 +1,6 @@
 # Secure Oracle connectivity
 
-**Selected deployment mode: Thin mTLS with an instance wallet.** The user selected Mumbai, Always Free Transaction Processing, Secure access from everywhere and required mTLS to accommodate a changing laptop IP, and reports completing creation. The actual database identity/status and credentials remain unverified. This selection supersedes the earlier conditional walletless-TLS assumption; only the selected mTLS mode is implemented. No cloud/network change is performed by the application or this agent.
+**Selected deployment mode: Thin mTLS with an instance wallet.** The user selected Mumbai, Always Free Transaction Processing, Secure access from everywhere and required mTLS to accommodate a changing laptop IP, and reports completing creation. The operator supplied passing account postconditions, and actual runtime identity/target and mTLS connectivity were verified on 22 November 2026; the Step 06 acceptance audit is awaiting user verification. This selection supersedes the earlier conditional walletless-TLS assumption; only the selected mTLS mode is implemented. No cloud/network change is performed by the application or this agent.
 
 Pinned `oracledb` **26.0.0** with `@types/oracledb` **26.0.1**, Node **22.22.0**, existing TypeScript **5.9.3**. The default Thin driver needs no Oracle Client library/native loading. Its Node >=14.17 metadata accepts Node 22; official documentation lists Node 22 and Linux aarch64. Windows x64 local execution is the only execution here; Linux ARM64/container/OCI validation is pending. pnpm deliberately leaves the driver's installation check script unapproved: inspection shows version/optional Thick binary checks; Thin imports/compilation are verified without enabling native mode.
 
@@ -28,3 +28,7 @@ Official evidence consulted 20 November 2026:
 - [NUMBER conversion, DATE/TIMESTAMP application timezone changes](https://node-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html#fetching-numbers-and-dates-as-strings).
 
 Consultation and mock coverage do not prove TLS handshakes, credentials, session behavior or effective grants on an actual ATP service. See [verification gates](oracle-verification.md).
+
+## Actual execution evidence
+
+The 22 November Step 06 acceptance audit passed both restricted identities against the designated Oracle target with pinned node-oracledb 26.0.0 Thin mTLS on Node 22.22.0 / Windows x64. Server release reported 23.26.4.1.0 and AL32UTF8. TLS certificate/DN checking stayed enabled; wallet decryption and live identity/UTC/exact-value probes passed. SQLcl 26.3.1 / Java 21 were the observed operator client versions, superseding the initial 25.4 runbook target for this local evidence. Linux ARM64 and container execution remain untested. [Exact checks and limits](oracle-verification.md) separate this evidence from initial mocks and failed setup attempts.
