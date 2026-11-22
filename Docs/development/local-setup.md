@@ -72,3 +72,9 @@ A valid minimum-zero pool may initialize while Oracle is unavailable: health rem
 ### mTLS follow-up
 
 The user selected Secure access from everywhere with required mTLS for changing laptop IPs. Download/extract the **instance wallet outside the checkout**, following [wallet setup](../database/secure-connectivity.md#instance-wallet-setup). Supply ORACLE_WALLET_DIRECTORY and ORACLE_WALLET_PASSWORD privately to both runtimes, alongside their separate Oracle usernames/passwords. Use the exact mTLS host/port/service in ORACLE_CONNECT_STRING. Never use ADMIN in app envs. Readability validation happens before pool creation; missing/empty/invalid wallet errors name the field without disclosing material or paths. A readable PEM is not proof of a successful handshake. No local secret file has been created or populated by this follow-up.
+
+## Step 07 operator tooling
+
+`pnpm db:plan` works locally without secrets and reports current artifact/review status, not Oracle validation. `pnpm db:status`, `pnpm db:migrate` and `pnpm db:verify` use separate migration-only process configuration and compiled local dependencies. They never load the API/worker .env files, run on application startup, provision accounts or create cloud infrastructure. Do not inject owner passwords into API/worker terminals/files. Current mutation/verification commands fail before connection while the manifest is under review. Follow [migration guide](../database/migration-guide.md) after the pending structural decisions and real Step 06 prerequisites are resolved.
+
+The explicit real runner command is `pnpm test:oracle:runner` and requires an empty isolated SPORTIFY_TEST_OWNER plus disposable-target confirmation; it is not ordinary local setup and must never target the application owner. All application commands and the web foundation are otherwise unchanged. Use the existing pinned `npx --yes pnpm@10.34.9` fallback.

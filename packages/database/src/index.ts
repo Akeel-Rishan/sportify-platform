@@ -4,3 +4,4 @@ export { createDatabase } from './pool.js';
 export type { Database, DatabaseFactory, PoolFactory, SqlConnection, SqlBinds } from './pool.js';
 export { DatabaseError } from './errors.js';
 export type { DatabaseLog, DatabaseEvent } from './errors.js';
+export { validateWallet } from './wallet.js';

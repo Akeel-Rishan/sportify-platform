@@ -1,0 +1,9 @@
+# Explicit Oracle testing
+
+`pnpm test:oracle:runner` is a **runner-protocol-only** real Oracle command, excluded from ordinary unit tests/PR CI. It refuses the current review-gated manifest and requires both migration target confirmation and `ORACLE_MIGRATION_TEST_CONFIRM=isolated-disposable-empty`, with the exact `SPORTIFY_TEST_OWNER` identity and a genuinely empty dedicated schema. The operator must provision that separate test owner with reviewed finite quota/minimal creation rights and a supported advisory-lock capability; no application owner/user is recreated or cleared by this suite.
+
+Once review gates and target prerequisites are satisfied, it checks clean application, repeat no-op, exact catalog/seed metadata, actual stored-checksum rejection, and two connections showing the schema lock survives a suite-created table's implicit DDL commit. It drops only that freshly generated test table and closes both connections; installed migration tables/history/reference data remain in the disposable schema. It fails instead of clearing/reusing an existing schema. Never run against an application owner or ordinary business data. A connection failure is never a passing denial test.
+
+This command does **not** implement or claim controlled failed-migration/repair Oracle evidence, authentication/tenant constraint tests, precise runtime grant denial or transaction-persistence verification. Those remain incomplete, along with the pending schema decisions listed in [implementation inventory](../../Docs/database/implemented-schema.md). `pnpm test:oracle` retains the Step 06 connectivity/privilege tools and is not a claim that Step 07 integrity passed. Missing credentials, unapproved artifacts or failed SQL produce exit 1, not skipped-pass output.
+
+Local `packages/migrations/src/*.test.ts` use metadata/driver mocks for planning, safe errors, locking protocol and lifecycle; they are not Oracle integration evidence.

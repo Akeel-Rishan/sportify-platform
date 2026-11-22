@@ -1,6 +1,6 @@
 # SPORTIFY documentation
 
-Current stage, 20 November 2026: **Step 06 local Oracle implementation awaiting user verification; live gate BLOCKED**. Account preparation scripts, restricted runtime identities, shared driver/pools, transaction helpers and Oracle-required API readiness are implemented. The user selected mTLS and reports creating the development instance; exact target identity/status, protected wallet and runtime credentials remain unverified. No account provisioning/live Oracle behavior is verified. Step 05 design review gates remain, and business schema/workflows and Step 07 are pending. See [progress](planning/progress.md).
+Current stage, 22 November 2026: **Step 07 partial: migration foundation awaiting user verification, schema decisions pending**. The operator-only runner and history/reference SQL artifacts exist; [inventory](database/implemented-schema.md) lists exactly what is written versus still blocked. Authentication/tenancy/facility SQL needs the explicitly requested Step 05 structural choices. The manifest is review-gated. Step 06 account postconditions, actual runtime Thin connectivity/privilege metadata and real-pool HTTP readiness passed; the broader live gate retains explicit transaction/deployment limitations. No Step 07 migration was executed. No application authentication or Step 08 work is implemented. See [progress](planning/progress.md).
 
 The workspace already uses `Docs/`. Keep that spelling in paths and links, including on case-sensitive Linux systems; it is the existing equivalent of the requested `docs/` directory. Original uploads remain in place. There is no `docs/source/` directory.
 
@@ -72,3 +72,9 @@ The traceability file owns requirement IDs and implementation status; the decisi
 - [Secure connectivity and exact official driver references](database/secure-connectivity.md).
 - [Pool/session/transaction ownership and UTC precision](database/connection-pooling.md).
 - [Explicit live verification and remaining gates](database/oracle-verification.md).
+
+## Step 07 migration foundation
+
+- [Migration/operator guide](database/migration-guide.md): single ledger, exact checksums, same-session locks, owner isolation and partial-DDL recovery.
+- [Implemented SQL versus pending schema](database/implemented-schema.md) and [reference seeds](database/reference-seeds.md).
+- [Explicit disposable Oracle runner subset](../database/tests/README.md) and [remaining live verification gates](database/oracle-verification.md).

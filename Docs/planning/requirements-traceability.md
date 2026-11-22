@@ -87,3 +87,7 @@ Design evidence only; all Oracle enforcement, concurrency, grants and business w
 | REQ-048-050, REQ-061-063 | [Migration strategy](../database/migration-strategy.md), [verification plan](../database/verification-plan.md) | Actual ATP provisioning, execution/recovery/backup tests; no Oracle test marked passed |
 
 The [three new MVP ERDs](../database/README.md) and repeatable structural checker support review only. They do not replace the required future tests or supersede the preserved source uploads without acceptance.
+
+## Step 07 implementation overlay
+
+REQ-048/REQ-050 are **In progress, Oracle verification blocked**: operator-only manifest/runner, history/reference SQL and unit evidence exist, but the required authentication/tenancy/facility subset still needs the explicitly identified Step 05 structural decisions. REQ-010 is **In progress, SQL only** for eight-sport deployment seed artifacts, not executed/runtime-configurable behavior. REQ-001/002/003/004/005/006/007/009/011-017 remain unverified and application behavior is not started; no authentication, tenant authorization or booking capability is marked complete. [Exact inventory](../database/implemented-schema.md) and [progress](progress.md) distinguish designed, SQL-written, Oracle-executed and real-tested states. Existing requirement IDs/source mappings above remain stable.

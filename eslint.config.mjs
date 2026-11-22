@@ -47,7 +47,13 @@ export default [
         {
           patterns: [
             {
-              group: ['@sportify/web', '@sportify/api', '@sportify/worker', '@sportify/*/src/**'],
+              group: [
+                '@sportify/web',
+                '@sportify/api',
+                '@sportify/worker',
+                '@sportify/*/src/**',
+                '@sportify/migrations',
+              ],
               message:
                 'Use public shared package exports; application internals are not shared packages.',
             },
@@ -116,6 +122,7 @@ export default [
           patterns: [
             '@sportify/database',
             '@sportify/database/*',
+            '@sportify/migrations',
             '@sportify/web',
             '@sportify/api',
             '@sportify/worker',

@@ -1,0 +1,372 @@
+{
+  "format": 1,
+  "status": "review",
+  "blockedBy": [
+    "STEP05_SECURITY_DECISIONS",
+    "STEP05_SCHEDULE_DECISIONS",
+    "PERMISSION_CATALOG_REVIEW"
+  ],
+  "migrations": [
+    {
+      "version": "000001",
+      "name": "migration_history",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000001_migration_history/001_table.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000001_migration_history/002_repair_fk.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000001_migration_history/003_repair_index.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SCHEMA_MIGRATIONS",
+          "columns": [
+            {
+              "name": "VERSION",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DESCRIPTION",
+              "type": "VARCHAR2(250 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CHECKSUM",
+              "type": "VARCHAR2(64 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INSTALLED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INSTALLED_BY",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": "USER",
+              "identity": false
+            },
+            {
+              "name": "STARTED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "FINISHED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXECUTION_STATUS",
+              "type": "VARCHAR2(12 CHAR)",
+              "nullable": false,
+              "default": "'RUNNING'",
+              "identity": false
+            },
+            {
+              "name": "RUNNER_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXECUTION_MS",
+              "type": "NUMBER(12)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ATTEMPT_COUNT",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "1",
+              "identity": false
+            },
+            {
+              "name": "ERROR_CODE",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REPAIR_VERSION",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_SCHEMA_MIGRATIONS",
+          "table": "SCHEMA_MIGRATIONS",
+          "type": "P",
+          "columns": ["VERSION"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_MIGRATION_REPAIR",
+          "table": "SCHEMA_MIGRATIONS",
+          "type": "R",
+          "columns": ["REPAIR_VERSION"],
+          "referencedTable": "SCHEMA_MIGRATIONS",
+          "referencedColumns": ["VERSION"],
+          "expression": null
+        },
+        {
+          "name": "CK_MIGRATION_RECORD",
+          "table": "SCHEMA_MIGRATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "execution_status IN ('RUNNING','APPLIED','FAILED') AND attempt_count>0 AND REGEXP_LIKE(checksum,'^[0-9a-f]{64}$','c') AND (repair_version IS NULL OR (execution_status='FAILED' AND repair_version<>version))"
+        },
+        {
+          "name": "CK_MIGRATION_TIMES",
+          "table": "SCHEMA_MIGRATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(execution_status='RUNNING' AND installed_at_utc IS NULL AND finished_at_utc IS NULL AND execution_ms IS NULL) OR (execution_status='APPLIED' AND installed_at_utc IS NOT NULL AND finished_at_utc IS NOT NULL AND execution_ms IS NOT NULL AND execution_ms>=0 AND error_code IS NULL) OR (execution_status='FAILED' AND installed_at_utc IS NULL AND finished_at_utc IS NOT NULL AND execution_ms IS NOT NULL AND execution_ms>=0 AND error_code IS NOT NULL)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_FK_MIGRATION_REPAIR",
+          "table": "SCHEMA_MIGRATIONS",
+          "expressions": ["REPAIR_VERSION"],
+          "unique": false
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000002",
+      "name": "reference_catalogs",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000002_reference_catalogs/001_sports.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000002_reference_catalogs/002_permissions.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SPORTS",
+          "columns": [
+            {
+              "name": "SPORT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "SPORT_CODE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SPORT_NAME",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_LABEL",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_ACTIVE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "DISPLAY_ORDER",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "0",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "PERMISSIONS",
+          "columns": [
+            {
+              "name": "PERMISSION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "PERMISSION_CODE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PERMISSION_NAME",
+              "type": "VARCHAR2(150 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DESCRIPTION",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_SPORTS",
+          "table": "SPORTS",
+          "type": "P",
+          "columns": ["SPORT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_SPORTS_CODE",
+          "table": "SPORTS",
+          "type": "U",
+          "columns": ["SPORT_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_SPORTS_ACTIVE",
+          "table": "SPORTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_active IN ('Y','N')"
+        },
+        {
+          "name": "CK_SPORTS_ID_POSITIVE",
+          "table": "SPORTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "SPORT_ID>0 AND SPORT_ID=TRUNC(SPORT_ID)"
+        },
+        {
+          "name": "PK_PERMISSIONS",
+          "table": "PERMISSIONS",
+          "type": "P",
+          "columns": ["PERMISSION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PERMISSIONS_CODE",
+          "table": "PERMISSIONS",
+          "type": "U",
+          "columns": ["PERMISSION_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_PERMISSIONS_ID_POSITIVE",
+          "table": "PERMISSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "PERMISSION_ID>0 AND PERMISSION_ID=TRUNC(PERMISSION_ID)"
+        }
+      ],
+      "indexes": [],
+      "seeds": []
+    },
+    {
+      "version": "000003",
+      "name": "launch_sports",
+      "kind": "seed",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "seeds/000003_launch_sports/001_sports.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [],
+      "constraints": [],
+      "indexes": [],
+      "seeds": [
+        {
+          "table": "SPORTS",
+          "key": "SPORT_CODE",
+          "values": [
+            "FUTSAL",
+            "BADMINTON",
+            "INDOOR_CRICKET",
+            "BASKETBALL",
+            "VOLLEYBALL",
+            "TENNIS",
+            "TABLE_TENNIS",
+            "SWIMMING"
+          ]
+        }
+      ]
+    }
+  ]
+}

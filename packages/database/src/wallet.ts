@@ -6,7 +6,9 @@ import type { DatabaseConfig } from './config.js';
 
 // Inspect metadata/readability only. The driver loads and decrypts the PEM;
 // neither wallet contents nor paths are included in our errors/log records.
-export async function validateWallet(config: DatabaseConfig): Promise<void> {
+export async function validateWallet(
+  config: Pick<DatabaseConfig, 'ORACLE_WALLET_DIRECTORY'>,
+): Promise<void> {
   try {
     const filename = join(config.ORACLE_WALLET_DIRECTORY, 'ewallet.pem');
     const metadata = await stat(filename);

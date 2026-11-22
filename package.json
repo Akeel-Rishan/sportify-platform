@@ -26,7 +26,12 @@
     "test:http": "pnpm build:packages && vitest run apps/api/test",
     "oracle:connectivity": "pnpm --filter \"@sportify/api...\" -r build && node infra/scripts/oracle-connectivity-check.mjs",
     "oracle:privileges": "pnpm build:packages && node infra/scripts/oracle-privilege-check.mjs",
-    "test:oracle": "pnpm build && node infra/scripts/oracle-connectivity-check.mjs && node infra/scripts/oracle-privilege-check.mjs"
+    "test:oracle": "pnpm build && node infra/scripts/oracle-connectivity-check.mjs && node infra/scripts/oracle-privilege-check.mjs",
+    "db:plan": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-plan.mjs",
+    "db:status": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-status.mjs",
+    "db:migrate": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-migrate.mjs",
+    "db:verify": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-verify.mjs",
+    "test:oracle:runner": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-migration-runner.mjs"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
@@ -42,6 +47,7 @@
     "@vitest/coverage-v8": "4.1.12",
     "globals": "17.14.0",
     "@sportify/database": "workspace:*",
-    "@sportify/validation": "workspace:*"
+    "@sportify/validation": "workspace:*",
+    "@sportify/migrations": "workspace:*"
   }
 }

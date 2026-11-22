@@ -29,7 +29,7 @@ export default defineConfig({
     environment: 'node',
     include: [
       'apps/{api,worker}/src/**/*.test.ts',
-      'packages/{validation,database}/src/**/*.test.ts',
+      'packages/{validation,database,migrations}/src/**/*.test.ts',
       'apps/api/test/**/*.e2e-spec.ts',
     ],
     clearMocks: true,
@@ -44,6 +44,7 @@ export default defineConfig({
         'apps/{api,worker}/src/**/*.ts',
         'packages/validation/src/environment.ts',
         'packages/database/src/**/*.ts',
+        'packages/migrations/src/**/*.ts',
       ],
       exclude: ['**/*.test.ts', '**/browser.ts'],
       reporter: ['text', 'json-summary', 'html', 'lcov'],

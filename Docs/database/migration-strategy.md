@@ -1,6 +1,6 @@
 # Migration and provisioning design
 
-Status: **design only, awaiting review**. No ATP provisioned, account created, driver connected, DDL/DML executed or migration framework installed. The source bootstrap is not execution-ready approval for the proposed MVP.
+Status: **original Step 05 design with a scoped Step 07 implementation overlay**. The operator-only runner and initial history/reference artifacts now exist, but no Oracle execution has occurred. The user reports creating an ATP instance; account/connectivity verification and structural decisions remain pending. The source bootstrap is not execution-ready approval. See [current migration guide](migration-guide.md) and [exact implementation inventory](implemented-schema.md).
 
 ## Provisioning sequence and privileges
 
@@ -13,9 +13,9 @@ Status: **design only, awaiting review**. No ATP provisioned, account created, d
 
 ## One baseline and one ledger
 
-Recommend a reviewed MVP-only `000001_mvp_baseline.sql` as migration 000001, derived from this accepted dictionary/constraint/index design. It creates the 52 included catalog tables plus two approved additions, not the full 61-table future catalog. This file does not exist yet: writing executable migrations belongs to the next explicitly authorized implementation step.
+The Step 07 prompt explicitly limits this release to authentication/tenancy/facility structures and requests small ordered migrations. This supersedes the earlier single 54-table baseline recommendation with **phased entries in the same ledger**: 000001 migration history, 000002 reference catalogs, 000003 launch sports, and later approved subset entries. Only these initial independent artifacts currently exist; unresolved security/schedule/catalog choices keep the manifest review-gated. No booking/payment/subscription/website/outbox expansion is authorized here.
 
-Preserve uploaded `001_sportify_schema.sql` and `002_verify_schema.sql` as historical input. Do not execute the broad source and then drop deferred tables. Do not also register its hardcoded `1.0.0` / `BOOTSTRAP-001` marker. The sole authoritative SCHEMA_MIGRATIONS ledger uses version `000001` plus real SHA-256 of the reviewed artifact. Subsequent immutable filenames are six-digit ascending `000002_description.sql`, etc.; no duplicate versions or out-of-order normal execution. Seed scripts are versioned/checksummed migration assets, not a second migration history.
+Preserve uploaded `001_sportify_schema.sql` and `002_verify_schema.sql` as historical input. Do not execute the broad source or register its hardcoded `1.0.0`/`BOOTSTRAP-001` marker. Six-digit contiguous manifest versions own ordered single-statement SQL or complete PL/SQL files under migration/seed directories. The immutable checksum combines that entry's canonical metadata and exact UTF-8/LF SQL bytes as specified in the [migration guide](migration-guide.md); seeds share this history. No duplicate version, ordinary out-of-order execution or second ledger is introduced.
 
 The dictionary owns SCHEMA_MIGRATIONS columns: VERSION, DESCRIPTION, CHECKSUM, INSTALLED_AT_UTC, INSTALLED_BY, STARTED_AT_UTC, FINISHED_AT_UTC, EXECUTION_STATUS, RUNNER_ID, EXECUTION_MS, ATTEMPT_COUNT, ERROR_CODE and REPAIR_VERSION. Checksums are lowercase SHA-256 over exact UTF-8/LF release artifact bytes. The registry table must be created as the explicit first bootstrap step, then its RUNNING row committed before remaining steps; a crash before registry creation/row is handled by the external bootstrap manifest and empty-schema preflight, not a fake applied marker. An unexpected preexisting registry/object fails empty-schema preconditions.
 

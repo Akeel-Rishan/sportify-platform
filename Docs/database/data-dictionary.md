@@ -1,6 +1,6 @@
 # MVP data dictionary
 
-**Proposed target, awaiting user review.** This is the sole Step 05 column definition; source uploads remain historical and unchanged. Every source column in each included table is retained unless explicitly amended; added/changed rows are marked proposed. No SQL file is generated/applied by this design.
+**Proposed target, awaiting user review.** [Step 07 implementation inventory](implemented-schema.md) identifies the initial history/reference SQL artifacts and the still-pending structures. No Oracle execution is claimed; the broader dictionary remains a design, not an installed-schema report. This is the sole Step 05 column definition; source uploads remain historical and unchanged. Every source column in each included table is retained unless explicitly amended; added/changed rows are marked proposed. No SQL file is generated/applied by this design.
 
 ## Universal column rules
 

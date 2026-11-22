@@ -1,6 +1,6 @@
 # MVP development roadmap
 
-Current status: **Step 06 local connectivity awaiting user verification; live Oracle gate incomplete**. Step 05 design review gates remain; Step 07 and business implementation are pending. Each step ends at its gate; do not proceed automatically. Source direction: MVP §10 and ARCH §§4–5, 15, 21, with the progression explicitly requested in Step 01 and the later scoped prompts.
+Current status: **Step 07 partial: migration foundation awaiting user verification, dependent schema decisions pending**. Step 06 live verification remains incomplete. The current scoped prompt authorizes only authentication/tenancy/facility database infrastructure; Step 08 and application authentication are unstarted. Each step ends at its actual verification gate.
 
 The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. The explicit Step 05 prompt assigns database design only; earlier UI/auth/Oracle implementation milestones remain deferred. The scoped Step 06 prompt now authorizes account preparation/connectivity only, as recorded below; business implementation remains deferred.
 
@@ -89,7 +89,13 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Requirements:** REQ-009–017, REQ-035, REQ-038, REQ-041, REQ-044.
 - **Status:** Not started.
 
-## Step 07 — Availability, pricing, holds and reservation engine
+## Step 07 - Authentication, tenancy and facility database migrations (scoped prompt)
+
+- **Scope:** One migration ledger, operator-only runner, approved auth/tenancy/permissions/configuration SQL, reference seeds, minimal runtime grants and actual Oracle verification.
+- **Current:** Partial independent foundation/SQL artifacts awaiting user verification; structural questions and real Oracle gates remain open. Manifest is review-gated; no business/application behavior is complete.
+- **Gate:** Required structural decisions, full scoped SQL/integrity tests and verified target execution. No application login/guards/tenant-routing, booking workflows or Step 08.
+
+## Deferred availability, pricing, holds and reservation engine (historical Step 07)
 
 - **Objective:** Prove booking integrity before connecting full booking screens.
 - **Dependencies:** Steps 03–06; resolve Q-04–Q-10, Q-16, Q-19 and relevant configuration values. Admission/entitlement rules must be enforceable before SaaS admin UI exists.
