@@ -106,3 +106,15 @@ The first real disposable run discovered internal LOB storage on RESOURCES.DESCR
 ## Step 07 final execution record
 
 All 11 original versions applied cleanly to the application owner, repeated with no changes and passed exact verification. The full disposable suite passed after explicit retained-state reconciliation of the verifier-only initial failure. Its test-only repairs are absent from the application manifest/history. The used test owner is intentionally retained and must not be treated as empty or re-provisioned automatically. See [complete results and commands](step07-verification.md). Step 07 awaits user verification; do not start Step 08 automatically.
+
+## Step 09 release and isolated testing
+
+The current release extends through 000026; original 000001-000017 remain immutable. Three STEP09 policy blockers make the manifest review-gated before any mutation/catalog-release verification. Current test configuration also admits exact SPORTIFY_STEP09_TEST_OWNER, with the same target/identity/mTLS/lock checks. Preserve existing used test owners and their virtual recovery versions. Do not run Step 07/08 old fixtures against the application owner or assume their retained histories match the extended release. The Step 08 suite intentionally pins its original 17-phase prefix after checking the global release gate. [Step 09 operator sequence, compatibility gate and failure handling](step09-verification.md).
+
+## D-24 technical release holds
+
+The three Step 09 structural approvals are recorded and their policy blockers removed. Manifest review now holds STEP09_ORACLE_COMPATIBILITY and STEP09_TEST_OWNER_PROVISIONING until verified operator evidence is recorded. Then a ready manifest permits the fresh isolated suite; its complete success is an additional gate before any application-owner apply. Do not bypass holds by editing the manifest without evidence. No new Oracle execution occurred. Original 17 applied entries/168 SQL-seed hashes remain unchanged; only unapplied Step 09 defaults/metadata were reconciled. [Exact staged instructions](step09-verification.md).
+
+## Step 09 executed release and retained test recovery
+
+Both technical holds cleared on operator compatibility/postcondition evidence. The original 26-phase application release is now APPLIED/catalog-verified with repeat no-op, no pending/repair and old history/data counts preserved. The first Step 09 test run retained FAILED 000019 for equivalent CASE index spelling; narrow comparator correction plus guarded virtual 000027 preserve/link that failure only in the separate test owner. No original SQL was changed. The complete isolated suite passed before application apply. Used schemas must not be recreated or treated as empty. [Exact executed commands and supported repeat verification](step09-verification.md). Historical D-24 hold statements no longer describe the current state.

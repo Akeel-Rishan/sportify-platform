@@ -1,5 +1,19 @@
 # Step 07 SQL implementation inventory
 
+## Current Step 09 SQL inventory - Oracle verified
+
+D-24-approved 000018-000026 is installed on the designated application owner: 26 APPLIED/no repairs/pending versions; 49 tables/569 columns/463 named constraints/101 explicit indexes. The original nine new phases applied cleanly, repeated as a no-op and passed catalog/history/data-count checks after the complete isolated suite passed. The test schema alone retains FAILED 000019 linked to virtual repair 000027; that repair is absent from application artifacts/history. All 26 original entries and 239 SQL-seed byte hashes remain unchanged. No new seed/runtime grant/product service; D-24 excluded values remain unset. [Complete evidence, retained recovery and verification checklist](step09-verification.md). Older draft inventories below are historical.
+
+## D-24 current Step 09 status
+
+All three structural policy recommendations are approved. 000018-000026 remain unapplied; prior 000001-000017 metadata/SQL hashes are preserved. No commercial/theme/feature code, quota, duration, retention, numeric operating configuration, collection or secret replay policy is invented. Retry/scheduling and entitlement enablement require explicit inputs. The manifest retains review for STEP09_ORACLE_COMPATIBILITY and STEP09_TEST_OWNER_PROVISIONING; complete isolated-suite success is an additional application-release gate. [Updated staged operator instructions and verification report](step09-verification.md). Earlier draft approval statements below are historical.
+
+## Historical Step 09 draft before D-24
+
+Nine unapplied phases 000018-000026 add subscription catalog/terms/feature snapshots/invoices/receipts, website theme/settings/media, audit, outbox, jobs and scoped idempotency: 13 tables/175 columns/143 named constraints/34 explicit indexes, 71 SQL files. Total proposed release: 26 phases/49 tables/569 columns/463 constraints/101 explicit indexes. All original 17 migration entries and 168 SQL/seed hashes remain unchanged. Current Oracle installation remains the verified Step 08 baseline (17 APPLIED/36 tables); new SQL is not an executed schema.
+
+Three Step 09 policy questions remain unanswered; manifest review and STEP09_SUBSCRIPTIONS/STEP09_WEBSITE_AUDIT/STEP09_OPERATIONS prevent execution. The separate test owner is not yet provisioned. No new seed/runtime grant/business service. [Exact inventory, blocked Oracle gates and operator commands](step09-verification.md), [scoped ERD](erd-step09.md), [subscription history](subscription-history.md), [website ownership](website-ownership.md), [audit/operations/idempotency](step09-operations.md). Historical Step 07/08 evidence below remains valid only for its own scope.
+
 **Step 07 executed and verified on Oracle; awaiting user verification.** D-18-approved original migrations 000001-000011 applied cleanly to SPORTIFY_SCHEMA_OWNER, repeated with no changes and passed exact catalog verification on 23 November 2026. The application manifest/history has no test repair entries. See [real evidence and retained test recovery](step07-verification.md).
 
 | Version | Name                     | Tables or seed                                                  | Approval/execution             |

@@ -37,3 +37,17 @@ Prepared SPORTIFY_STEP08_TEST_OWNER has the same narrow test-only prerequisites:
 Actual runtime object grants remain none, since no booking/payment/cleanup functionality exists. Planned expiry-worker access must later be limited to required hold/item/slot reads and conditional state/release writes; it receives no finance, migration history or DDL authority merely because those tables exist. [Step 08 safety/evidence](step08-verification.md).
 
 D-22 verified the separate Step 08 test owner and both restricted runtime identities. API/worker still have CREATE SESSION only and no application/test object grant; migration-history read/write and test DDL denials passed after positive connectivity. The operator's test-owner provisioning did not grant runtime schema privileges. Keep migration/test secrets separate. [Actual evidence](step08-verification.md).
+
+## Step 09 proposed owner and grant boundary
+
+SPORTIFY_STEP09_TEST_OWNER is the sole new operator-only allowlisted identity for a fresh isolated suite. Preparation initially creates it locked without authentication, with CREATE SESSION/TABLE/SEQUENCE, finite 256 MB DATA quota and only SYS.DBMS_LOCK EXECUTE without admin/grant option. It refuses existing users and never resets/drops old owners. Scripts are prepared, not executed; its private configuration is separate and new password remains blank. Existing application/Step 07/08 owners, credentials and retained migration histories are preserved.
+
+API/worker retain CREATE SESSION only and no new object grant: they still have no subscription, audit or job duty. Future reviewed audit emitters may receive INSERT only; subscription-payment/admin authority, dispatch/claim state updates and any retention process require separately approved per-object duties. No runtime UPDATE/DELETE audit, history, owner credential or DDL access is granted by this step. Planned tests require positive runtime identity/DUAL checks before exact denial codes. [Operator sequence and incomplete gate](step09-verification.md).
+
+## D-24 approval reconciliation
+
+Policy approval grants no new runtime object privileges. Existing Step 07/08 identities/grants and applied history remain unchanged. Exact Step 09 test-owner compatibility/provisioning/postcondition evidence is still required, followed by the isolated suite before application migration. No provisioning, password changes or Oracle connection occurred during this reconciliation. Undecided collection/retention/secret replay and numeric operating values do not authorize new processes or grants. [Current sequence](step09-verification.md).
+
+## Step 09 actual provisioning and denials
+
+The operator's exact Step 09 test-owner initial postconditions passed. Its isolated suite and both runtime identities passed actual checks. Additional API/worker verification after application installation proved identity/UTC DUAL success plus 17 exact Oracle access denials each, including all new table/history reads and audit INSERT/UPDATE/DELETE attempts with WHERE 1=0. No new runtime object grant or credential change occurred. Test-only CASE recovery is restricted to the Step 09 owner; application and older test owners are refused. [Actual evidence](step09-verification.md). Retention, commercial authority and later emitter/processor grants remain separately scoped.

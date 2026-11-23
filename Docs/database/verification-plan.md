@@ -52,3 +52,15 @@ Use a dedicated isolated ATP schema at the recorded exact release; synthetic dat
 | DBV-26 | Restore rehearsal and retained failure repair version                                                                                      | Verified recovery into compatible isolated target, no blind bootstrap rerun, no falsely successful failed ledger entry; Q-13 RPO/RTO evidence remains required |
 
 Future application HTTP suites must also prove tenant-scoped reads/authorization; composite foreign keys do not restrict SELECT. Oracle concurrency cannot be substituted with mocks, SQLite, Markdown parsing, screenshots or the passing Step 04 HTTP suites. All DBV rows remain pending after this design step.
+
+## Step 09 pending Oracle matrix
+
+[Step 09 verification](step09-verification.md) separates actual Step 08 baseline/read-only JSON capability evidence from unexecuted new SQL. Required gates: policy reconciliation, actual COMPATIBLE confirmation, new isolated owner/postconditions, full clean apply/repeat/catalog/unchanged seeds/checksum refusal, specific tenant/currency/status/JSON/actor/lease/uniqueness errors, separate-session outbox commit/rollback/fanout, job claim/reclaim/fencing, tenant and platform idempotency contenders/atomic completion/rollback and positive-connectivity runtime denials. No mock/static result substitutes for Oracle. Application 000018-000026 follows only a complete passing isolated suite, then repeat/verify/status and old checksum/data preservation. No new test is claimed executed yet.
+
+## D-24 gate ordering
+
+Policy approval is complete. First record ADMIN target/identity/COMPATIBLE evidence and exact test-owner authentication/grants/quota/empty-schema postconditions. Then clear only the corresponding technical manifest holds and execute the complete isolated suite. Application release requires that suite's actual success plus unchanged prior history/data, then apply/repeat/catalog/status. No new Oracle check ran during reconciliation. Missing retry budgets and scheduling inputs have explicit planned ORA-01400 cases; they are test sources, not executed passes. [Current report](step09-verification.md).
+
+## Step 09 actual completed matrix
+
+The complete isolated suite passed 53 integrity cases and outbox atomic commit/rollback/fan-out, job skip-locked claim/reclaim/fencing and tenant/platform idempotency contender/atomic-completion tests. Cleanup and both runtime denials passed. Application apply/repeat/catalog/status and independent old-history/table-count checks passed, followed by actual application runtime access denials. Initial CASE verifier failure/recovery and one unclassified worker-verification failure are retained in the [dated report](step09-verification.md); only the final complete suite is the gate pass. No production processor or external-delivery test is claimed.

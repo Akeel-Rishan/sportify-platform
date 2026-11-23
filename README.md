@@ -1,5 +1,7 @@
 # SPORTIFY
 
+Current database work: **Step 09 executed and verified on Oracle; awaiting user verification.** The development application has 26 APPLIED/no pending migrations and 49 catalog-verified tables; previous history/checksums/data counts are preserved. No subscription/website/audit/worker/idempotency service is operational from these artifacts. [Current evidence and remaining commands](Docs/database/step09-verification.md). Previous implementation summaries below are historical. No Step 10 work is included.
+
 Current scope: **Step 08 executed and verified on Oracle; awaiting user verification.** Application history has 17 APPLIED/no pending migrations; actual catalog has 36 tables/394 columns/320 named constraints/67 explicit indexes. The full isolated suite passed 40 integrity cases and A-E concurrency, cleanup and runtime denials after documented verifier/harness corrections. No application booking/payment service or Step 09. [Dated evidence and retained recovery](Docs/database/step08-verification.md).
 
 A multi-tenant indoor sports booking and business management platform for Sri Lanka.

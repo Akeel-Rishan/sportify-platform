@@ -128,6 +128,27 @@ describe('Oracle catalog comparison (unit metadata fixtures)', () => {
       canonicalIndexExpression("CASE WHEN STATUS = 'A''B' THEN ID END"),
     );
   });
+  it('matches the observed subscription IN-list rewrite without accepting semantic drift', () => {
+    const expected =
+      "CASE WHEN SUBSCRIPTION_STATUS IN ('TRIAL','ACTIVE','PAST_DUE','GRACE','SUSPENDED') THEN TENANT_ID END";
+    const actual =
+      'CASE "SUBSCRIPTION_STATUS" WHEN \'TRIAL\' THEN "TENANT_ID" WHEN \'ACTIVE\' THEN "TENANT_ID" WHEN \'PAST_DUE\' THEN "TENANT_ID" WHEN \'GRACE\' THEN "TENANT_ID" WHEN \'SUSPENDED\' THEN "TENANT_ID" END ';
+    expect(canonicalIndexExpression(actual)).toBe(canonicalIndexExpression(expected));
+    for (const changed of [
+      actual.replace("'ACTIVE'", "'active'"),
+      actual.replace("'SUSPENDED'", "'CANCELLED'"),
+      actual.replace('"SUBSCRIPTION_STATUS"', '"OTHER_STATUS"'),
+      actual.replace('THEN "TENANT_ID"', 'THEN "SUBSCRIPTION_ID"'),
+      actual.replace('END ', 'ELSE 0 END '),
+      actual.replace('THEN "TENANT_ID"', 'THEN "TENANT_ID" + 0'),
+    ])
+      expect(canonicalIndexExpression(changed)).not.toBe(canonicalIndexExpression(expected));
+  });
+  it('preserves commas and escaped quotes inside literal CASE values', () => {
+    expect(canonicalIndexExpression("CASE STATE WHEN 'A,B' THEN ID WHEN 'it''s' THEN ID END")).toBe(
+      canonicalIndexExpression("CASE WHEN STATE IN ('A,B','it''s') THEN ID END"),
+    );
+  });
   it('verifies actual Oracle CASE index spelling and still rejects changed semantics', async () => {
     const f = fixture();
     f.migration.tables[0]!.columns[0]!.type = 'VARCHAR2(20 CHAR)';

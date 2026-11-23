@@ -1,5 +1,21 @@
 # Oracle verification gates
 
+## Step 09 Oracle gate passed
+
+23 November 2026. The complete isolated suite passed 53 integrity cases, transaction/concurrency, cleanup and runtime denials after the documented narrow CASE metadata correction/retained test-only repair. Only then did application 000018-000026 apply cleanly, repeat no-op and pass standard verify/status and independent catalog/history/table-count checks. Application: 26 APPLIED/no repairs/pending, 49 tables, 569 columns, 463 constraints, 101 explicit indexes and zero invalid objects. Additional actual application denials passed for API/worker. Previous Step 07/08 records/checksums/counts remain unchanged; all excluded configuration remains unseeded. [Dated execution/failure/recovery evidence and limits](step09-verification.md). Step 09 awaiting user verification; no Step 10.
+
+## Step 09 compatibility confirmed by operator
+
+23 November 2026. User-supplied SQLcl results confirm fce953xa / ADMIN and V$PARAMETER.COMPATIBLE=23.5.0. This supersedes the earlier restricted-owner access failure as the current compatibility result. Only the compatibility hold is cleared; test-owner provisioning/postconditions, isolated migration/integrity/concurrency and application verification remain pending. The agent did not reconnect or perform Oracle mutations. [Current staged report](step09-verification.md).
+
+## D-24 approval reconciliation; Oracle checks still blocked
+
+Three Step 09 policy approvals are recorded. This reconciliation made no Oracle connection, grant, migration or fixture call. COMPATIBLE confirmation and exact fresh test-owner postconditions are still missing; complete isolated-suite success is required before application release. Earlier baseline server/JSON predicates and Step 07/08 results remain scoped historical evidence, not a new pass. Manifest review now records technical holds, not unanswered policy questions. [Current report and staged commands](step09-verification.md).
+
+## Historical Step 09 gate before D-24, 23 November 2026
+
+**BLOCKED for new Step 09 DDL/integrity/concurrency.** Existing Step 08 owner/catalog/status verification passed as a baseline before editing. Server reports 23.26.4.1.0; strict unique-key JSON predicate probe on DUAL passed, but restricted-owner V$PARAMETER access was denied and actual COMPATIBLE remains unknown. No new table/constraint was executed. Three new policy approvals and a fresh SPORTIFY_STEP09_TEST_OWNER/private initial password are required. No earlier Oracle pass is relabeled as Step 09. [Exact evidence and remaining commands](step09-verification.md). Historical records below remain scoped to their dated steps.
+
 **Live status, 22 November 2026: operator provisioning and actual runtime connectivity/metadata privileges/HTTP readiness passed.** The user supplied passing ADMIN preparation and account postconditions, including a finite 256 MB owner DATA quota, then completed initial passwords privately in Database Actions. The agent subsequently verified both restricted runtime identities against the designated target with node-oracledb 26.0.0 Thin mTLS, UTC/exact-value behavior, real-pool HTTP readiness and compiled worker lifecycle. Replacement-wallet decryption succeeded. These results do not establish business schema, persistent transactions, remote outage recovery, POSIX signal handling, Linux ARM64 or commercial readiness; Windows Ctrl+C entry-point checks are recorded in the acceptance audit below. PUBLIC object-grant baseline review remains pending; no migrations or cloud/network changes were executed.
 
 ## Initial 22 November runtime attempt (superseded)

@@ -26,3 +26,9 @@ Approved additions to the source 14: location.read, resource.read, customer.read
 Platform authority remains in the separately controlled administrator model; platform.* codes are not tenant-grantable seed data. Tenant roles are tenant-owned, so no global Owner/Manager/Receptionist instances or assignments can be seeded without a real tenant. Later onboarding must create tenant-owned defaults transactionally under the approved action/permission policy. Repeated seeds must never overwrite manual role/permission assignments.
 
 The disposable suite executes each seed SQL twice within a rollback-only customization fixture and compares IDs, labels/flags, descriptions and exact cardinality. This actual Oracle seed-rerun fixture passed, preserving IDs/customization/cardinality and rolling back its synthetic changes. See [dated evidence](step07-verification.md).
+
+## Step 09 seed boundary
+
+No additional reference rows are introduced: commercial plan definitions/prices, entitlement feature codes/units and theme assets/codes are not approved. Do not populate these catalogs with the synthetic integration-test plan/theme. Tests create them only inside the disposable schema and remove them. Existing eight sports/20 tenant permissions and their applied SQL bytes stay unchanged.
+
+D-24 approves structural behavior only. Commercial prices, plan/feature codes and commercial quotas/entitlements remain undecided; no new seed is introduced. Trial/grace and operating/retention/secret replay values remain unconfigured. Test fixtures are synthetic, isolated and not approved catalog definitions.

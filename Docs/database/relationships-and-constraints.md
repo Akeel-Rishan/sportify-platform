@@ -1,5 +1,17 @@
 # Relationships and constraints
 
+## Step 09 actual constraint verification
+
+The scoped application has 463 named enabled/validated constraints; 53 specific isolated rejection cases plus positive tenant/platform scopes passed. Oracle catalog verification includes exact FK keys, owner, restrictive deletion and CHECK definitions; no constraint was disabled/relaxed. CASE index comparison changed only to accept the observed equivalent literal equal-return rewrite while rejecting changed semantics. Original SQL/entry checksums remain unchanged. Runtime authorization, immutable history updates, interval exclusion and aggregate caps remain future services. [Evidence and limits](step09-verification.md). Prior draft overlays are historical.
+
+## D-24 approved Step 09 structural overlay
+
+The lifecycle/snapshot/manual-settlement, canonical slug/scoped audit and handoff/lease/idempotency policies are approved; source/proposed labels below remain provenance. Static checks constrain explicit values, not commercial quotas, aggregate settlement, authorization, retention or timing policy. Those excluded configurations remain undecided/unseeded. Positive MAX_ATTEMPTS is required without a default; scheduling timestamps are explicit inputs. No applied constraint or SQL bytes changed. Actual Oracle verification remains pending [technical gates](step09-verification.md).
+
+## Historical Step 09 draft before D-24
+
+New subscription/website/audit/operational definitions align with 000018-000026 and remain policy-review gated. The new source-event scope and tenant FKs both constrain jobs; idempotency's complete unique scope includes a nonnull platform/tenant discriminator even when platform tenant is NULL. Strict JSON checks validate syntax/unique keys, not safe payload shape or size. Current-term uniqueness does not exclude all interval overlaps. Existing applied constraints are unchanged. [Enforcement boundaries and pending Oracle tests](step09-verification.md).
+
 **Step 07 scope is installed; D-21-approved Step 08 artifacts are installed and catalog/integrity-verified under D-22; broader future definitions are proposed.** Source/proposed labels record provenance, while approved marks identify explicit D-21 amendments. Names/columns below are exact; the dictionary links here rather than duplicating definitions. Each FK targets the listed exact PK/UK order. No FK has ON DELETE CASCADE. All constraints are intended ENABLE VALIDATE, nondeferrable/immediate unless a later reviewed migration explicitly changes them.
 
 ## Isolation rules
@@ -14,256 +26,262 @@ Oracle composite UNIQUE semantics already reject equal non-null components in pa
 
 ## Exact key and FK register
 
-| Table                            | Name                                  | Kind | Child/key columns                                              | Referenced table         | Referenced columns                                  | Origin   |
-| -------------------------------- | ------------------------------------- | ---- | -------------------------------------------------------------- | ------------------------ | --------------------------------------------------- | -------- |
-| `SCHEMA_MIGRATIONS`              | `PK_SCHEMA_MIGRATIONS`                | PK   | `VERSION`                                                      | `-`                      | `-`                                                 | source   |
-| `SCHEMA_MIGRATIONS`              | `FK_MIGRATION_REPAIR`                 | FK   | `REPAIR_VERSION`                                               | `SCHEMA_MIGRATIONS`      | `VERSION`                                           | proposed |
-| `TENANTS`                        | `PK_TENANTS`                          | PK   | `TENANT_ID`                                                    | `-`                      | `-`                                                 | source   |
-| `TENANTS`                        | `UQ_TENANTS_PUBLIC_ID`                | UK   | `PUBLIC_ID`                                                    | `-`                      | `-`                                                 | source   |
-| `TENANTS`                        | `UQ_TENANTS_CODE`                     | UK   | `TENANT_CODE`                                                  | `-`                      | `-`                                                 | source   |
-| `USERS`                          | `PK_USERS`                            | PK   | `USER_ID`                                                      | `-`                      | `-`                                                 | source   |
-| `USERS`                          | `UQ_USERS_PUBLIC_ID`                  | UK   | `PUBLIC_ID`                                                    | `-`                      | `-`                                                 | source   |
-| `USERS`                          | `UQ_USERS_EMAIL_NORMALIZED`           | UK   | `EMAIL_NORMALIZED`                                             | `-`                      | `-`                                                 | source   |
-| `PLATFORM_SETTINGS`              | `PK_PLATFORM_SETTINGS`                | PK   | `SETTING_KEY`                                                  | `-`                      | `-`                                                 | source   |
-| `TENANT_USERS`                   | `PK_TENANT_USERS`                     | PK   | `MEMBERSHIP_ID`                                                | `-`                      | `-`                                                 | source   |
-| `TENANT_USERS`                   | `UQ_TU_TENANT_MEMBER`                 | UK   | `TENANT_ID, MEMBERSHIP_ID`                                     | `-`                      | `-`                                                 | source   |
-| `TENANT_USERS`                   | `UQ_TU_TENANT_MEMBER_USER`            | UK   | `TENANT_ID, MEMBERSHIP_ID, USER_ID`                            | `-`                      | `-`                                                 | source   |
-| `TENANT_USERS`                   | `UQ_TENANT_USERS_TENANT_USER`         | UK   | `TENANT_ID, USER_ID`                                           | `-`                      | `-`                                                 | source   |
-| `TENANT_USERS`                   | `FK_TENANT_USERS_TENANT`              | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `TENANT_USERS`                   | `FK_TENANT_USERS_USER`                | FK   | `USER_ID`                                                      | `USERS`                  | `USER_ID`                                           | source   |
-| `TENANT_USERS`                   | `FK_TENANT_USERS_INVITER`             | FK   | `TENANT_ID, INVITED_BY_MEMBERSHIP_ID`                          | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `TENANT_USERS`                   | `UQ_TENANT_USERS_PUBLIC_ID`           | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `AUTH_SESSIONS`                  | `PK_AUTH_SESSIONS`                    | PK   | `SESSION_ID`                                                   | `-`                      | `-`                                                 | source   |
-| `AUTH_SESSIONS`                  | `UQ_AUTH_SESSIONS_TOKEN`              | UK   | `TOKEN_HASH`                                                   | `-`                      | `-`                                                 | source   |
-| `AUTH_SESSIONS`                  | `FK_AUTH_SESSIONS_USER`               | FK   | `USER_ID`                                                      | `USERS`                  | `USER_ID`                                           | source   |
-| `AUTH_SESSIONS`                  | `FK_SESSION_ACTIVE_MEMBER`            | FK   | `ACTIVE_TENANT_ID, ACTIVE_MEMBERSHIP_ID, USER_ID`              | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID, USER_ID`                 | proposed |
-| `EMAIL_VERIFICATION_TOKENS`      | `PK_EMAIL_VERIFICATION_TOKENS`        | PK   | `VERIFICATION_ID`                                              | `-`                      | `-`                                                 | source   |
-| `EMAIL_VERIFICATION_TOKENS`      | `UQ_EMAIL_VERIFICATION_TOKEN`         | UK   | `TOKEN_HASH`                                                   | `-`                      | `-`                                                 | source   |
-| `EMAIL_VERIFICATION_TOKENS`      | `FK_EMAIL_VERIFICATION_USER`          | FK   | `USER_ID`                                                      | `USERS`                  | `USER_ID`                                           | source   |
-| `EMAIL_VERIFICATION_TOKENS`      | `UQ_EMAIL_VERIFICATION_TOKENS_PUBLIC` | UK   | `PUBLIC_ID`                                                    | `-`                      | `-`                                                 | proposed |
-| `PASSWORD_RESET_TOKENS`          | `PK_PASSWORD_RESET_TOKENS`            | PK   | `RESET_ID`                                                     | `-`                      | `-`                                                 | source   |
-| `PASSWORD_RESET_TOKENS`          | `UQ_PASSWORD_RESET_TOKEN`             | UK   | `TOKEN_HASH`                                                   | `-`                      | `-`                                                 | source   |
-| `PASSWORD_RESET_TOKENS`          | `FK_PASSWORD_RESET_USER`              | FK   | `USER_ID`                                                      | `USERS`                  | `USER_ID`                                           | source   |
-| `PASSWORD_RESET_TOKENS`          | `UQ_PASSWORD_RESET_TOKENS_PUBLIC`     | UK   | `PUBLIC_ID`                                                    | `-`                      | `-`                                                 | proposed |
-| `PLATFORM_ADMINS`                | `PK_PLATFORM_ADMINS`                  | PK   | `PLATFORM_ADMIN_ID`                                            | `-`                      | `-`                                                 | source   |
-| `PLATFORM_ADMINS`                | `UQ_PLATFORM_ADMINS_USER`             | UK   | `USER_ID`                                                      | `-`                      | `-`                                                 | source   |
-| `PLATFORM_ADMINS`                | `FK_PLATFORM_ADMINS_USER`             | FK   | `USER_ID`                                                      | `USERS`                  | `USER_ID`                                           | source   |
-| `PLATFORM_ADMINS`                | `UQ_ADMIN_USER_PAIR`                  | UK   | `PLATFORM_ADMIN_ID, USER_ID`                                   | `-`                      | `-`                                                 | proposed |
-| `ROLES`                          | `PK_ROLES`                            | PK   | `ROLE_ID`                                                      | `-`                      | `-`                                                 | source   |
-| `ROLES`                          | `UQ_ROLES_TENANT_ROLE`                | UK   | `TENANT_ID, ROLE_ID`                                           | `-`                      | `-`                                                 | source   |
-| `ROLES`                          | `UQ_ROLES_TENANT_CODE`                | UK   | `TENANT_ID, ROLE_CODE`                                         | `-`                      | `-`                                                 | source   |
-| `ROLES`                          | `UQ_ROLES_TENANT_NAME`                | UK   | `TENANT_ID, ROLE_NAME`                                         | `-`                      | `-`                                                 | required |
-| `ROLES`                          | `FK_ROLES_TENANT`                     | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `PERMISSIONS`                    | `PK_PERMISSIONS`                      | PK   | `PERMISSION_ID`                                                | `-`                      | `-`                                                 | source   |
-| `PERMISSIONS`                    | `UQ_PERMISSIONS_CODE`                 | UK   | `PERMISSION_CODE`                                              | `-`                      | `-`                                                 | source   |
-| `ROLE_PERMISSIONS`               | `PK_ROLE_PERMISSIONS`                 | PK   | `TENANT_ID, ROLE_ID, PERMISSION_ID`                            | `-`                      | `-`                                                 | source   |
-| `ROLE_PERMISSIONS`               | `FK_ROLE_PERMISSIONS_ROLE`            | FK   | `TENANT_ID, ROLE_ID`                                           | `ROLES`                  | `TENANT_ID, ROLE_ID`                                | source   |
-| `ROLE_PERMISSIONS`               | `FK_ROLE_PERMISSIONS_PERMISSION`      | FK   | `PERMISSION_ID`                                                | `PERMISSIONS`            | `PERMISSION_ID`                                     | source   |
-| `USER_ROLES`                     | `PK_USER_ROLES`                       | PK   | `TENANT_ID, MEMBERSHIP_ID, ROLE_ID`                            | `-`                      | `-`                                                 | source   |
-| `USER_ROLES`                     | `FK_USER_ROLES_MEMBERSHIP`            | FK   | `TENANT_ID, MEMBERSHIP_ID`                                     | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `USER_ROLES`                     | `FK_USER_ROLES_ROLE`                  | FK   | `TENANT_ID, ROLE_ID`                                           | `ROLES`                  | `TENANT_ID, ROLE_ID`                                | source   |
-| `USER_ROLES`                     | `FK_USER_ROLES_ASSIGNER`              | FK   | `TENANT_ID, ASSIGNED_BY_MEMBERSHIP_ID`                         | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `TENANT_INVITATIONS`             | `PK_TENANT_INVITATIONS`               | PK   | `INVITATION_ID`                                                | `-`                      | `-`                                                 | source   |
-| `TENANT_INVITATIONS`             | `UQ_TENANT_INVITATIONS_TOKEN`         | UK   | `TOKEN_HASH`                                                   | `-`                      | `-`                                                 | source   |
-| `TENANT_INVITATIONS`             | `UQ_INV_TENANT_ID`                    | UK   | `TENANT_ID, INVITATION_ID`                                     | `-`                      | `-`                                                 | source   |
-| `TENANT_INVITATIONS`             | `FK_TENANT_INVITATIONS_TENANT`        | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `TENANT_INVITATIONS`             | `FK_TENANT_INVITATIONS_ROLE`          | FK   | `TENANT_ID, ROLE_ID`                                           | `ROLES`                  | `TENANT_ID, ROLE_ID`                                | source   |
-| `TENANT_INVITATIONS`             | `FK_TENANT_INVITATIONS_INVITER`       | FK   | `TENANT_ID, INVITED_BY_MEMBERSHIP_ID`                          | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `TENANT_INVITATIONS`             | `UQ_TENANT_INVITATIONS_PUBLIC_ID`     | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `BUSINESSES`                     | `PK_BUSINESSES`                       | PK   | `BUSINESS_ID`                                                  | `-`                      | `-`                                                 | source   |
-| `BUSINESSES`                     | `UQ_BUSINESSES_TENANT_ID`             | UK   | `TENANT_ID, BUSINESS_ID`                                       | `-`                      | `-`                                                 | source   |
-| `BUSINESSES`                     | `UQ_BUSINESSES_ONE_PER_TENANT`        | UK   | `TENANT_ID`                                                    | `-`                      | `-`                                                 | source   |
-| `BUSINESSES`                     | `UQ_BUSINESSES_SLUG`                  | UK   | `BUSINESS_SLUG`                                                | `-`                      | `-`                                                 | source   |
-| `BUSINESSES`                     | `FK_BUSINESSES_TENANT`                | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `BUSINESSES`                     | `UQ_BUSINESSES_PUBLIC_ID`             | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `BUSINESS_PROFILES`              | `PK_BUSINESS_PROFILES`                | PK   | `BUSINESS_PROFILE_ID`                                          | `-`                      | `-`                                                 | source   |
-| `BUSINESS_PROFILES`              | `UQ_BUSINESS_PROFILES_BUSINESS`       | UK   | `TENANT_ID, BUSINESS_ID`                                       | `-`                      | `-`                                                 | source   |
-| `BUSINESS_PROFILES`              | `FK_BUSINESS_PROFILES_BUSINESS`       | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `LOCATIONS`                      | `PK_LOCATIONS`                        | PK   | `LOCATION_ID`                                                  | `-`                      | `-`                                                 | source   |
-| `LOCATIONS`                      | `UQ_LOCATIONS_TENANT_ID`              | UK   | `TENANT_ID, LOCATION_ID`                                       | `-`                      | `-`                                                 | source   |
-| `LOCATIONS`                      | `UQ_LOCATIONS_BUSINESS_LOCATION`      | UK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID`                          | `-`                      | `-`                                                 | source   |
-| `LOCATIONS`                      | `UQ_LOCATIONS_BUSINESS_CODE`          | UK   | `TENANT_ID, BUSINESS_ID, LOCATION_CODE`                        | `-`                      | `-`                                                 | source   |
-| `LOCATIONS`                      | `FK_LOCATIONS_BUSINESS`               | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `LOCATIONS`                      | `UQ_LOCATIONS_PUBLIC_ID`              | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `STAFF_ASSIGNMENTS`              | `PK_STAFF_ASSIGNMENTS`                | PK   | `STAFF_ASSIGNMENT_ID`                                          | `-`                      | `-`                                                 | source   |
-| `STAFF_ASSIGNMENTS`              | `UQ_STAFF_ASSIGNMENTS_TENANT_ID`      | UK   | `TENANT_ID, STAFF_ASSIGNMENT_ID`                               | `-`                      | `-`                                                 | source   |
-| `STAFF_ASSIGNMENTS`              | `UQ_STAFF_MEMBER_LOC`                 | UK   | `TENANT_ID, MEMBERSHIP_ID, LOCATION_ID`                        | `-`                      | `-`                                                 | source   |
-| `STAFF_ASSIGNMENTS`              | `FK_STAFF_MEMBER`                     | FK   | `TENANT_ID, MEMBERSHIP_ID`                                     | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `STAFF_ASSIGNMENTS`              | `FK_STAFF_ASSIGNMENTS_LOCATION`       | FK   | `TENANT_ID, LOCATION_ID`                                       | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
-| `STAFF_ASSIGNMENTS`              | `UQ_STAFF_ASSIGNMENTS_PUBLIC_ID`      | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `SPORTS`                         | `PK_SPORTS`                           | PK   | `SPORT_ID`                                                     | `-`                      | `-`                                                 | source   |
-| `SPORTS`                         | `UQ_SPORTS_CODE`                      | UK   | `SPORT_CODE`                                                   | `-`                      | `-`                                                 | source   |
-| `BUSINESS_SPORTS`                | `PK_BUSINESS_SPORTS`                  | PK   | `TENANT_ID, BUSINESS_ID, SPORT_ID`                             | `-`                      | `-`                                                 | source   |
-| `BUSINESS_SPORTS`                | `FK_BUSINESS_SPORTS_BUSINESS`         | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `BUSINESS_SPORTS`                | `FK_BUSINESS_SPORTS_SPORT`            | FK   | `SPORT_ID`                                                     | `SPORTS`                 | `SPORT_ID`                                          | source   |
-| `RESOURCES`                      | `PK_RESOURCES`                        | PK   | `RESOURCE_ID`                                                  | `-`                      | `-`                                                 | source   |
-| `RESOURCES`                      | `UQ_RESOURCES_TENANT_ID`              | UK   | `TENANT_ID, RESOURCE_ID`                                       | `-`                      | `-`                                                 | source   |
-| `RESOURCES`                      | `UQ_RES_TENANT_LOC_ID`                | UK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID`                          | `-`                      | `-`                                                 | source   |
-| `RESOURCES`                      | `UQ_RES_BIZ_LOC_ID`                   | UK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`             | `-`                      | `-`                                                 | source   |
-| `RESOURCES`                      | `UQ_RESOURCES_LOCATION_CODE`          | UK   | `TENANT_ID, LOCATION_ID, RESOURCE_CODE`                        | `-`                      | `-`                                                 | source   |
-| `RESOURCES`                      | `FK_RESOURCES_BUSINESS`               | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `RESOURCES`                      | `FK_RESOURCES_LOCATION`               | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID`                          | `LOCATIONS`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID`               | source   |
-| `RESOURCES`                      | `FK_RESOURCES_BUSINESS_SPORT`         | FK   | `TENANT_ID, BUSINESS_ID, SPORT_ID`                             | `BUSINESS_SPORTS`        | `TENANT_ID, BUSINESS_ID, SPORT_ID`                  | source   |
-| `RESOURCES`                      | `UQ_RESOURCES_PUBLIC_ID`              | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `RESOURCE_FEATURES`              | `PK_RESOURCE_FEATURES`                | PK   | `RESOURCE_FEATURE_ID`                                          | `-`                      | `-`                                                 | source   |
-| `RESOURCE_FEATURES`              | `UQ_RESOURCE_FEATURES_TENANT_ID`      | UK   | `TENANT_ID, RESOURCE_FEATURE_ID`                               | `-`                      | `-`                                                 | source   |
-| `RESOURCE_FEATURES`              | `UQ_RESOURCE_FEATURES_CODE`           | UK   | `TENANT_ID, RESOURCE_ID, FEATURE_CODE`                         | `-`                      | `-`                                                 | source   |
-| `RESOURCE_FEATURES`              | `FK_RESOURCE_FEATURES_RESOURCE`       | FK   | `TENANT_ID, RESOURCE_ID`                                       | `RESOURCES`              | `TENANT_ID, RESOURCE_ID`                            | source   |
-| `OPERATING_HOURS`                | `PK_OPERATING_HOURS`                  | PK   | `OPERATING_HOUR_ID`                                            | `-`                      | `-`                                                 | source   |
-| `OPERATING_HOURS`                | `UQ_OPERATING_HOURS_TENANT_ID`        | UK   | `TENANT_ID, OPERATING_HOUR_ID`                                 | `-`                      | `-`                                                 | source   |
-| `OPERATING_HOURS`                | `FK_OPERATING_HOURS_LOCATION`         | FK   | `TENANT_ID, LOCATION_ID`                                       | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
-| `OPERATING_HOURS`                | `FK_OPERATING_HOURS_RESOURCE`         | FK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID`                          | `RESOURCES`              | `TENANT_ID, LOCATION_ID, RESOURCE_ID`               | source   |
-| `OPERATING_HOURS`                | `UQ_OPERATING_HOURS_PUBLIC_ID`        | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `OPERATING_HOURS`                | `UQ_OPERATING_HOURS_SEGMENT`          | UK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID, DAY_OF_WEEK, SEGMENT_NO` | `-`                      | `-`                                                 | proposed |
-| `HOLIDAYS`                       | `PK_HOLIDAYS`                         | PK   | `HOLIDAY_ID`                                                   | `-`                      | `-`                                                 | source   |
-| `HOLIDAYS`                       | `UQ_HOLIDAYS_TENANT_ID`               | UK   | `TENANT_ID, HOLIDAY_ID`                                        | `-`                      | `-`                                                 | source   |
-| `HOLIDAYS`                       | `UQ_HOLIDAYS_LOCATION_DATE`           | UK   | `TENANT_ID, LOCATION_ID, HOLIDAY_DATE`                         | `-`                      | `-`                                                 | source   |
-| `HOLIDAYS`                       | `FK_HOLIDAYS_LOCATION`                | FK   | `TENANT_ID, LOCATION_ID`                                       | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
-| `HOLIDAYS`                       | `UQ_HOLIDAYS_PUBLIC_ID`               | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `AVAILABILITY_BLOCKS`            | `PK_AVAILABILITY_BLOCKS`              | PK   | `AVAILABILITY_BLOCK_ID`                                        | `-`                      | `-`                                                 | source   |
-| `AVAILABILITY_BLOCKS`            | `UQ_AVAIL_BLK_TENANT_ID`              | UK   | `TENANT_ID, AVAILABILITY_BLOCK_ID`                             | `-`                      | `-`                                                 | source   |
-| `AVAILABILITY_BLOCKS`            | `FK_AVAIL_LOC`                        | FK   | `TENANT_ID, LOCATION_ID`                                       | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
-| `AVAILABILITY_BLOCKS`            | `FK_AVAIL_RESOURCE`                   | FK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID`                          | `RESOURCES`              | `TENANT_ID, LOCATION_ID, RESOURCE_ID`               | source   |
-| `AVAILABILITY_BLOCKS`            | `FK_AVAILABILITY_BLOCKS_CREATOR`      | FK   | `TENANT_ID, CREATED_BY_MEMBERSHIP_ID`                          | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `AVAILABILITY_BLOCKS`            | `UQ_AVAILABILITY_BLOCKS_PUBLIC_ID`    | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `PRICING_RULES`                  | `PK_PRICING_RULES`                    | PK   | `PRICING_RULE_ID`                                              | `-`                      | `-`                                                 | source   |
-| `PRICING_RULES`                  | `UQ_PRICING_RULES_TENANT_ID`          | UK   | `TENANT_ID, PRICING_RULE_ID`                                   | `-`                      | `-`                                                 | source   |
-| `PRICING_RULES`                  | `UQ_PRICING_RULES_CODE`               | UK   | `TENANT_ID, RESOURCE_ID, RULE_CODE`                            | `-`                      | `-`                                                 | source   |
-| `PRICING_RULES`                  | `FK_PRICING_RULES_RESOURCE`           | FK   | `TENANT_ID, RESOURCE_ID`                                       | `RESOURCES`              | `TENANT_ID, RESOURCE_ID`                            | source   |
-| `PRICING_RULES`                  | `UQ_PRICING_RULES_PUBLIC_ID`          | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `PRICING_RULES`                  | `UQ_PRICE_RESOURCE_KEY`               | UK   | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`                      | `-`                      | `-`                                                 | proposed |
-| `CUSTOMERS`                      | `PK_CUSTOMERS`                        | PK   | `CUSTOMER_ID`                                                  | `-`                      | `-`                                                 | source   |
-| `CUSTOMERS`                      | `UQ_CUSTOMERS_TENANT_ID`              | UK   | `TENANT_ID, CUSTOMER_ID`                                       | `-`                      | `-`                                                 | source   |
-| `CUSTOMERS`                      | `UQ_CUSTOMERS_PUBLIC`                 | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | source   |
-| `CUSTOMERS`                      | `FK_CUSTOMERS_TENANT`                 | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `CUSTOMERS`                      | `FK_CUSTOMERS_USER`                   | FK   | `USER_ID`                                                      | `USERS`                  | `USER_ID`                                           | source   |
-| `BOOKING_HOLDS`                  | `PK_BOOKING_HOLDS`                    | PK   | `HOLD_ID`                                                      | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLDS`                  | `UQ_BOOKING_HOLDS_TENANT_ID`          | UK   | `TENANT_ID, HOLD_ID`                                           | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLDS`                  | `UQ_BOOKING_HOLDS_PUBLIC`             | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLDS`                  | `UQ_BOOKING_HOLDS_TOKEN`              | UK   | `HOLD_TOKEN_HASH`                                              | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLDS`                  | `FK_BOOKING_HOLDS_TENANT`             | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `BOOKING_HOLD_ITEMS`             | `PK_BOOKING_HOLD_ITEMS`               | PK   | `HOLD_ITEM_ID`                                                 | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLD_ITEMS`             | `UQ_BHI_TENANT_ID`                    | UK   | `TENANT_ID, HOLD_ITEM_ID`                                      | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLD_ITEMS`             | `UQ_BHI_RESOURCE`                     | UK   | `TENANT_ID, HOLD_ITEM_ID, RESOURCE_ID`                         | `-`                      | `-`                                                 | source   |
-| `BOOKING_HOLD_ITEMS`             | `FK_BOOKING_HOLD_ITEMS_HOLD`          | FK   | `TENANT_ID, HOLD_ID`                                           | `BOOKING_HOLDS`          | `TENANT_ID, HOLD_ID`                                | source   |
-| `BOOKING_HOLD_ITEMS`             | `FK_BOOKING_HOLD_ITEMS_RESOURCE`      | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`             | `RESOURCES`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`  | source   |
-| `BOOKING_HOLD_ITEMS`             | `FK_BOOKING_HOLD_ITEMS_PRICE`         | FK   | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`                      | `PRICING_RULES`          | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`           | proposed |
-| `BOOKINGS`                       | `PK_BOOKINGS`                         | PK   | `BOOKING_ID`                                                   | `-`                      | `-`                                                 | source   |
-| `BOOKINGS`                       | `UQ_BOOKINGS_TENANT_ID`               | UK   | `TENANT_ID, BOOKING_ID`                                        | `-`                      | `-`                                                 | source   |
-| `BOOKINGS`                       | `UQ_BOOKINGS_REFERENCE`               | UK   | `TENANT_ID, BOOKING_REFERENCE`                                 | `-`                      | `-`                                                 | source   |
-| `BOOKINGS`                       | `UQ_BOOKINGS_BUSINESS_KEY`            | UK   | `TENANT_ID, BOOKING_ID, BUSINESS_ID`                           | `-`                      | `-`                                                 | source   |
-| `BOOKINGS`                       | `UQ_BOOKINGS_CUSTOMER_KEY`            | UK   | `TENANT_ID, BOOKING_ID, CUSTOMER_ID`                           | `-`                      | `-`                                                 | source   |
-| `BOOKINGS`                       | `UQ_BOOKINGS_PUBLIC`                  | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | source   |
-| `BOOKINGS`                       | `FK_BOOKINGS_BUSINESS`                | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `BOOKINGS`                       | `FK_BOOKINGS_CUSTOMER`                | FK   | `TENANT_ID, CUSTOMER_ID`                                       | `CUSTOMERS`              | `TENANT_ID, CUSTOMER_ID`                            | source   |
-| `BOOKINGS`                       | `FK_BOOKINGS_HOLD`                    | FK   | `TENANT_ID, SOURCE_HOLD_ID`                                    | `BOOKING_HOLDS`          | `TENANT_ID, HOLD_ID`                                | source   |
-| `BOOKINGS`                       | `FK_BOOKINGS_CREATOR`                 | FK   | `TENANT_ID, CREATED_BY_MEMBERSHIP_ID`                          | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `BOOKINGS`                       | `UQ_BOOKING_CURRENCY`                 | UK   | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`                         | `-`                      | `-`                                                 | proposed |
-| `BOOKING_ITEMS`                  | `PK_BOOKING_ITEMS`                    | PK   | `BOOKING_ITEM_ID`                                              | `-`                      | `-`                                                 | source   |
-| `BOOKING_ITEMS`                  | `UQ_BOOKING_ITEMS_TENANT_ID`          | UK   | `TENANT_ID, BOOKING_ITEM_ID`                                   | `-`                      | `-`                                                 | source   |
-| `BOOKING_ITEMS`                  | `UQ_BI_RESOURCE`                      | UK   | `TENANT_ID, BOOKING_ITEM_ID, RESOURCE_ID`                      | `-`                      | `-`                                                 | source   |
-| `BOOKING_ITEMS`                  | `FK_BOOKING_ITEMS_BOOKING`            | FK   | `TENANT_ID, BOOKING_ID, BUSINESS_ID`                           | `BOOKINGS`               | `TENANT_ID, BOOKING_ID, BUSINESS_ID`                | source   |
-| `BOOKING_ITEMS`                  | `FK_BOOKING_ITEMS_RESOURCE`           | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`             | `RESOURCES`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`  | source   |
-| `BOOKING_ITEMS`                  | `FK_BOOKING_ITEMS_PRICE`              | FK   | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`                      | `PRICING_RULES`          | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`           | proposed |
-| `BOOKING_ITEMS`                  | `FK_BI_CURRENCY`                      | FK   | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`                         | `BOOKINGS`               | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`              | proposed |
-| `RESOURCE_SLOT_RESERVATIONS`     | `PK_RESOURCE_SLOT_RESERVATIONS`       | PK   | `TENANT_ID, RESOURCE_ID, SLOT_START_UTC`                       | `-`                      | `-`                                                 | source   |
-| `RESOURCE_SLOT_RESERVATIONS`     | `FK_SLOT_RESERVATIONS_RESOURCE`       | FK   | `TENANT_ID, RESOURCE_ID`                                       | `RESOURCES`              | `TENANT_ID, RESOURCE_ID`                            | source   |
-| `RESOURCE_SLOT_RESERVATIONS`     | `FK_SLOTS_BOOKING_ITEM`               | FK   | `TENANT_ID, BOOKING_ITEM_ID, RESOURCE_ID`                      | `BOOKING_ITEMS`          | `TENANT_ID, BOOKING_ITEM_ID, RESOURCE_ID`           | source   |
-| `RESOURCE_SLOT_RESERVATIONS`     | `FK_SLOT_RESERVATIONS_HOLD_ITEM`      | FK   | `TENANT_ID, HOLD_ITEM_ID, RESOURCE_ID`                         | `BOOKING_HOLD_ITEMS`     | `TENANT_ID, HOLD_ITEM_ID, RESOURCE_ID`              | source   |
-| `BOOKING_CANCELLATIONS`          | `PK_BOOKING_CANCELLATIONS`            | PK   | `CANCELLATION_ID`                                              | `-`                      | `-`                                                 | source   |
-| `BOOKING_CANCELLATIONS`          | `UQ_BC_TENANT_ID`                     | UK   | `TENANT_ID, CANCELLATION_ID`                                   | `-`                      | `-`                                                 | source   |
-| `BOOKING_CANCELLATIONS`          | `FK_BC_BOOKING`                       | FK   | `TENANT_ID, BOOKING_ID`                                        | `BOOKINGS`               | `TENANT_ID, BOOKING_ID`                             | source   |
-| `BOOKING_CANCELLATIONS`          | `FK_BOOKING_CANCELLATIONS_ACTOR`      | FK   | `TENANT_ID, CANCELLED_BY_MEMBERSHIP_ID`                        | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `BOOKING_CANCELLATIONS`          | `UQ_BC_BOOKING`                       | UK   | `TENANT_ID, BOOKING_ID`                                        | `-`                      | `-`                                                 | source   |
-| `BUSINESS_PAYMENT_SETTINGS`      | `PK_BUSINESS_PAYMENT_SETTINGS`        | PK   | `BUSINESS_PAYMENT_SETTINGS_ID`                                 | `-`                      | `-`                                                 | source   |
-| `BUSINESS_PAYMENT_SETTINGS`      | `UQ_BPS_BUSINESS`                     | UK   | `TENANT_ID, BUSINESS_ID`                                       | `-`                      | `-`                                                 | source   |
-| `BUSINESS_PAYMENT_SETTINGS`      | `FK_BPS_BUSINESS`                     | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `PAYMENTS`                       | `PK_PAYMENTS`                         | PK   | `PAYMENT_ID`                                                   | `-`                      | `-`                                                 | source   |
-| `PAYMENTS`                       | `UQ_PAYMENTS_TENANT_ID`               | UK   | `TENANT_ID, PAYMENT_ID`                                        | `-`                      | `-`                                                 | source   |
-| `PAYMENTS`                       | `FK_PAYMENTS_RECORDER`                | FK   | `TENANT_ID, RECORDED_BY_MEMBERSHIP_ID`                         | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `PAYMENTS`                       | `UQ_PAYMENTS_PUBLIC_ID`               | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `PAYMENTS`                       | `FK_PAYMENTS_BOOKING`                 | FK   | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`                         | `BOOKINGS`               | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`              | proposed |
-| `PAYMENTS`                       | `UQ_PAYMENT_CURRENCY`                 | UK   | `TENANT_ID, PAYMENT_ID, CURRENCY_CODE`                         | `-`                      | `-`                                                 | proposed |
-| `PAYMENTS`                       | `FK_PAYMENT_VOID_ACTOR`               | FK   | `TENANT_ID, VOIDED_BY_MEMBERSHIP_ID`                           | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | proposed |
-| `REFUNDS`                        | `PK_REFUNDS`                          | PK   | `REFUND_ID`                                                    | `-`                      | `-`                                                 | source   |
-| `REFUNDS`                        | `UQ_REFUNDS_TENANT_ID`                | UK   | `TENANT_ID, REFUND_ID`                                         | `-`                      | `-`                                                 | source   |
-| `REFUNDS`                        | `FK_REFUNDS_RECORDER`                 | FK   | `TENANT_ID, RECORDED_BY_MEMBERSHIP_ID`                         | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
-| `REFUNDS`                        | `UQ_REFUNDS_PUBLIC_ID`                | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `REFUNDS`                        | `FK_REFUNDS_PAYMENT`                  | FK   | `TENANT_ID, PAYMENT_ID, CURRENCY_CODE`                         | `PAYMENTS`               | `TENANT_ID, PAYMENT_ID, CURRENCY_CODE`              | proposed |
-| `SUBSCRIPTION_PLANS`             | `PK_SUBSCRIPTION_PLANS`               | PK   | `PLAN_ID`                                                      | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_PLANS`             | `UQ_SUBSCRIPTION_PLANS_CODE`          | UK   | `PLAN_CODE`                                                    | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_ENTITLEMENTS`      | `PK_SUBSCRIPTION_ENTITLEMENTS`        | PK   | `PLAN_ID, FEATURE_CODE`                                        | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_ENTITLEMENTS`      | `FK_SE_PLAN`                          | FK   | `PLAN_ID`                                                      | `SUBSCRIPTION_PLANS`     | `PLAN_ID`                                           | source   |
-| `SUBSCRIPTIONS`                  | `PK_SUBSCRIPTIONS`                    | PK   | `SUBSCRIPTION_ID`                                              | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTIONS`                  | `UQ_SUBSCRIPTIONS_TENANT_ID`          | UK   | `TENANT_ID, SUBSCRIPTION_ID`                                   | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTIONS`                  | `FK_SUBSCRIPTIONS_TENANT`             | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `SUBSCRIPTIONS`                  | `FK_SUBSCRIPTIONS_PLAN`               | FK   | `PLAN_ID`                                                      | `SUBSCRIPTION_PLANS`     | `PLAN_ID`                                           | source   |
-| `SUBSCRIPTIONS`                  | `UQ_SUBSCRIPTION_CURRENCY`            | UK   | `TENANT_ID, SUBSCRIPTION_ID, CURRENCY_CODE`                    | `-`                      | `-`                                                 | proposed |
-| `SUBSCRIPTION_INVOICES`          | `PK_SUBSCRIPTION_INVOICES`            | PK   | `SUBSCRIPTION_INVOICE_ID`                                      | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_INVOICES`          | `UQ_SI_TENANT_ID`                     | UK   | `TENANT_ID, SUBSCRIPTION_INVOICE_ID`                           | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_INVOICES`          | `UQ_SI_NUMBER`                        | UK   | `TENANT_ID, INVOICE_NUMBER`                                    | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_INVOICES`          | `FK_SI_SUBSCRIPTION`                  | FK   | `TENANT_ID, SUBSCRIPTION_ID, CURRENCY_CODE`                    | `SUBSCRIPTIONS`          | `TENANT_ID, SUBSCRIPTION_ID, CURRENCY_CODE`         | proposed |
-| `SUBSCRIPTION_INVOICES`          | `UQ_INVOICE_CURRENCY`                 | UK   | `TENANT_ID, SUBSCRIPTION_INVOICE_ID, CURRENCY_CODE`            | `-`                      | `-`                                                 | proposed |
-| `SUBSCRIPTION_PAYMENTS`          | `PK_SUBSCRIPTION_PAYMENTS`            | PK   | `SUBSCRIPTION_PAYMENT_ID`                                      | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_PAYMENTS`          | `UQ_SP_TENANT_ID`                     | UK   | `TENANT_ID, SUBSCRIPTION_PAYMENT_ID`                           | `-`                      | `-`                                                 | source   |
-| `SUBSCRIPTION_PAYMENTS`          | `FK_SUBSCRIPTION_PAYMENTS_USER`       | FK   | `RECORDED_BY_USER_ID`                                          | `USERS`                  | `USER_ID`                                           | source   |
-| `SUBSCRIPTION_PAYMENTS`          | `UQ_SUBSCRIPTION_PAYMENTS_PUBLIC_ID`  | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_VOID_USER`                     | FK   | `VOIDED_BY_USER_ID`                                            | `USERS`                  | `USER_ID`                                           | proposed |
-| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_INVOICE`                       | FK   | `TENANT_ID, SUBSCRIPTION_INVOICE_ID, CURRENCY_CODE`            | `SUBSCRIPTION_INVOICES`  | `TENANT_ID, SUBSCRIPTION_INVOICE_ID, CURRENCY_CODE` | proposed |
-| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_ADMIN_ACTOR`                   | FK   | `RECORDED_BY_PLATFORM_ADMIN_ID, RECORDED_BY_USER_ID`           | `PLATFORM_ADMINS`        | `PLATFORM_ADMIN_ID, USER_ID`                        | proposed |
-| `WEBSITE_THEMES`                 | `PK_WEBSITE_THEMES`                   | PK   | `THEME_ID`                                                     | `-`                      | `-`                                                 | source   |
-| `WEBSITE_THEMES`                 | `UQ_WEBSITE_THEMES_CODE`              | UK   | `THEME_CODE`                                                   | `-`                      | `-`                                                 | source   |
-| `WEBSITE_SETTINGS`               | `PK_WEBSITE_SETTINGS`                 | PK   | `WEBSITE_ID`                                                   | `-`                      | `-`                                                 | source   |
-| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_TENANT_ID`       | UK   | `TENANT_ID, WEBSITE_ID`                                        | `-`                      | `-`                                                 | source   |
-| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_BUSINESS`        | UK   | `TENANT_ID, BUSINESS_ID`                                       | `-`                      | `-`                                                 | source   |
-| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_SUBDOMAIN`       | UK   | `SUBDOMAIN_SLUG`                                               | `-`                      | `-`                                                 | source   |
-| `WEBSITE_SETTINGS`               | `FK_WEBSITE_SETTINGS_BUSINESS`        | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `WEBSITE_SETTINGS`               | `FK_WEBSITE_SETTINGS_THEME`           | FK   | `THEME_ID`                                                     | `WEBSITE_THEMES`         | `THEME_ID`                                          | source   |
-| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_PUBLIC_ID`       | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `WEBSITE_MEDIA`                  | `PK_WEBSITE_MEDIA`                    | PK   | `WEBSITE_MEDIA_ID`                                             | `-`                      | `-`                                                 | source   |
-| `WEBSITE_MEDIA`                  | `UQ_WEBSITE_MEDIA_TENANT_ID`          | UK   | `TENANT_ID, WEBSITE_MEDIA_ID`                                  | `-`                      | `-`                                                 | source   |
-| `WEBSITE_MEDIA`                  | `UQ_WEBSITE_MEDIA_OBJECT_KEY`         | UK   | `OBJECT_KEY`                                                   | `-`                      | `-`                                                 | source   |
-| `WEBSITE_MEDIA`                  | `FK_WEBSITE_MEDIA_BUSINESS`           | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `WEBSITE_MEDIA`                  | `FK_WEBSITE_MEDIA_LOCATION`           | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID`                          | `LOCATIONS`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID`               | source   |
-| `WEBSITE_MEDIA`                  | `FK_WEBSITE_MEDIA_RESOURCE`           | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`             | `RESOURCES`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`  | source   |
-| `WEBSITE_MEDIA`                  | `UQ_WEBSITE_MEDIA_PUBLIC_ID`          | UK   | `TENANT_ID, PUBLIC_ID`                                         | `-`                      | `-`                                                 | proposed |
-| `NOTIFICATION_TEMPLATES`         | `PK_NOTIFICATION_TEMPLATES`           | PK   | `NOTIFICATION_TEMPLATE_ID`                                     | `-`                      | `-`                                                 | source   |
-| `NOTIFICATION_TEMPLATES`         | `FK_NT_TENANT`                        | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `NOTIFICATIONS`                  | `PK_NOTIFICATIONS`                    | PK   | `NOTIFICATION_ID`                                              | `-`                      | `-`                                                 | source   |
-| `NOTIFICATIONS`                  | `UQ_NOTIFICATIONS_TENANT_ID`          | UK   | `TENANT_ID, NOTIFICATION_ID`                                   | `-`                      | `-`                                                 | source   |
-| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_TENANT`             | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_TEMPLATE`           | FK   | `NOTIFICATION_TEMPLATE_ID`                                     | `NOTIFICATION_TEMPLATES` | `NOTIFICATION_TEMPLATE_ID`                          | source   |
-| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_BOOKING`            | FK   | `TENANT_ID, BOOKING_ID`                                        | `BOOKINGS`               | `TENANT_ID, BOOKING_ID`                             | source   |
-| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_USER`               | FK   | `RECIPIENT_USER_ID`                                            | `USERS`                  | `USER_ID`                                           | source   |
-| `NOTIFICATIONS`                  | `UQ_NOTIFICATION_SCOPE`               | UK   | `SCOPE_TENANT_ID, NOTIFICATION_ID`                             | `-`                      | `-`                                                 | proposed |
-| `NOTIFICATIONS`                  | `UQ_NOTIFICATION_DEDUPE`              | UK   | `SCOPE_TENANT_ID, DEDUPE_KEY`                                  | `-`                      | `-`                                                 | proposed |
-| `NOTIFICATION_LOGS`              | `PK_NOTIFICATION_LOGS`                | PK   | `NOTIFICATION_LOG_ID`                                          | `-`                      | `-`                                                 | source   |
-| `NOTIFICATION_LOGS`              | `UQ_NOTIFICATION_LOGS_TENANT_ID`      | UK   | `TENANT_ID, NOTIFICATION_LOG_ID`                               | `-`                      | `-`                                                 | source   |
-| `NOTIFICATION_LOGS`              | `FK_NL_NOTIFICATION`                  | FK   | `TENANT_ID, NOTIFICATION_ID`                                   | `NOTIFICATIONS`          | `TENANT_ID, NOTIFICATION_ID`                        | source   |
-| `NOTIFICATION_LOGS`              | `FK_NL_SCOPE`                         | FK   | `SCOPE_TENANT_ID, NOTIFICATION_ID`                             | `NOTIFICATIONS`          | `SCOPE_TENANT_ID, NOTIFICATION_ID`                  | proposed |
-| `NOTIFICATION_LOGS`              | `FK_NL_TENANT`                        | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | proposed |
-| `NOTIFICATION_LOGS`              | `UQ_NOTIFICATION_ATTEMPT`             | UK   | `SCOPE_TENANT_ID, NOTIFICATION_ID, ATTEMPT_NUMBER`             | `-`                      | `-`                                                 | proposed |
-| `OUTBOX_EVENTS`                  | `PK_OUTBOX_EVENTS`                    | PK   | `OUTBOX_EVENT_ID`                                              | `-`                      | `-`                                                 | source   |
-| `OUTBOX_EVENTS`                  | `FK_OUTBOX_EVENTS_TENANT`             | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `JOB_QUEUE`                      | `PK_JOB_QUEUE`                        | PK   | `JOB_ID`                                                       | `-`                      | `-`                                                 | source   |
-| `JOB_QUEUE`                      | `FK_JOB_QUEUE_TENANT`                 | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `IDEMPOTENCY_KEYS`               | `PK_IDEMPOTENCY_KEYS`                 | PK   | `IDEMPOTENCY_ID`                                               | `-`                      | `-`                                                 | source   |
-| `IDEMPOTENCY_KEYS`               | `FK_IDEMPOTENCY_KEYS_TENANT`          | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `IDEMPOTENCY_KEYS`               | `UQ_IDEMPOTENCY_OWNER_KEY`            | UK   | `TENANT_ID, OPERATION_SCOPE, OWNER_SCOPE, IDEMPOTENCY_KEY`     | `-`                      | `-`                                                 | proposed |
-| `AUDIT_LOGS`                     | `PK_AUDIT_LOGS`                       | PK   | `AUDIT_LOG_ID`                                                 | `-`                      | `-`                                                 | source   |
-| `AUDIT_LOGS`                     | `FK_AUDIT_LOGS_TENANT`                | FK   | `TENANT_ID`                                                    | `TENANTS`                | `TENANT_ID`                                         | source   |
-| `AUDIT_LOGS`                     | `FK_AUDIT_LOGS_USER`                  | FK   | `ACTOR_USER_ID`                                                | `USERS`                  | `USER_ID`                                           | source   |
-| `AUDIT_LOGS`                     | `FK_AUDIT_LOGS_MEMBERSHIP_ACTOR`      | FK   | `TENANT_ID, ACTOR_MEMBERSHIP_ID, ACTOR_USER_ID`                | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID, USER_ID`                 | source   |
-| `AUDIT_LOGS`                     | `UQ_AUDIT_LOGS_PUBLIC_ID`             | UK   | `PUBLIC_ID`                                                    | `-`                      | `-`                                                 | proposed |
-| `AUDIT_LOGS`                     | `FK_AUDIT_ADMIN_USER`                 | FK   | `ACTOR_PLATFORM_ADMIN_ID, ACTOR_USER_ID`                       | `PLATFORM_ADMINS`        | `PLATFORM_ADMIN_ID, USER_ID`                        | proposed |
-| `ONBOARDING_PROGRESS`            | `PK_ONBOARDING_PROGRESS`              | PK   | `ONBOARDING_PROGRESS_ID`                                       | `-`                      | `-`                                                 | source   |
-| `ONBOARDING_PROGRESS`            | `UQ_ONBOARDING_STEP`                  | UK   | `TENANT_ID, BUSINESS_ID, STEP_CODE`                            | `-`                      | `-`                                                 | source   |
-| `ONBOARDING_PROGRESS`            | `FK_ONBOARDING_BUSINESS`              | FK   | `TENANT_ID, BUSINESS_ID`                                       | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
-| `INVITATION_LOCATIONS`           | `PK_INVITATION_LOCATIONS`             | PK   | `TENANT_ID, INVITATION_ID, LOCATION_ID`                        | `-`                      | `-`                                                 | proposed |
-| `INVITATION_LOCATIONS`           | `FK_IL_INVITATION`                    | FK   | `TENANT_ID, INVITATION_ID`                                     | `TENANT_INVITATIONS`     | `TENANT_ID, INVITATION_ID`                          | proposed |
-| `INVITATION_LOCATIONS`           | `FK_IL_LOCATION`                      | FK   | `TENANT_ID, LOCATION_ID`                                       | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | proposed |
-| `SUBSCRIPTION_FEATURE_SNAPSHOTS` | `PK_SUB_FEATURE_SNAPSHOTS`            | PK   | `TENANT_ID, SUBSCRIPTION_ID, FEATURE_CODE`                     | `-`                      | `-`                                                 | proposed |
-| `SUBSCRIPTION_FEATURE_SNAPSHOTS` | `FK_SFS_SUBSCRIPTION`                 | FK   | `TENANT_ID, SUBSCRIPTION_ID`                                   | `SUBSCRIPTIONS`          | `TENANT_ID, SUBSCRIPTION_ID`                        | proposed |
+| Table                            | Name                                  | Kind | Child/key columns                                                                  | Referenced table         | Referenced columns                                  | Origin   |
+| -------------------------------- | ------------------------------------- | ---- | ---------------------------------------------------------------------------------- | ------------------------ | --------------------------------------------------- | -------- |
+| `SCHEMA_MIGRATIONS`              | `PK_SCHEMA_MIGRATIONS`                | PK   | `VERSION`                                                                          | `-`                      | `-`                                                 | source   |
+| `SCHEMA_MIGRATIONS`              | `FK_MIGRATION_REPAIR`                 | FK   | `REPAIR_VERSION`                                                                   | `SCHEMA_MIGRATIONS`      | `VERSION`                                           | proposed |
+| `TENANTS`                        | `PK_TENANTS`                          | PK   | `TENANT_ID`                                                                        | `-`                      | `-`                                                 | source   |
+| `TENANTS`                        | `UQ_TENANTS_PUBLIC_ID`                | UK   | `PUBLIC_ID`                                                                        | `-`                      | `-`                                                 | source   |
+| `TENANTS`                        | `UQ_TENANTS_CODE`                     | UK   | `TENANT_CODE`                                                                      | `-`                      | `-`                                                 | source   |
+| `USERS`                          | `PK_USERS`                            | PK   | `USER_ID`                                                                          | `-`                      | `-`                                                 | source   |
+| `USERS`                          | `UQ_USERS_PUBLIC_ID`                  | UK   | `PUBLIC_ID`                                                                        | `-`                      | `-`                                                 | source   |
+| `USERS`                          | `UQ_USERS_EMAIL_NORMALIZED`           | UK   | `EMAIL_NORMALIZED`                                                                 | `-`                      | `-`                                                 | source   |
+| `PLATFORM_SETTINGS`              | `PK_PLATFORM_SETTINGS`                | PK   | `SETTING_KEY`                                                                      | `-`                      | `-`                                                 | source   |
+| `TENANT_USERS`                   | `PK_TENANT_USERS`                     | PK   | `MEMBERSHIP_ID`                                                                    | `-`                      | `-`                                                 | source   |
+| `TENANT_USERS`                   | `UQ_TU_TENANT_MEMBER`                 | UK   | `TENANT_ID, MEMBERSHIP_ID`                                                         | `-`                      | `-`                                                 | source   |
+| `TENANT_USERS`                   | `UQ_TU_TENANT_MEMBER_USER`            | UK   | `TENANT_ID, MEMBERSHIP_ID, USER_ID`                                                | `-`                      | `-`                                                 | source   |
+| `TENANT_USERS`                   | `UQ_TENANT_USERS_TENANT_USER`         | UK   | `TENANT_ID, USER_ID`                                                               | `-`                      | `-`                                                 | source   |
+| `TENANT_USERS`                   | `FK_TENANT_USERS_TENANT`              | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `TENANT_USERS`                   | `FK_TENANT_USERS_USER`                | FK   | `USER_ID`                                                                          | `USERS`                  | `USER_ID`                                           | source   |
+| `TENANT_USERS`                   | `FK_TENANT_USERS_INVITER`             | FK   | `TENANT_ID, INVITED_BY_MEMBERSHIP_ID`                                              | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `TENANT_USERS`                   | `UQ_TENANT_USERS_PUBLIC_ID`           | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `AUTH_SESSIONS`                  | `PK_AUTH_SESSIONS`                    | PK   | `SESSION_ID`                                                                       | `-`                      | `-`                                                 | source   |
+| `AUTH_SESSIONS`                  | `UQ_AUTH_SESSIONS_TOKEN`              | UK   | `TOKEN_HASH`                                                                       | `-`                      | `-`                                                 | source   |
+| `AUTH_SESSIONS`                  | `FK_AUTH_SESSIONS_USER`               | FK   | `USER_ID`                                                                          | `USERS`                  | `USER_ID`                                           | source   |
+| `AUTH_SESSIONS`                  | `FK_SESSION_ACTIVE_MEMBER`            | FK   | `ACTIVE_TENANT_ID, ACTIVE_MEMBERSHIP_ID, USER_ID`                                  | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID, USER_ID`                 | proposed |
+| `EMAIL_VERIFICATION_TOKENS`      | `PK_EMAIL_VERIFICATION_TOKENS`        | PK   | `VERIFICATION_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `EMAIL_VERIFICATION_TOKENS`      | `UQ_EMAIL_VERIFICATION_TOKEN`         | UK   | `TOKEN_HASH`                                                                       | `-`                      | `-`                                                 | source   |
+| `EMAIL_VERIFICATION_TOKENS`      | `FK_EMAIL_VERIFICATION_USER`          | FK   | `USER_ID`                                                                          | `USERS`                  | `USER_ID`                                           | source   |
+| `EMAIL_VERIFICATION_TOKENS`      | `UQ_EMAIL_VERIFICATION_TOKENS_PUBLIC` | UK   | `PUBLIC_ID`                                                                        | `-`                      | `-`                                                 | proposed |
+| `PASSWORD_RESET_TOKENS`          | `PK_PASSWORD_RESET_TOKENS`            | PK   | `RESET_ID`                                                                         | `-`                      | `-`                                                 | source   |
+| `PASSWORD_RESET_TOKENS`          | `UQ_PASSWORD_RESET_TOKEN`             | UK   | `TOKEN_HASH`                                                                       | `-`                      | `-`                                                 | source   |
+| `PASSWORD_RESET_TOKENS`          | `FK_PASSWORD_RESET_USER`              | FK   | `USER_ID`                                                                          | `USERS`                  | `USER_ID`                                           | source   |
+| `PASSWORD_RESET_TOKENS`          | `UQ_PASSWORD_RESET_TOKENS_PUBLIC`     | UK   | `PUBLIC_ID`                                                                        | `-`                      | `-`                                                 | proposed |
+| `PLATFORM_ADMINS`                | `PK_PLATFORM_ADMINS`                  | PK   | `PLATFORM_ADMIN_ID`                                                                | `-`                      | `-`                                                 | source   |
+| `PLATFORM_ADMINS`                | `UQ_PLATFORM_ADMINS_USER`             | UK   | `USER_ID`                                                                          | `-`                      | `-`                                                 | source   |
+| `PLATFORM_ADMINS`                | `FK_PLATFORM_ADMINS_USER`             | FK   | `USER_ID`                                                                          | `USERS`                  | `USER_ID`                                           | source   |
+| `PLATFORM_ADMINS`                | `UQ_ADMIN_USER_PAIR`                  | UK   | `PLATFORM_ADMIN_ID, USER_ID`                                                       | `-`                      | `-`                                                 | proposed |
+| `ROLES`                          | `PK_ROLES`                            | PK   | `ROLE_ID`                                                                          | `-`                      | `-`                                                 | source   |
+| `ROLES`                          | `UQ_ROLES_TENANT_ROLE`                | UK   | `TENANT_ID, ROLE_ID`                                                               | `-`                      | `-`                                                 | source   |
+| `ROLES`                          | `UQ_ROLES_TENANT_CODE`                | UK   | `TENANT_ID, ROLE_CODE`                                                             | `-`                      | `-`                                                 | source   |
+| `ROLES`                          | `UQ_ROLES_TENANT_NAME`                | UK   | `TENANT_ID, ROLE_NAME`                                                             | `-`                      | `-`                                                 | required |
+| `ROLES`                          | `FK_ROLES_TENANT`                     | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `PERMISSIONS`                    | `PK_PERMISSIONS`                      | PK   | `PERMISSION_ID`                                                                    | `-`                      | `-`                                                 | source   |
+| `PERMISSIONS`                    | `UQ_PERMISSIONS_CODE`                 | UK   | `PERMISSION_CODE`                                                                  | `-`                      | `-`                                                 | source   |
+| `ROLE_PERMISSIONS`               | `PK_ROLE_PERMISSIONS`                 | PK   | `TENANT_ID, ROLE_ID, PERMISSION_ID`                                                | `-`                      | `-`                                                 | source   |
+| `ROLE_PERMISSIONS`               | `FK_ROLE_PERMISSIONS_ROLE`            | FK   | `TENANT_ID, ROLE_ID`                                                               | `ROLES`                  | `TENANT_ID, ROLE_ID`                                | source   |
+| `ROLE_PERMISSIONS`               | `FK_ROLE_PERMISSIONS_PERMISSION`      | FK   | `PERMISSION_ID`                                                                    | `PERMISSIONS`            | `PERMISSION_ID`                                     | source   |
+| `USER_ROLES`                     | `PK_USER_ROLES`                       | PK   | `TENANT_ID, MEMBERSHIP_ID, ROLE_ID`                                                | `-`                      | `-`                                                 | source   |
+| `USER_ROLES`                     | `FK_USER_ROLES_MEMBERSHIP`            | FK   | `TENANT_ID, MEMBERSHIP_ID`                                                         | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `USER_ROLES`                     | `FK_USER_ROLES_ROLE`                  | FK   | `TENANT_ID, ROLE_ID`                                                               | `ROLES`                  | `TENANT_ID, ROLE_ID`                                | source   |
+| `USER_ROLES`                     | `FK_USER_ROLES_ASSIGNER`              | FK   | `TENANT_ID, ASSIGNED_BY_MEMBERSHIP_ID`                                             | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `TENANT_INVITATIONS`             | `PK_TENANT_INVITATIONS`               | PK   | `INVITATION_ID`                                                                    | `-`                      | `-`                                                 | source   |
+| `TENANT_INVITATIONS`             | `UQ_TENANT_INVITATIONS_TOKEN`         | UK   | `TOKEN_HASH`                                                                       | `-`                      | `-`                                                 | source   |
+| `TENANT_INVITATIONS`             | `UQ_INV_TENANT_ID`                    | UK   | `TENANT_ID, INVITATION_ID`                                                         | `-`                      | `-`                                                 | source   |
+| `TENANT_INVITATIONS`             | `FK_TENANT_INVITATIONS_TENANT`        | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `TENANT_INVITATIONS`             | `FK_TENANT_INVITATIONS_ROLE`          | FK   | `TENANT_ID, ROLE_ID`                                                               | `ROLES`                  | `TENANT_ID, ROLE_ID`                                | source   |
+| `TENANT_INVITATIONS`             | `FK_TENANT_INVITATIONS_INVITER`       | FK   | `TENANT_ID, INVITED_BY_MEMBERSHIP_ID`                                              | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `TENANT_INVITATIONS`             | `UQ_TENANT_INVITATIONS_PUBLIC_ID`     | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `BUSINESSES`                     | `PK_BUSINESSES`                       | PK   | `BUSINESS_ID`                                                                      | `-`                      | `-`                                                 | source   |
+| `BUSINESSES`                     | `UQ_BUSINESSES_TENANT_ID`             | UK   | `TENANT_ID, BUSINESS_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `BUSINESSES`                     | `UQ_BUSINESSES_ONE_PER_TENANT`        | UK   | `TENANT_ID`                                                                        | `-`                      | `-`                                                 | source   |
+| `BUSINESSES`                     | `UQ_BUSINESSES_SLUG`                  | UK   | `BUSINESS_SLUG`                                                                    | `-`                      | `-`                                                 | source   |
+| `BUSINESSES`                     | `FK_BUSINESSES_TENANT`                | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `BUSINESSES`                     | `UQ_BUSINESSES_PUBLIC_ID`             | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `BUSINESS_PROFILES`              | `PK_BUSINESS_PROFILES`                | PK   | `BUSINESS_PROFILE_ID`                                                              | `-`                      | `-`                                                 | source   |
+| `BUSINESS_PROFILES`              | `UQ_BUSINESS_PROFILES_BUSINESS`       | UK   | `TENANT_ID, BUSINESS_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `BUSINESS_PROFILES`              | `FK_BUSINESS_PROFILES_BUSINESS`       | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `LOCATIONS`                      | `PK_LOCATIONS`                        | PK   | `LOCATION_ID`                                                                      | `-`                      | `-`                                                 | source   |
+| `LOCATIONS`                      | `UQ_LOCATIONS_TENANT_ID`              | UK   | `TENANT_ID, LOCATION_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `LOCATIONS`                      | `UQ_LOCATIONS_BUSINESS_LOCATION`      | UK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID`                                              | `-`                      | `-`                                                 | source   |
+| `LOCATIONS`                      | `UQ_LOCATIONS_BUSINESS_CODE`          | UK   | `TENANT_ID, BUSINESS_ID, LOCATION_CODE`                                            | `-`                      | `-`                                                 | source   |
+| `LOCATIONS`                      | `FK_LOCATIONS_BUSINESS`               | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `LOCATIONS`                      | `UQ_LOCATIONS_PUBLIC_ID`              | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `STAFF_ASSIGNMENTS`              | `PK_STAFF_ASSIGNMENTS`                | PK   | `STAFF_ASSIGNMENT_ID`                                                              | `-`                      | `-`                                                 | source   |
+| `STAFF_ASSIGNMENTS`              | `UQ_STAFF_ASSIGNMENTS_TENANT_ID`      | UK   | `TENANT_ID, STAFF_ASSIGNMENT_ID`                                                   | `-`                      | `-`                                                 | source   |
+| `STAFF_ASSIGNMENTS`              | `UQ_STAFF_MEMBER_LOC`                 | UK   | `TENANT_ID, MEMBERSHIP_ID, LOCATION_ID`                                            | `-`                      | `-`                                                 | source   |
+| `STAFF_ASSIGNMENTS`              | `FK_STAFF_MEMBER`                     | FK   | `TENANT_ID, MEMBERSHIP_ID`                                                         | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `STAFF_ASSIGNMENTS`              | `FK_STAFF_ASSIGNMENTS_LOCATION`       | FK   | `TENANT_ID, LOCATION_ID`                                                           | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
+| `STAFF_ASSIGNMENTS`              | `UQ_STAFF_ASSIGNMENTS_PUBLIC_ID`      | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `SPORTS`                         | `PK_SPORTS`                           | PK   | `SPORT_ID`                                                                         | `-`                      | `-`                                                 | source   |
+| `SPORTS`                         | `UQ_SPORTS_CODE`                      | UK   | `SPORT_CODE`                                                                       | `-`                      | `-`                                                 | source   |
+| `BUSINESS_SPORTS`                | `PK_BUSINESS_SPORTS`                  | PK   | `TENANT_ID, BUSINESS_ID, SPORT_ID`                                                 | `-`                      | `-`                                                 | source   |
+| `BUSINESS_SPORTS`                | `FK_BUSINESS_SPORTS_BUSINESS`         | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `BUSINESS_SPORTS`                | `FK_BUSINESS_SPORTS_SPORT`            | FK   | `SPORT_ID`                                                                         | `SPORTS`                 | `SPORT_ID`                                          | source   |
+| `RESOURCES`                      | `PK_RESOURCES`                        | PK   | `RESOURCE_ID`                                                                      | `-`                      | `-`                                                 | source   |
+| `RESOURCES`                      | `UQ_RESOURCES_TENANT_ID`              | UK   | `TENANT_ID, RESOURCE_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `RESOURCES`                      | `UQ_RES_TENANT_LOC_ID`                | UK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID`                                              | `-`                      | `-`                                                 | source   |
+| `RESOURCES`                      | `UQ_RES_BIZ_LOC_ID`                   | UK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`                                 | `-`                      | `-`                                                 | source   |
+| `RESOURCES`                      | `UQ_RESOURCES_LOCATION_CODE`          | UK   | `TENANT_ID, LOCATION_ID, RESOURCE_CODE`                                            | `-`                      | `-`                                                 | source   |
+| `RESOURCES`                      | `FK_RESOURCES_BUSINESS`               | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `RESOURCES`                      | `FK_RESOURCES_LOCATION`               | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID`                                              | `LOCATIONS`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID`               | source   |
+| `RESOURCES`                      | `FK_RESOURCES_BUSINESS_SPORT`         | FK   | `TENANT_ID, BUSINESS_ID, SPORT_ID`                                                 | `BUSINESS_SPORTS`        | `TENANT_ID, BUSINESS_ID, SPORT_ID`                  | source   |
+| `RESOURCES`                      | `UQ_RESOURCES_PUBLIC_ID`              | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `RESOURCE_FEATURES`              | `PK_RESOURCE_FEATURES`                | PK   | `RESOURCE_FEATURE_ID`                                                              | `-`                      | `-`                                                 | source   |
+| `RESOURCE_FEATURES`              | `UQ_RESOURCE_FEATURES_TENANT_ID`      | UK   | `TENANT_ID, RESOURCE_FEATURE_ID`                                                   | `-`                      | `-`                                                 | source   |
+| `RESOURCE_FEATURES`              | `UQ_RESOURCE_FEATURES_CODE`           | UK   | `TENANT_ID, RESOURCE_ID, FEATURE_CODE`                                             | `-`                      | `-`                                                 | source   |
+| `RESOURCE_FEATURES`              | `FK_RESOURCE_FEATURES_RESOURCE`       | FK   | `TENANT_ID, RESOURCE_ID`                                                           | `RESOURCES`              | `TENANT_ID, RESOURCE_ID`                            | source   |
+| `OPERATING_HOURS`                | `PK_OPERATING_HOURS`                  | PK   | `OPERATING_HOUR_ID`                                                                | `-`                      | `-`                                                 | source   |
+| `OPERATING_HOURS`                | `UQ_OPERATING_HOURS_TENANT_ID`        | UK   | `TENANT_ID, OPERATING_HOUR_ID`                                                     | `-`                      | `-`                                                 | source   |
+| `OPERATING_HOURS`                | `FK_OPERATING_HOURS_LOCATION`         | FK   | `TENANT_ID, LOCATION_ID`                                                           | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
+| `OPERATING_HOURS`                | `FK_OPERATING_HOURS_RESOURCE`         | FK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID`                                              | `RESOURCES`              | `TENANT_ID, LOCATION_ID, RESOURCE_ID`               | source   |
+| `OPERATING_HOURS`                | `UQ_OPERATING_HOURS_PUBLIC_ID`        | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `OPERATING_HOURS`                | `UQ_OPERATING_HOURS_SEGMENT`          | UK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID, DAY_OF_WEEK, SEGMENT_NO`                     | `-`                      | `-`                                                 | proposed |
+| `HOLIDAYS`                       | `PK_HOLIDAYS`                         | PK   | `HOLIDAY_ID`                                                                       | `-`                      | `-`                                                 | source   |
+| `HOLIDAYS`                       | `UQ_HOLIDAYS_TENANT_ID`               | UK   | `TENANT_ID, HOLIDAY_ID`                                                            | `-`                      | `-`                                                 | source   |
+| `HOLIDAYS`                       | `UQ_HOLIDAYS_LOCATION_DATE`           | UK   | `TENANT_ID, LOCATION_ID, HOLIDAY_DATE`                                             | `-`                      | `-`                                                 | source   |
+| `HOLIDAYS`                       | `FK_HOLIDAYS_LOCATION`                | FK   | `TENANT_ID, LOCATION_ID`                                                           | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
+| `HOLIDAYS`                       | `UQ_HOLIDAYS_PUBLIC_ID`               | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `AVAILABILITY_BLOCKS`            | `PK_AVAILABILITY_BLOCKS`              | PK   | `AVAILABILITY_BLOCK_ID`                                                            | `-`                      | `-`                                                 | source   |
+| `AVAILABILITY_BLOCKS`            | `UQ_AVAIL_BLK_TENANT_ID`              | UK   | `TENANT_ID, AVAILABILITY_BLOCK_ID`                                                 | `-`                      | `-`                                                 | source   |
+| `AVAILABILITY_BLOCKS`            | `FK_AVAIL_LOC`                        | FK   | `TENANT_ID, LOCATION_ID`                                                           | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | source   |
+| `AVAILABILITY_BLOCKS`            | `FK_AVAIL_RESOURCE`                   | FK   | `TENANT_ID, LOCATION_ID, RESOURCE_ID`                                              | `RESOURCES`              | `TENANT_ID, LOCATION_ID, RESOURCE_ID`               | source   |
+| `AVAILABILITY_BLOCKS`            | `FK_AVAILABILITY_BLOCKS_CREATOR`      | FK   | `TENANT_ID, CREATED_BY_MEMBERSHIP_ID`                                              | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `AVAILABILITY_BLOCKS`            | `UQ_AVAILABILITY_BLOCKS_PUBLIC_ID`    | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `PRICING_RULES`                  | `PK_PRICING_RULES`                    | PK   | `PRICING_RULE_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `PRICING_RULES`                  | `UQ_PRICING_RULES_TENANT_ID`          | UK   | `TENANT_ID, PRICING_RULE_ID`                                                       | `-`                      | `-`                                                 | source   |
+| `PRICING_RULES`                  | `UQ_PRICING_RULES_CODE`               | UK   | `TENANT_ID, RESOURCE_ID, RULE_CODE`                                                | `-`                      | `-`                                                 | source   |
+| `PRICING_RULES`                  | `FK_PRICING_RULES_RESOURCE`           | FK   | `TENANT_ID, RESOURCE_ID`                                                           | `RESOURCES`              | `TENANT_ID, RESOURCE_ID`                            | source   |
+| `PRICING_RULES`                  | `UQ_PRICING_RULES_PUBLIC_ID`          | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `PRICING_RULES`                  | `UQ_PRICE_RESOURCE_KEY`               | UK   | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`                                          | `-`                      | `-`                                                 | proposed |
+| `CUSTOMERS`                      | `PK_CUSTOMERS`                        | PK   | `CUSTOMER_ID`                                                                      | `-`                      | `-`                                                 | source   |
+| `CUSTOMERS`                      | `UQ_CUSTOMERS_TENANT_ID`              | UK   | `TENANT_ID, CUSTOMER_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `CUSTOMERS`                      | `UQ_CUSTOMERS_PUBLIC`                 | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | source   |
+| `CUSTOMERS`                      | `FK_CUSTOMERS_TENANT`                 | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `CUSTOMERS`                      | `FK_CUSTOMERS_USER`                   | FK   | `USER_ID`                                                                          | `USERS`                  | `USER_ID`                                           | source   |
+| `BOOKING_HOLDS`                  | `PK_BOOKING_HOLDS`                    | PK   | `HOLD_ID`                                                                          | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLDS`                  | `UQ_BOOKING_HOLDS_TENANT_ID`          | UK   | `TENANT_ID, HOLD_ID`                                                               | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLDS`                  | `UQ_BOOKING_HOLDS_PUBLIC`             | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLDS`                  | `UQ_BOOKING_HOLDS_TOKEN`              | UK   | `HOLD_TOKEN_HASH`                                                                  | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLDS`                  | `FK_BOOKING_HOLDS_TENANT`             | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `BOOKING_HOLD_ITEMS`             | `PK_BOOKING_HOLD_ITEMS`               | PK   | `HOLD_ITEM_ID`                                                                     | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLD_ITEMS`             | `UQ_BHI_TENANT_ID`                    | UK   | `TENANT_ID, HOLD_ITEM_ID`                                                          | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLD_ITEMS`             | `UQ_BHI_RESOURCE`                     | UK   | `TENANT_ID, HOLD_ITEM_ID, RESOURCE_ID`                                             | `-`                      | `-`                                                 | source   |
+| `BOOKING_HOLD_ITEMS`             | `FK_BOOKING_HOLD_ITEMS_HOLD`          | FK   | `TENANT_ID, HOLD_ID`                                                               | `BOOKING_HOLDS`          | `TENANT_ID, HOLD_ID`                                | source   |
+| `BOOKING_HOLD_ITEMS`             | `FK_BOOKING_HOLD_ITEMS_RESOURCE`      | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`                                 | `RESOURCES`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`  | source   |
+| `BOOKING_HOLD_ITEMS`             | `FK_BOOKING_HOLD_ITEMS_PRICE`         | FK   | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`                                          | `PRICING_RULES`          | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`           | proposed |
+| `BOOKINGS`                       | `PK_BOOKINGS`                         | PK   | `BOOKING_ID`                                                                       | `-`                      | `-`                                                 | source   |
+| `BOOKINGS`                       | `UQ_BOOKINGS_TENANT_ID`               | UK   | `TENANT_ID, BOOKING_ID`                                                            | `-`                      | `-`                                                 | source   |
+| `BOOKINGS`                       | `UQ_BOOKINGS_REFERENCE`               | UK   | `TENANT_ID, BOOKING_REFERENCE`                                                     | `-`                      | `-`                                                 | source   |
+| `BOOKINGS`                       | `UQ_BOOKINGS_BUSINESS_KEY`            | UK   | `TENANT_ID, BOOKING_ID, BUSINESS_ID`                                               | `-`                      | `-`                                                 | source   |
+| `BOOKINGS`                       | `UQ_BOOKINGS_CUSTOMER_KEY`            | UK   | `TENANT_ID, BOOKING_ID, CUSTOMER_ID`                                               | `-`                      | `-`                                                 | source   |
+| `BOOKINGS`                       | `UQ_BOOKINGS_PUBLIC`                  | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | source   |
+| `BOOKINGS`                       | `FK_BOOKINGS_BUSINESS`                | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `BOOKINGS`                       | `FK_BOOKINGS_CUSTOMER`                | FK   | `TENANT_ID, CUSTOMER_ID`                                                           | `CUSTOMERS`              | `TENANT_ID, CUSTOMER_ID`                            | source   |
+| `BOOKINGS`                       | `FK_BOOKINGS_HOLD`                    | FK   | `TENANT_ID, SOURCE_HOLD_ID`                                                        | `BOOKING_HOLDS`          | `TENANT_ID, HOLD_ID`                                | source   |
+| `BOOKINGS`                       | `FK_BOOKINGS_CREATOR`                 | FK   | `TENANT_ID, CREATED_BY_MEMBERSHIP_ID`                                              | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `BOOKINGS`                       | `UQ_BOOKING_CURRENCY`                 | UK   | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`                                             | `-`                      | `-`                                                 | proposed |
+| `BOOKING_ITEMS`                  | `PK_BOOKING_ITEMS`                    | PK   | `BOOKING_ITEM_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `BOOKING_ITEMS`                  | `UQ_BOOKING_ITEMS_TENANT_ID`          | UK   | `TENANT_ID, BOOKING_ITEM_ID`                                                       | `-`                      | `-`                                                 | source   |
+| `BOOKING_ITEMS`                  | `UQ_BI_RESOURCE`                      | UK   | `TENANT_ID, BOOKING_ITEM_ID, RESOURCE_ID`                                          | `-`                      | `-`                                                 | source   |
+| `BOOKING_ITEMS`                  | `FK_BOOKING_ITEMS_BOOKING`            | FK   | `TENANT_ID, BOOKING_ID, BUSINESS_ID`                                               | `BOOKINGS`               | `TENANT_ID, BOOKING_ID, BUSINESS_ID`                | source   |
+| `BOOKING_ITEMS`                  | `FK_BOOKING_ITEMS_RESOURCE`           | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`                                 | `RESOURCES`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`  | source   |
+| `BOOKING_ITEMS`                  | `FK_BOOKING_ITEMS_PRICE`              | FK   | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`                                          | `PRICING_RULES`          | `TENANT_ID, RESOURCE_ID, PRICING_RULE_ID`           | proposed |
+| `BOOKING_ITEMS`                  | `FK_BI_CURRENCY`                      | FK   | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`                                             | `BOOKINGS`               | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`              | proposed |
+| `RESOURCE_SLOT_RESERVATIONS`     | `PK_RESOURCE_SLOT_RESERVATIONS`       | PK   | `TENANT_ID, RESOURCE_ID, SLOT_START_UTC`                                           | `-`                      | `-`                                                 | source   |
+| `RESOURCE_SLOT_RESERVATIONS`     | `FK_SLOT_RESERVATIONS_RESOURCE`       | FK   | `TENANT_ID, RESOURCE_ID`                                                           | `RESOURCES`              | `TENANT_ID, RESOURCE_ID`                            | source   |
+| `RESOURCE_SLOT_RESERVATIONS`     | `FK_SLOTS_BOOKING_ITEM`               | FK   | `TENANT_ID, BOOKING_ITEM_ID, RESOURCE_ID`                                          | `BOOKING_ITEMS`          | `TENANT_ID, BOOKING_ITEM_ID, RESOURCE_ID`           | source   |
+| `RESOURCE_SLOT_RESERVATIONS`     | `FK_SLOT_RESERVATIONS_HOLD_ITEM`      | FK   | `TENANT_ID, HOLD_ITEM_ID, RESOURCE_ID`                                             | `BOOKING_HOLD_ITEMS`     | `TENANT_ID, HOLD_ITEM_ID, RESOURCE_ID`              | source   |
+| `BOOKING_CANCELLATIONS`          | `PK_BOOKING_CANCELLATIONS`            | PK   | `CANCELLATION_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `BOOKING_CANCELLATIONS`          | `UQ_BC_TENANT_ID`                     | UK   | `TENANT_ID, CANCELLATION_ID`                                                       | `-`                      | `-`                                                 | source   |
+| `BOOKING_CANCELLATIONS`          | `FK_BC_BOOKING`                       | FK   | `TENANT_ID, BOOKING_ID`                                                            | `BOOKINGS`               | `TENANT_ID, BOOKING_ID`                             | source   |
+| `BOOKING_CANCELLATIONS`          | `FK_BOOKING_CANCELLATIONS_ACTOR`      | FK   | `TENANT_ID, CANCELLED_BY_MEMBERSHIP_ID`                                            | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `BOOKING_CANCELLATIONS`          | `UQ_BC_BOOKING`                       | UK   | `TENANT_ID, BOOKING_ID`                                                            | `-`                      | `-`                                                 | source   |
+| `BUSINESS_PAYMENT_SETTINGS`      | `PK_BUSINESS_PAYMENT_SETTINGS`        | PK   | `BUSINESS_PAYMENT_SETTINGS_ID`                                                     | `-`                      | `-`                                                 | source   |
+| `BUSINESS_PAYMENT_SETTINGS`      | `UQ_BPS_BUSINESS`                     | UK   | `TENANT_ID, BUSINESS_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `BUSINESS_PAYMENT_SETTINGS`      | `FK_BPS_BUSINESS`                     | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `PAYMENTS`                       | `PK_PAYMENTS`                         | PK   | `PAYMENT_ID`                                                                       | `-`                      | `-`                                                 | source   |
+| `PAYMENTS`                       | `UQ_PAYMENTS_TENANT_ID`               | UK   | `TENANT_ID, PAYMENT_ID`                                                            | `-`                      | `-`                                                 | source   |
+| `PAYMENTS`                       | `FK_PAYMENTS_RECORDER`                | FK   | `TENANT_ID, RECORDED_BY_MEMBERSHIP_ID`                                             | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `PAYMENTS`                       | `UQ_PAYMENTS_PUBLIC_ID`               | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `PAYMENTS`                       | `FK_PAYMENTS_BOOKING`                 | FK   | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`                                             | `BOOKINGS`               | `TENANT_ID, BOOKING_ID, CURRENCY_CODE`              | proposed |
+| `PAYMENTS`                       | `UQ_PAYMENT_CURRENCY`                 | UK   | `TENANT_ID, PAYMENT_ID, CURRENCY_CODE`                                             | `-`                      | `-`                                                 | proposed |
+| `PAYMENTS`                       | `FK_PAYMENT_VOID_ACTOR`               | FK   | `TENANT_ID, VOIDED_BY_MEMBERSHIP_ID`                                               | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | proposed |
+| `REFUNDS`                        | `PK_REFUNDS`                          | PK   | `REFUND_ID`                                                                        | `-`                      | `-`                                                 | source   |
+| `REFUNDS`                        | `UQ_REFUNDS_TENANT_ID`                | UK   | `TENANT_ID, REFUND_ID`                                                             | `-`                      | `-`                                                 | source   |
+| `REFUNDS`                        | `FK_REFUNDS_RECORDER`                 | FK   | `TENANT_ID, RECORDED_BY_MEMBERSHIP_ID`                                             | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID`                          | source   |
+| `REFUNDS`                        | `UQ_REFUNDS_PUBLIC_ID`                | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `REFUNDS`                        | `FK_REFUNDS_PAYMENT`                  | FK   | `TENANT_ID, PAYMENT_ID, CURRENCY_CODE`                                             | `PAYMENTS`               | `TENANT_ID, PAYMENT_ID, CURRENCY_CODE`              | proposed |
+| `SUBSCRIPTION_PLANS`             | `PK_SUBSCRIPTION_PLANS`               | PK   | `PLAN_ID`                                                                          | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_PLANS`             | `UQ_SUBSCRIPTION_PLANS_CODE`          | UK   | `PLAN_CODE`                                                                        | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_ENTITLEMENTS`      | `PK_SUBSCRIPTION_ENTITLEMENTS`        | PK   | `PLAN_ID, FEATURE_CODE`                                                            | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_ENTITLEMENTS`      | `FK_SE_PLAN`                          | FK   | `PLAN_ID`                                                                          | `SUBSCRIPTION_PLANS`     | `PLAN_ID`                                           | source   |
+| `SUBSCRIPTIONS`                  | `PK_SUBSCRIPTIONS`                    | PK   | `SUBSCRIPTION_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTIONS`                  | `UQ_SUBSCRIPTIONS_TENANT_ID`          | UK   | `TENANT_ID, SUBSCRIPTION_ID`                                                       | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTIONS`                  | `FK_SUBSCRIPTIONS_TENANT`             | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `SUBSCRIPTIONS`                  | `FK_SUBSCRIPTIONS_PLAN`               | FK   | `PLAN_ID`                                                                          | `SUBSCRIPTION_PLANS`     | `PLAN_ID`                                           | source   |
+| `SUBSCRIPTIONS`                  | `UQ_SUBSCRIPTION_CURRENCY`            | UK   | `TENANT_ID, SUBSCRIPTION_ID, CURRENCY_CODE`                                        | `-`                      | `-`                                                 | proposed |
+| `SUBSCRIPTION_INVOICES`          | `PK_SUBSCRIPTION_INVOICES`            | PK   | `SUBSCRIPTION_INVOICE_ID`                                                          | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_INVOICES`          | `UQ_SI_TENANT_ID`                     | UK   | `TENANT_ID, SUBSCRIPTION_INVOICE_ID`                                               | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_INVOICES`          | `UQ_SI_NUMBER`                        | UK   | `TENANT_ID, INVOICE_NUMBER`                                                        | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_INVOICES`          | `FK_SI_SUBSCRIPTION`                  | FK   | `TENANT_ID, SUBSCRIPTION_ID, CURRENCY_CODE`                                        | `SUBSCRIPTIONS`          | `TENANT_ID, SUBSCRIPTION_ID, CURRENCY_CODE`         | proposed |
+| `SUBSCRIPTION_INVOICES`          | `UQ_INVOICE_CURRENCY`                 | UK   | `TENANT_ID, SUBSCRIPTION_INVOICE_ID, CURRENCY_CODE`                                | `-`                      | `-`                                                 | proposed |
+| `SUBSCRIPTION_PAYMENTS`          | `PK_SUBSCRIPTION_PAYMENTS`            | PK   | `SUBSCRIPTION_PAYMENT_ID`                                                          | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_PAYMENTS`          | `UQ_SP_TENANT_ID`                     | UK   | `TENANT_ID, SUBSCRIPTION_PAYMENT_ID`                                               | `-`                      | `-`                                                 | source   |
+| `SUBSCRIPTION_PAYMENTS`          | `FK_SUBSCRIPTION_PAYMENTS_USER`       | FK   | `RECORDED_BY_USER_ID`                                                              | `USERS`                  | `USER_ID`                                           | source   |
+| `SUBSCRIPTION_PAYMENTS`          | `UQ_SUBSCRIPTION_PAYMENTS_PUBLIC_ID`  | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_VOID_USER`                     | FK   | `VOIDED_BY_USER_ID`                                                                | `USERS`                  | `USER_ID`                                           | proposed |
+| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_INVOICE`                       | FK   | `TENANT_ID, SUBSCRIPTION_INVOICE_ID, CURRENCY_CODE`                                | `SUBSCRIPTION_INVOICES`  | `TENANT_ID, SUBSCRIPTION_INVOICE_ID, CURRENCY_CODE` | proposed |
+| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_ADMIN_ACTOR`                   | FK   | `RECORDED_BY_PLATFORM_ADMIN_ID, RECORDED_BY_USER_ID`                               | `PLATFORM_ADMINS`        | `PLATFORM_ADMIN_ID, USER_ID`                        | proposed |
+| `SUBSCRIPTION_PAYMENTS`          | `FK_SP_VOID_ADMIN`                    | FK   | `VOIDED_BY_PLATFORM_ADMIN_ID, VOIDED_BY_USER_ID`                                   | `PLATFORM_ADMINS`        | `PLATFORM_ADMIN_ID, USER_ID`                        | proposed |
+| `WEBSITE_THEMES`                 | `PK_WEBSITE_THEMES`                   | PK   | `THEME_ID`                                                                         | `-`                      | `-`                                                 | source   |
+| `WEBSITE_THEMES`                 | `UQ_WEBSITE_THEMES_CODE`              | UK   | `THEME_CODE`                                                                       | `-`                      | `-`                                                 | source   |
+| `WEBSITE_SETTINGS`               | `PK_WEBSITE_SETTINGS`                 | PK   | `WEBSITE_ID`                                                                       | `-`                      | `-`                                                 | source   |
+| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_TENANT_ID`       | UK   | `TENANT_ID, WEBSITE_ID`                                                            | `-`                      | `-`                                                 | source   |
+| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_BUSINESS`        | UK   | `TENANT_ID, BUSINESS_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_SUBDOMAIN`       | UK   | `SUBDOMAIN_SLUG`                                                                   | `-`                      | `-`                                                 | source   |
+| `WEBSITE_SETTINGS`               | `FK_WEBSITE_SETTINGS_BUSINESS`        | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `WEBSITE_SETTINGS`               | `FK_WEBSITE_SETTINGS_THEME`           | FK   | `THEME_ID`                                                                         | `WEBSITE_THEMES`         | `THEME_ID`                                          | source   |
+| `WEBSITE_SETTINGS`               | `UQ_WEBSITE_SETTINGS_PUBLIC_ID`       | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `WEBSITE_MEDIA`                  | `PK_WEBSITE_MEDIA`                    | PK   | `WEBSITE_MEDIA_ID`                                                                 | `-`                      | `-`                                                 | source   |
+| `WEBSITE_MEDIA`                  | `UQ_WEBSITE_MEDIA_TENANT_ID`          | UK   | `TENANT_ID, WEBSITE_MEDIA_ID`                                                      | `-`                      | `-`                                                 | source   |
+| `WEBSITE_MEDIA`                  | `UQ_WEBSITE_MEDIA_OBJECT_KEY`         | UK   | `OBJECT_KEY`                                                                       | `-`                      | `-`                                                 | source   |
+| `WEBSITE_MEDIA`                  | `FK_WEBSITE_MEDIA_BUSINESS`           | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `WEBSITE_MEDIA`                  | `FK_WEBSITE_MEDIA_LOCATION`           | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID`                                              | `LOCATIONS`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID`               | source   |
+| `WEBSITE_MEDIA`                  | `FK_WEBSITE_MEDIA_RESOURCE`           | FK   | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`                                 | `RESOURCES`              | `TENANT_ID, BUSINESS_ID, LOCATION_ID, RESOURCE_ID`  | source   |
+| `WEBSITE_MEDIA`                  | `UQ_WEBSITE_MEDIA_PUBLIC_ID`          | UK   | `TENANT_ID, PUBLIC_ID`                                                             | `-`                      | `-`                                                 | proposed |
+| `NOTIFICATION_TEMPLATES`         | `PK_NOTIFICATION_TEMPLATES`           | PK   | `NOTIFICATION_TEMPLATE_ID`                                                         | `-`                      | `-`                                                 | source   |
+| `NOTIFICATION_TEMPLATES`         | `FK_NT_TENANT`                        | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `NOTIFICATIONS`                  | `PK_NOTIFICATIONS`                    | PK   | `NOTIFICATION_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `NOTIFICATIONS`                  | `UQ_NOTIFICATIONS_TENANT_ID`          | UK   | `TENANT_ID, NOTIFICATION_ID`                                                       | `-`                      | `-`                                                 | source   |
+| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_TENANT`             | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_TEMPLATE`           | FK   | `NOTIFICATION_TEMPLATE_ID`                                                         | `NOTIFICATION_TEMPLATES` | `NOTIFICATION_TEMPLATE_ID`                          | source   |
+| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_BOOKING`            | FK   | `TENANT_ID, BOOKING_ID`                                                            | `BOOKINGS`               | `TENANT_ID, BOOKING_ID`                             | source   |
+| `NOTIFICATIONS`                  | `FK_NOTIFICATIONS_USER`               | FK   | `RECIPIENT_USER_ID`                                                                | `USERS`                  | `USER_ID`                                           | source   |
+| `NOTIFICATIONS`                  | `UQ_NOTIFICATION_SCOPE`               | UK   | `SCOPE_TENANT_ID, NOTIFICATION_ID`                                                 | `-`                      | `-`                                                 | proposed |
+| `NOTIFICATIONS`                  | `UQ_NOTIFICATION_DEDUPE`              | UK   | `SCOPE_TENANT_ID, DEDUPE_KEY`                                                      | `-`                      | `-`                                                 | proposed |
+| `NOTIFICATION_LOGS`              | `PK_NOTIFICATION_LOGS`                | PK   | `NOTIFICATION_LOG_ID`                                                              | `-`                      | `-`                                                 | source   |
+| `NOTIFICATION_LOGS`              | `UQ_NOTIFICATION_LOGS_TENANT_ID`      | UK   | `TENANT_ID, NOTIFICATION_LOG_ID`                                                   | `-`                      | `-`                                                 | source   |
+| `NOTIFICATION_LOGS`              | `FK_NL_NOTIFICATION`                  | FK   | `TENANT_ID, NOTIFICATION_ID`                                                       | `NOTIFICATIONS`          | `TENANT_ID, NOTIFICATION_ID`                        | source   |
+| `NOTIFICATION_LOGS`              | `FK_NL_SCOPE`                         | FK   | `SCOPE_TENANT_ID, NOTIFICATION_ID`                                                 | `NOTIFICATIONS`          | `SCOPE_TENANT_ID, NOTIFICATION_ID`                  | proposed |
+| `NOTIFICATION_LOGS`              | `FK_NL_TENANT`                        | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | proposed |
+| `NOTIFICATION_LOGS`              | `UQ_NOTIFICATION_ATTEMPT`             | UK   | `SCOPE_TENANT_ID, NOTIFICATION_ID, ATTEMPT_NUMBER`                                 | `-`                      | `-`                                                 | proposed |
+| `OUTBOX_EVENTS`                  | `PK_OUTBOX_EVENTS`                    | PK   | `OUTBOX_EVENT_ID`                                                                  | `-`                      | `-`                                                 | source   |
+| `OUTBOX_EVENTS`                  | `FK_OUTBOX_EVENTS_TENANT`             | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `OUTBOX_EVENTS`                  | `UQ_OUTBOX_SCOPE_ID`                  | UK   | `SCOPE_KIND, OUTBOX_EVENT_ID`                                                      | `-`                      | `-`                                                 | proposed |
+| `OUTBOX_EVENTS`                  | `UQ_OUTBOX_TENANT_ID`                 | UK   | `TENANT_ID, OUTBOX_EVENT_ID`                                                       | `-`                      | `-`                                                 | proposed |
+| `JOB_QUEUE`                      | `PK_JOB_QUEUE`                        | PK   | `JOB_ID`                                                                           | `-`                      | `-`                                                 | source   |
+| `JOB_QUEUE`                      | `FK_JOB_QUEUE_TENANT`                 | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `JOB_QUEUE`                      | `FK_JOB_EVENT_SCOPE`                  | FK   | `SCOPE_KIND, SOURCE_OUTBOX_EVENT_ID`                                               | `OUTBOX_EVENTS`          | `SCOPE_KIND, OUTBOX_EVENT_ID`                       | proposed |
+| `JOB_QUEUE`                      | `FK_JOB_EVENT_TENANT`                 | FK   | `TENANT_ID, SOURCE_OUTBOX_EVENT_ID`                                                | `OUTBOX_EVENTS`          | `TENANT_ID, OUTBOX_EVENT_ID`                        | proposed |
+| `JOB_QUEUE`                      | `UQ_JOB_EVENT_CONSUMER`               | UK   | `SOURCE_OUTBOX_EVENT_ID, CONSUMER_CODE`                                            | `-`                      | `-`                                                 | proposed |
+| `IDEMPOTENCY_KEYS`               | `PK_IDEMPOTENCY_KEYS`                 | PK   | `IDEMPOTENCY_ID`                                                                   | `-`                      | `-`                                                 | source   |
+| `IDEMPOTENCY_KEYS`               | `FK_IDEMPOTENCY_KEYS_TENANT`          | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `IDEMPOTENCY_KEYS`               | `UQ_IDEMPOTENCY_OWNER_KEY`            | UK   | `SCOPE_KIND, TENANT_ID, OPERATION_SCOPE, OWNER_TYPE, OWNER_SCOPE, IDEMPOTENCY_KEY` | `-`                      | `-`                                                 | proposed |
+| `AUDIT_LOGS`                     | `PK_AUDIT_LOGS`                       | PK   | `AUDIT_LOG_ID`                                                                     | `-`                      | `-`                                                 | source   |
+| `AUDIT_LOGS`                     | `FK_AUDIT_LOGS_TENANT`                | FK   | `TENANT_ID`                                                                        | `TENANTS`                | `TENANT_ID`                                         | source   |
+| `AUDIT_LOGS`                     | `FK_AUDIT_LOGS_USER`                  | FK   | `ACTOR_USER_ID`                                                                    | `USERS`                  | `USER_ID`                                           | source   |
+| `AUDIT_LOGS`                     | `FK_AUDIT_LOGS_MEMBERSHIP_ACTOR`      | FK   | `TENANT_ID, ACTOR_MEMBERSHIP_ID, ACTOR_USER_ID`                                    | `TENANT_USERS`           | `TENANT_ID, MEMBERSHIP_ID, USER_ID`                 | source   |
+| `AUDIT_LOGS`                     | `UQ_AUDIT_LOGS_PUBLIC_ID`             | UK   | `PUBLIC_ID`                                                                        | `-`                      | `-`                                                 | proposed |
+| `AUDIT_LOGS`                     | `FK_AUDIT_ADMIN_USER`                 | FK   | `ACTOR_PLATFORM_ADMIN_ID, ACTOR_USER_ID`                                           | `PLATFORM_ADMINS`        | `PLATFORM_ADMIN_ID, USER_ID`                        | proposed |
+| `ONBOARDING_PROGRESS`            | `PK_ONBOARDING_PROGRESS`              | PK   | `ONBOARDING_PROGRESS_ID`                                                           | `-`                      | `-`                                                 | source   |
+| `ONBOARDING_PROGRESS`            | `UQ_ONBOARDING_STEP`                  | UK   | `TENANT_ID, BUSINESS_ID, STEP_CODE`                                                | `-`                      | `-`                                                 | source   |
+| `ONBOARDING_PROGRESS`            | `FK_ONBOARDING_BUSINESS`              | FK   | `TENANT_ID, BUSINESS_ID`                                                           | `BUSINESSES`             | `TENANT_ID, BUSINESS_ID`                            | source   |
+| `INVITATION_LOCATIONS`           | `PK_INVITATION_LOCATIONS`             | PK   | `TENANT_ID, INVITATION_ID, LOCATION_ID`                                            | `-`                      | `-`                                                 | proposed |
+| `INVITATION_LOCATIONS`           | `FK_IL_INVITATION`                    | FK   | `TENANT_ID, INVITATION_ID`                                                         | `TENANT_INVITATIONS`     | `TENANT_ID, INVITATION_ID`                          | proposed |
+| `INVITATION_LOCATIONS`           | `FK_IL_LOCATION`                      | FK   | `TENANT_ID, LOCATION_ID`                                                           | `LOCATIONS`              | `TENANT_ID, LOCATION_ID`                            | proposed |
+| `SUBSCRIPTION_FEATURE_SNAPSHOTS` | `PK_SUB_FEATURE_SNAPSHOTS`            | PK   | `TENANT_ID, SUBSCRIPTION_ID, FEATURE_CODE`                                         | `-`                      | `-`                                                 | proposed |
+| `SUBSCRIPTION_FEATURE_SNAPSHOTS` | `FK_SFS_SUBSCRIPTION`                 | FK   | `TENANT_ID, SUBSCRIPTION_ID`                                                       | `SUBSCRIPTIONS`          | `TENANT_ID, SUBSCRIPTION_ID`                        | proposed |
 
 ## Exact checks
 
@@ -724,6 +742,10 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
   <a id="ck_se_limit"></a>
 - `CK_SE_LIMIT` (source): `CHECK (limit_value IS NULL OR limit_value >= 0)`
 
+<a id="ck_se_value_kind"></a>
+
+- `CK_SE_VALUE_KIND` (proposed): `CHECK ((value_kind='BOOLEAN' AND limit_value IS NULL AND limit_unit IS NULL) OR (value_kind='LIMIT' AND limit_value IS NOT NULL AND limit_value>=0 AND limit_unit IS NOT NULL AND TRIM(limit_unit) IS NOT NULL))`
+
 ### SUBSCRIPTIONS
 
 <a id="ck_subscriptions_period"></a>
@@ -744,6 +766,10 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
   <a id="ck_subscription_grace"></a>
 - `CK_SUBSCRIPTION_GRACE` (proposed): `CHECK (subscription_status<>'GRACE' OR (grace_ends_at_utc IS NOT NULL AND grace_ends_at_utc>=ends_at_utc))`
 
+<a id="ck_sub_trial_within_term"></a>
+
+- `CK_SUB_TRIAL_WITHIN_TERM` (proposed): `CHECK (trial_starts_at_utc IS NULL OR (trial_starts_at_utc>=starts_at_utc AND trial_ends_at_utc<=ends_at_utc))`
+
 ### SUBSCRIPTION_INVOICES
 
 <a id="ck_si_amount"></a>
@@ -757,6 +783,10 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 - `CK_SUBSCRIPTION_INVOICES_ID_POSITIVE` (proposed): `CHECK (SUBSCRIPTION_INVOICE_ID>0 AND SUBSCRIPTION_INVOICE_ID=TRUNC(SUBSCRIPTION_INVOICE_ID))`
   <a id="ck_si_period"></a>
 - `CK_SI_PERIOD` (proposed): `CHECK (period_ends_at_utc>period_starts_at_utc)`
+
+<a id="ck_si_due_order"></a>
+
+- `CK_SI_DUE_ORDER` (proposed): `CHECK (due_at_utc IS NULL OR due_at_utc>=issued_at_utc)`
 
 ### SUBSCRIPTION_PAYMENTS
 
@@ -774,7 +804,7 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
   <a id="ck_subscription_payments_id_positive"></a>
 - `CK_SUBSCRIPTION_PAYMENTS_ID_POSITIVE` (proposed): `CHECK (SUBSCRIPTION_PAYMENT_ID>0 AND SUBSCRIPTION_PAYMENT_ID=TRUNC(SUBSCRIPTION_PAYMENT_ID))`
   <a id="ck_subscription_payments_void"></a>
-- `CK_SUBSCRIPTION_PAYMENTS_VOID` (proposed): `CHECK ((payment_status='RECEIVED' AND voided_at_utc IS NULL AND void_reason IS NULL AND VOIDED_BY_USER_ID IS NULL) OR (payment_status='VOIDED' AND voided_at_utc IS NOT NULL AND void_reason IS NOT NULL AND VOIDED_BY_USER_ID IS NOT NULL))`
+- `CK_SUBSCRIPTION_PAYMENTS_VOID` (proposed): `CHECK ((payment_status='RECEIVED' AND voided_at_utc IS NULL AND void_reason IS NULL AND voided_by_user_id IS NULL AND voided_by_platform_admin_id IS NULL) OR (payment_status='VOIDED' AND voided_at_utc IS NOT NULL AND void_reason IS NOT NULL AND voided_by_user_id IS NOT NULL AND voided_by_platform_admin_id IS NOT NULL))`
 
 ### WEBSITE_THEMES
 
@@ -790,13 +820,21 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 
 - `CK_WEBSITE_SETTINGS_STATUS` (source): `CHECK (website_status IN ('DRAFT','PUBLISHED','UNPUBLISHED'))`
   <a id="ck_website_settings_slug"></a>
-- `CK_WEBSITE_SETTINGS_SLUG` (source): `CHECK (REGEXP_LIKE(subdomain_slug, '^[a-z0-9]([a-z0-9-]{0,98}[a-z0-9])?$'))`
+- `CK_WEBSITE_SETTINGS_SLUG` (proposed): `CHECK (REGEXP_LIKE(subdomain_slug,'^[a-z0-9]([a-z0-9-]{0,98}[a-z0-9])?$','c'))`
   <a id="ck_website_settings_uuid"></a>
 - `CK_WEBSITE_SETTINGS_UUID` (proposed): `CHECK (REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c'))`
   <a id="ck_website_settings_id_positive"></a>
 - `CK_WEBSITE_SETTINGS_ID_POSITIVE` (proposed): `CHECK (WEBSITE_ID>0 AND WEBSITE_ID=TRUNC(WEBSITE_ID))`
   <a id="ck_website_dns_label"></a>
 - `CK_WEBSITE_DNS_LABEL` (proposed): `CHECK (LENGTH(subdomain_slug)<=63)`
+
+<a id="ck_website_host_canonical"></a>
+
+- `CK_WEBSITE_HOST_CANONICAL` (proposed): `CHECK (NOT REGEXP_LIKE(subdomain_slug,'[^a-z0-9-]','c') AND subdomain_slug NOT IN ('admin','api','dashboard'))`
+
+<a id="ck_website_published"></a>
+
+- `CK_WEBSITE_PUBLISHED` (proposed): `CHECK (website_status<>'PUBLISHED' OR published_at_utc IS NOT NULL)`
 
 ### WEBSITE_MEDIA
 
@@ -813,6 +851,10 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 - `CK_WEBSITE_MEDIA_UUID` (proposed): `CHECK (REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c'))`
   <a id="ck_website_media_id_positive"></a>
 - `CK_WEBSITE_MEDIA_ID_POSITIVE` (proposed): `CHECK (WEBSITE_MEDIA_ID>0 AND WEBSITE_MEDIA_ID=TRUNC(WEBSITE_MEDIA_ID))`
+
+<a id="ck_website_object_key"></a>
+
+- `CK_WEBSITE_OBJECT_KEY` (proposed): `CHECK (REGEXP_LIKE(object_key,'^[A-Za-z0-9][A-Za-z0-9/_.-]*$','c') AND NOT REGEXP_LIKE(object_key,'[^A-Za-z0-9/_.-]','c') AND INSTR('/'||object_key||'/','/../')=0 AND INSTR('/'||object_key||'/','/./')=0)`
 
 ### NOTIFICATION_TEMPLATES
 
@@ -866,9 +908,17 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
   <a id="ck_outbox_events_scope"></a>
 - `CK_OUTBOX_EVENTS_SCOPE` (proposed): `CHECK ((scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL))`
   <a id="ck_outbox_attempts"></a>
-- `CK_OUTBOX_ATTEMPTS` (proposed): `CHECK (attempt_count>=0 AND max_attempts>0)`
+- `CK_OUTBOX_ATTEMPTS` (proposed): `CHECK (attempt_count>=0 AND max_attempts>0 AND attempt_count<=max_attempts)`
   <a id="ck_outbox_events_payload_version"></a>
 - `CK_OUTBOX_EVENTS_PAYLOAD_VERSION` (proposed): `CHECK (payload_version>0)`
+
+<a id="ck_outbox_payload_json"></a>
+
+- `CK_OUTBOX_PAYLOAD_JSON` (proposed): `CHECK (payload IS JSON STRICT WITH UNIQUE KEYS)`
+
+<a id="ck_outbox_processed"></a>
+
+- `CK_OUTBOX_PROCESSED` (proposed): `CHECK ((event_status='PROCESSED' AND processed_at_utc IS NOT NULL AND processed_at_utc>=created_at_utc) OR (event_status<>'PROCESSED' AND processed_at_utc IS NULL))`
 
 ### JOB_QUEUE
 
@@ -876,7 +926,7 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 
 - `CK_JOB_QUEUE_STATUS` (source): `CHECK (job_status IN ('PENDING','RUNNING','COMPLETED','FAILED','CANCELLED'))`
   <a id="ck_job_queue_attempts"></a>
-- `CK_JOB_QUEUE_ATTEMPTS` (source): `CHECK (attempt_count >= 0 AND max_attempts > 0)`
+- `CK_JOB_QUEUE_ATTEMPTS` (proposed): `CHECK (attempt_count>=0 AND max_attempts>0 AND attempt_count<=max_attempts)`
   <a id="ck_job_queue_id_positive"></a>
 - `CK_JOB_QUEUE_ID_POSITIVE` (proposed): `CHECK (JOB_ID>0 AND JOB_ID=TRUNC(JOB_ID))`
   <a id="ck_job_queue_scope"></a>
@@ -884,7 +934,23 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
   <a id="ck_job_queue_payload_version"></a>
 - `CK_JOB_QUEUE_PAYLOAD_VERSION` (proposed): `CHECK (payload_version>0)`
   <a id="ck_job_lease"></a>
-- `CK_JOB_LEASE` (proposed): `CHECK ((job_status='RUNNING' AND lease_token IS NOT NULL AND lease_expires_at_utc IS NOT NULL AND locked_by IS NOT NULL AND locked_at_utc IS NOT NULL) OR (job_status<>'RUNNING' AND lease_token IS NULL AND lease_expires_at_utc IS NULL AND locked_by IS NULL AND locked_at_utc IS NULL))`
+- `CK_JOB_LEASE` (proposed): `CHECK ((job_status='RUNNING' AND lease_token IS NOT NULL AND lease_expires_at_utc IS NOT NULL AND locked_by IS NOT NULL AND locked_at_utc IS NOT NULL AND lease_expires_at_utc>locked_at_utc AND locked_at_utc>=created_at_utc AND attempt_count>0) OR (job_status<>'RUNNING' AND lease_token IS NULL AND lease_expires_at_utc IS NULL AND locked_by IS NULL AND locked_at_utc IS NULL))`
+
+<a id="ck_job_payload_json"></a>
+
+- `CK_JOB_PAYLOAD_JSON` (proposed): `CHECK (payload IS JSON STRICT WITH UNIQUE KEYS)`
+
+<a id="ck_job_source_pair"></a>
+
+- `CK_JOB_SOURCE_PAIR` (proposed): `CHECK ((source_outbox_event_id IS NULL AND consumer_code IS NULL) OR (source_outbox_event_id IS NOT NULL AND consumer_code IS NOT NULL AND TRIM(consumer_code) IS NOT NULL))`
+
+<a id="ck_job_fence_uuid"></a>
+
+- `CK_JOB_FENCE_UUID` (proposed): `CHECK (lease_token IS NULL OR REGEXP_LIKE(lease_token,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c'))`
+
+<a id="ck_job_terminal"></a>
+
+- `CK_JOB_TERMINAL` (proposed): `CHECK ((job_status='COMPLETED' AND completed_at_utc IS NOT NULL AND completed_at_utc>=created_at_utc AND failed_at_utc IS NULL) OR (job_status='FAILED' AND failed_at_utc IS NOT NULL AND failed_at_utc>=created_at_utc AND completed_at_utc IS NULL) OR (job_status IN ('PENDING','RUNNING','CANCELLED') AND completed_at_utc IS NULL AND failed_at_utc IS NULL))`
 
 ### IDEMPOTENCY_KEYS
 
@@ -896,9 +962,33 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
   <a id="ck_idem_state"></a>
 - `CK_IDEM_STATE` (proposed): `CHECK (owner_type IN ('USER','GUEST') AND execution_status IN ('PROCESSING','COMPLETED','FAILED') AND expires_at_utc>created_at_utc AND REGEXP_LIKE(owner_scope,'^[0-9a-f]{64}$','c'))`
   <a id="ck_idem_lease"></a>
-- `CK_IDEM_LEASE` (proposed): `CHECK ((execution_status='PROCESSING' AND lease_token IS NOT NULL AND lease_expires_at_utc IS NOT NULL) OR (execution_status<>'PROCESSING' AND lease_token IS NULL AND lease_expires_at_utc IS NULL))`
+- `CK_IDEM_LEASE` (proposed): `CHECK ((execution_status='PROCESSING' AND lease_token IS NOT NULL AND lease_expires_at_utc IS NOT NULL AND lease_expires_at_utc>created_at_utc AND lease_expires_at_utc<=expires_at_utc) OR (execution_status<>'PROCESSING' AND lease_token IS NULL AND lease_expires_at_utc IS NULL))`
   <a id="ck_idem_http_status"></a>
 - `CK_IDEM_HTTP_STATUS` (proposed): `CHECK (response_status IS NULL OR response_status BETWEEN 100 AND 599)`
+
+<a id="ck_idem_scope"></a>
+
+- `CK_IDEM_SCOPE` (proposed): `CHECK ((scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL))`
+
+<a id="ck_idem_response_json"></a>
+
+- `CK_IDEM_RESPONSE_JSON` (proposed): `CHECK (response_body IS JSON STRICT WITH UNIQUE KEYS)`
+
+<a id="ck_idem_response_version"></a>
+
+- `CK_IDEM_RESPONSE_VERSION` (proposed): `CHECK (response_version>0)`
+
+<a id="ck_idem_key_length"></a>
+
+- `CK_IDEM_KEY_LENGTH` (proposed): `CHECK (LENGTH(idempotency_key) BETWEEN 8 AND 160)`
+
+<a id="ck_idem_fence_uuid"></a>
+
+- `CK_IDEM_FENCE_UUID` (proposed): `CHECK (lease_token IS NULL OR REGEXP_LIKE(lease_token,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c'))`
+
+<a id="ck_idem_result_state"></a>
+
+- `CK_IDEM_RESULT_STATE` (proposed): `CHECK ((execution_status='PROCESSING' AND response_status IS NULL AND response_body IS NULL) OR (execution_status='COMPLETED' AND response_status IS NOT NULL AND response_status BETWEEN 200 AND 599) OR (execution_status='FAILED' AND (response_status IS NULL OR response_status BETWEEN 400 AND 599)))`
 
 ### AUDIT_LOGS
 
@@ -913,6 +1003,18 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 - `CK_AUDIT_LOGS_SCOPE` (proposed): `CHECK ((scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL))`
   <a id="ck_audit_actor"></a>
 - `CK_AUDIT_ACTOR` (proposed): `CHECK ((actor_type='USER' AND actor_user_id IS NOT NULL AND actor_platform_admin_id IS NULL AND actor_service IS NULL AND actor_key IS NULL AND ((tenant_id IS NULL AND actor_membership_id IS NULL) OR (tenant_id IS NOT NULL AND actor_membership_id IS NOT NULL))) OR (actor_type='PLATFORM_ADMIN' AND actor_platform_admin_id IS NOT NULL AND actor_user_id IS NOT NULL AND actor_membership_id IS NULL AND actor_service IS NULL AND actor_key IS NULL) OR (actor_type IN ('WORKER','SYSTEM') AND actor_service IS NOT NULL AND actor_user_id IS NULL AND actor_membership_id IS NULL AND actor_platform_admin_id IS NULL AND actor_key IS NULL) OR (actor_type='GUEST' AND tenant_id IS NOT NULL AND actor_key IS NOT NULL AND actor_user_id IS NULL AND actor_membership_id IS NULL AND actor_platform_admin_id IS NULL AND actor_service IS NULL))`
+
+<a id="ck_audit_before_data_json"></a>
+
+- `CK_AUDIT_BEFORE_DATA_JSON` (proposed): `CHECK (BEFORE_DATA IS JSON STRICT WITH UNIQUE KEYS)`
+
+<a id="ck_audit_after_data_json"></a>
+
+- `CK_AUDIT_AFTER_DATA_JSON` (proposed): `CHECK (AFTER_DATA IS JSON STRICT WITH UNIQUE KEYS)`
+
+<a id="ck_audit_payload_version"></a>
+
+- `CK_AUDIT_PAYLOAD_VERSION` (proposed): `CHECK (payload_version>0)`
 
 ### ONBOARDING_PROGRESS
 
@@ -929,6 +1031,10 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 <a id="ck_sfs_values"></a>
 
 - `CK_SFS_VALUES` (proposed): `CHECK (is_enabled IN ('Y','N') AND (limit_value IS NULL OR limit_value>=0))`
+
+<a id="ck_sfs_value_kind"></a>
+
+- `CK_SFS_VALUE_KIND` (proposed): `CHECK ((value_kind='BOOLEAN' AND limit_value IS NULL AND limit_unit IS NULL) OR (value_kind='LIMIT' AND limit_value IS NOT NULL AND limit_value>=0 AND limit_unit IS NOT NULL AND TRIM(limit_unit) IS NOT NULL))`
 
 ## Source deviations and dependencies
 

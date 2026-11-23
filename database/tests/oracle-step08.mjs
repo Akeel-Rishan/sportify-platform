@@ -26,8 +26,9 @@ let phase = 'prerequisites';
 try {
   const reconcile = process.argv[2] === '--reconcile-case-catalog';
   assert.equal(process.argv.length, reconcile ? 3 : 2);
-  let manifest = await loadManifest(fileURLToPath(new URL('../', import.meta.url)));
-  assertReady(manifest);
+  const release = await loadManifest(fileURLToPath(new URL('../', import.meta.url)));
+  assertReady(release);
+  let manifest = { ...release, migrations: release.migrations.slice(0, 17) };
   assert.equal(manifest.migrations.length, 17);
   const config = parseMigrationConfig(process.env);
   assert.equal(config.ORACLE_MIGRATION_SCHEMA, TEST_OWNER);

@@ -1,5 +1,9 @@
 # Toolchain and package boundaries
 
+## Step 09 actual compatibility follow-up
+
+23 November 2026: the operator supplied actual ADMIN query results for designated fce953xa, confirming COMPATIBLE=23.5.0. This resolves the previously unreadable parameter without broad grants or a driver/runtime upgrade. New Step 09 DDL/catalog/integrity/concurrency remain unexecuted; compatibility evidence alone does not validate them. [Current verification report](../database/step09-verification.md).
+
 Selected 16 November 2026 for Step 02; exact engine/peer and Linux ARM64 compiler metadata rechecked directly against the official npm registry on 20 November. Versions are exact direct-dependency pins; `pnpm-lock.yaml` records the resolved graph. Compatibility below combines official documentation, exact registry metadata and the local checks recorded in [progress](../planning/progress.md). No prerelease dependency is selected.
 
 ## Version selection
@@ -68,3 +72,7 @@ Pinned `oracledb` 26.0.0 and `@types/oracledb` 26.0.1; Node 22.22.0, pnpm 10.34.
 Earlier no-driver/no-connections statements above describe the historical Step 02?04 scaffold. Step 06 supersedes those statements with this connection package and dependency readiness, without implementing business schema or workflows.
 
 Step 06 mTLS follow-up: the existing pinned Thin driver now receives walletLocation and walletPassword. Pure config validation requires an absolute wallet directory and a separately supplied password; metadata/readability checks precede pool allocation. No new dependency, native Oracle Client, driver-mode change or walletless fallback was added. The 26.0.0 createPool wallet attributes and Thin mTLS/Easy Connect documentation were consulted again on 20 November 2026; versioned connection-page access failed, so the official latest page identifying itself as 26.0.0 supplied the content. The later 22 November acceptance audit verified actual wallet decryption/handshake, both identities, server release 23.26.4.1.0 and AL32UTF8; deployment and other explicitly deferred limits remain in the live evidence record.
+
+## Step 09 compatibility evidence
+
+No runtime/framework/dependency version changes. node-oracledb remains exact 26.0.0 in Thin mTLS mode with certificate/DN verification. The actual designated server reports 23.26.4.1.0. A restricted-owner read of V$PARAMETER was denied; the COMPATIBLE value remains unknown and needs the ADMIN operator query before new release execution. A bound CLOB strict/unique-key JSON predicate probe passed valid/duplicate/malformed cases without DDL. Proposed SQL conservatively uses Oracle 19c-supported CLOB IS JSON STRICT WITH UNIQUE KEYS, composite keys, ordinary CASE indexes and direct-key FOR UPDATE SKIP LOCKED; no native JSON or FETCH FIRST/FOR UPDATE combination. [Exact official references, executed probes and limits](../database/step09-verification.md). Functional probes/static agreement are not new-table Oracle compilation/catalog/concurrency evidence. No ARM64 test was performed.

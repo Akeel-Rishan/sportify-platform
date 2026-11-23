@@ -10,6 +10,37 @@ export function canonicalSql(sql: string | null): string {
     .join('');
 }
 export function canonicalIndexExpression(sql: string): string {
+  // Observed on the Step 09 subscription index: Oracle expands a searched
+  // CASE ... IN (...) into simple CASE arms with the same return identifier.
+  // Accept only that restricted shape, preserving literal spelling and order.
+  // No ELSE, expressions, changed selectors or differing return arms are folded.
+  const tokens = sql.match(/'(?:''|[^'])*'|"(?:""|[^"])*"|[A-Z][A-Z0-9_$#]*|\S/gi) ?? [];
+  const identifier = /^(?:"(?:""|[^"])*"|[A-Z][A-Z0-9_$#]*)$/i;
+  const literal = /^'(?:''|[^'])*'$/;
+  if (
+    tokens.length >= 11 &&
+    (tokens.length - 3) % 4 === 0 &&
+    tokens[0]?.toUpperCase() === 'CASE' &&
+    tokens.at(-1)?.toUpperCase() === 'END' &&
+    identifier.test(tokens[1] ?? '')
+  ) {
+    const values: string[] = [];
+    const result = tokens[5] ?? '';
+    let valid = identifier.test(result);
+    for (let i = 2; i < tokens.length - 1; i += 4) {
+      if (
+        tokens[i]?.toUpperCase() !== 'WHEN' ||
+        !literal.test(tokens[i + 1] ?? '') ||
+        tokens[i + 2]?.toUpperCase() !== 'THEN' ||
+        !identifier.test(tokens[i + 3] ?? '') ||
+        canonicalSql(tokens[i + 3] ?? '') !== canonicalSql(result)
+      )
+        valid = false;
+      values.push(tokens[i + 1] ?? '');
+    }
+    if (valid)
+      return canonicalSql(`CASE WHEN ${tokens[1]} IN (${values.join(',')}) THEN ${result} END`);
+  }
   // Oracle can store a single equality CASE as simple CASE. Normalize only
   // identifier / string-literal / identifier with one arm and no ELSE.
   // Leave general SQL, literal contents and differing branches unchanged.

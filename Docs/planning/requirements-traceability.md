@@ -113,3 +113,15 @@ D-21 explicitly approves the Step 08 policy subparts of REQ-015-020/026-031 and 
 ## D-22 Step 08 database verification evidence
 
 Database portions of scoped REQ-013-028/029-033/048/050 now have actual Oracle migration/catalog, 40 integrity-case and A-E concurrency evidence plus cleanup/runtime denials. The application schema has 17 APPLIED/no pending versions. This supersedes earlier Step 08 unverified-storage statements only. Requirement IDs and end-to-end application/UI/authorization statuses remain unchanged: production booking/payment/schedule/maintenance/refund services are not implemented or proved by test-only harnesses. [Evidence and boundaries](../database/step08-verification.md).
+
+## Step 09 prepared storage, not verified application behavior
+
+Scoped REQ-035-038/040-046/048-050 gain review-gated subscription/website/audit/operational SQL and test-only integrity/transaction harness sources. REQ-032 ledger separation and historical snapshots are preserved. Stable IDs and broader application statuses are unchanged: no subscription enforcement, host routing/rendering/upload, audit emission, notification delivery, job processing or request idempotency is marked operational. Three policy decisions and isolated/application Oracle execution remain blocked. [Evidence, approval impacts and operator gate](../database/step09-verification.md). Earlier Step 07/08 execution evidence remains valid for its own scope.
+
+## D-24 scoped policy approval
+
+The Step 09 structural policy portions of REQ-035-038/040-046/048-050 are approved; no requirement ID or end-to-end application status changes. Commercial values/codes/quotas, trial/grace, operating timings/retries, collection/retention and secret replay remain undecided. No new seed/runtime grant or Oracle pass. Technical compatibility/test-owner/isolated/application gates remain incomplete. [Current verification report](../database/step09-verification.md).
+
+## Step 09 actual database verification
+
+Scoped storage portions of REQ-035-038/040-046/048-050 now have actual original application apply/repeat/catalog/history/count evidence and isolated integrity/transaction/concurrency/runtime-denial evidence. Existing IDs and end-to-end product statuses remain unchanged. No subscription enforcement, website publication/routing/media service, audit emitter, job processing, notification delivery or request-idempotency API is marked operational. All D-24 excluded commercial/operating/privacy/secret replay configuration remains undecided. [Detailed results, retained recovery and limits](../database/step09-verification.md).

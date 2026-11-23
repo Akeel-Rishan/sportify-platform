@@ -100,8 +100,16 @@ export function fixtureSql(manifest, table, values) {
   };
 }
 
-export async function createFixtures(session, owner, manifest) {
-  assertTestOwner(owner);
+export async function createFixtures(
+  session,
+  owner,
+  manifest,
+  { expectedOwner = TEST_OWNER, commitSetup = true } = {},
+) {
+  // Shared synthetic venue roots, with explicit fixed disposable identities.
+  // Default/Step 08 callers retain their original single-owner boundary.
+  assert.ok([TEST_OWNER, 'SPORTIFY_STEP09_TEST_OWNER'].includes(expectedOwner));
+  assert.equal(owner, expectedOwner);
   let serial = 9007199254741000n + BigInt(randomInt(1, 1000000)) * 10000n;
   const id = () => String(++serial),
     nonce = randomUUID().replaceAll('-', '').slice(0, 12);
@@ -303,7 +311,7 @@ export async function createFixtures(session, owner, manifest) {
     }
   };
   // Committed only inside this verified disposable owner for independent sessions.
-  await session.commit();
+  if (commitSetup) await session.commit();
   return {
     a,
     b,

@@ -7210,6 +7210,3219 @@
         }
       ],
       "seeds": []
+    },
+    {
+      "version": "000018",
+      "name": "subscription_catalog",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000018_subscription_catalog/001_subscription_plans.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000018_subscription_catalog/002_subscription_entitlements.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000018_subscription_catalog/003_fk_se_plan.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SUBSCRIPTION_PLANS",
+          "columns": [
+            {
+              "name": "PLAN_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "PLAN_CODE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PLAN_NAME",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DESCRIPTION",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PRICE_AMOUNT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BILLING_INTERVAL",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TRIAL_DAYS",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_ACTIVE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "SUBSCRIPTION_ENTITLEMENTS",
+          "columns": [
+            {
+              "name": "PLAN_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FEATURE_CODE",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_ENABLED",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LIMIT_VALUE",
+              "type": "NUMBER(12)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LIMIT_UNIT",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VALUE_KIND",
+              "type": "VARCHAR2(7 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_SUBSCRIPTION_PLANS",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "P",
+          "columns": ["PLAN_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_SUBSCRIPTION_PLANS_CODE",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "U",
+          "columns": ["PLAN_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PLANS_PRICE",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "price_amount >= 0"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PLANS_INTERVAL",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "billing_interval IN ('MONTHLY','YEARLY','CUSTOM')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PLANS_TRIAL",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "trial_days >= 0"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PLANS_ACTIVE",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_active IN ('Y','N')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PLANS_CURRENCY_CODE",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PLANS_ID_POSITIVE",
+          "table": "SUBSCRIPTION_PLANS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "PLAN_ID>0 AND PLAN_ID=TRUNC(PLAN_ID)"
+        },
+        {
+          "name": "PK_SUBSCRIPTION_ENTITLEMENTS",
+          "table": "SUBSCRIPTION_ENTITLEMENTS",
+          "type": "P",
+          "columns": ["PLAN_ID", "FEATURE_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SE_PLAN",
+          "table": "SUBSCRIPTION_ENTITLEMENTS",
+          "type": "R",
+          "columns": ["PLAN_ID"],
+          "referencedTable": "SUBSCRIPTION_PLANS",
+          "referencedColumns": ["PLAN_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_SE_ENABLED",
+          "table": "SUBSCRIPTION_ENTITLEMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_enabled IN ('Y','N')"
+        },
+        {
+          "name": "CK_SE_LIMIT",
+          "table": "SUBSCRIPTION_ENTITLEMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "limit_value IS NULL OR limit_value >= 0"
+        },
+        {
+          "name": "CK_SE_VALUE_KIND",
+          "table": "SUBSCRIPTION_ENTITLEMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(value_kind='BOOLEAN' AND limit_value IS NULL AND limit_unit IS NULL) OR (value_kind='LIMIT' AND limit_value IS NOT NULL AND limit_value>=0 AND limit_unit IS NOT NULL AND TRIM(limit_unit) IS NOT NULL)"
+        }
+      ],
+      "indexes": [],
+      "seeds": []
+    },
+    {
+      "version": "000019",
+      "name": "subscription_terms",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000019_subscription_terms/001_subscriptions.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/002_subscription_feature_snapshots.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/003_fk_subscriptions_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/004_fk_subscriptions_plan.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/005_fk_sfs_subscription.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/006_ix_subscriptions_tenant_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/007_ix_subscriptions_status_end.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/008_ix_subscriptions_plan.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/009_ux_subscriptions_one_current.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000019_subscription_terms/010_ix_sub_scheduled_start.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SUBSCRIPTIONS",
+          "columns": [
+            {
+              "name": "SUBSCRIPTION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PLAN_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SUBSCRIPTION_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'TRIAL'",
+              "identity": false
+            },
+            {
+              "name": "STARTS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TRIAL_STARTS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TRIAL_ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "GRACE_ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PLAN_NAME_SNAPSHOT",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PRICE_AMOUNT_SNAPSHOT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BILLING_INTERVAL_SNAPSHOT",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SUBSCRIPTION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FEATURE_CODE",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_ENABLED",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LIMIT_VALUE",
+              "type": "NUMBER(12)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LIMIT_UNIT",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VALUE_KIND",
+              "type": "VARCHAR2(7 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_SUBSCRIPTIONS",
+          "table": "SUBSCRIPTIONS",
+          "type": "P",
+          "columns": ["SUBSCRIPTION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_SUBSCRIPTIONS_TENANT_ID",
+          "table": "SUBSCRIPTIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SUBSCRIPTIONS_TENANT",
+          "table": "SUBSCRIPTIONS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_SUBSCRIPTIONS_PLAN",
+          "table": "SUBSCRIPTIONS",
+          "type": "R",
+          "columns": ["PLAN_ID"],
+          "referencedTable": "SUBSCRIPTION_PLANS",
+          "referencedColumns": ["PLAN_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_SUBSCRIPTION_CURRENCY",
+          "table": "SUBSCRIPTIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_ID", "CURRENCY_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_SUBSCRIPTIONS_PERIOD",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ends_at_utc IS NULL OR ends_at_utc > starts_at_utc"
+        },
+        {
+          "name": "CK_SUBSCRIPTIONS_TRIAL",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "trial_ends_at_utc IS NULL OR trial_starts_at_utc IS NULL OR trial_ends_at_utc >= trial_starts_at_utc"
+        },
+        {
+          "name": "CK_SUBSCRIPTIONS_ID_POSITIVE",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "SUBSCRIPTION_ID>0 AND SUBSCRIPTION_ID=TRUNC(SUBSCRIPTION_ID)"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_SNAPSHOT",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "price_amount_snapshot>=0 AND REGEXP_LIKE(currency_code,'^[A-Z]{3}$','c') AND billing_interval_snapshot IN ('MONTHLY','YEARLY','CUSTOM')"
+        },
+        {
+          "name": "CK_SUBSCRIPTIONS_STATUS",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "subscription_status IN ('SCHEDULED','TRIAL','ACTIVE','PAST_DUE','GRACE','SUSPENDED','CANCELLED','EXPIRED')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_TRIAL_PAIR",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(trial_starts_at_utc IS NULL AND trial_ends_at_utc IS NULL) OR (trial_starts_at_utc IS NOT NULL AND trial_ends_at_utc IS NOT NULL AND trial_ends_at_utc>trial_starts_at_utc)"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_TRIAL_STATE",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "subscription_status<>'TRIAL' OR (trial_starts_at_utc IS NOT NULL AND trial_ends_at_utc IS NOT NULL)"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_GRACE",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "subscription_status<>'GRACE' OR (grace_ends_at_utc IS NOT NULL AND grace_ends_at_utc>=ends_at_utc)"
+        },
+        {
+          "name": "CK_SUB_TRIAL_WITHIN_TERM",
+          "table": "SUBSCRIPTIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "trial_starts_at_utc IS NULL OR (trial_starts_at_utc>=starts_at_utc AND trial_ends_at_utc<=ends_at_utc)"
+        },
+        {
+          "name": "PK_SUB_FEATURE_SNAPSHOTS",
+          "table": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+          "type": "P",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_ID", "FEATURE_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SFS_SUBSCRIPTION",
+          "table": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_ID"],
+          "referencedTable": "SUBSCRIPTIONS",
+          "referencedColumns": ["TENANT_ID", "SUBSCRIPTION_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_SFS_VALUES",
+          "table": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_enabled IN ('Y','N') AND (limit_value IS NULL OR limit_value>=0)"
+        },
+        {
+          "name": "CK_SFS_VALUE_KIND",
+          "table": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(value_kind='BOOLEAN' AND limit_value IS NULL AND limit_unit IS NULL) OR (value_kind='LIMIT' AND limit_value IS NOT NULL AND limit_value>=0 AND limit_unit IS NOT NULL AND TRIM(limit_unit) IS NOT NULL)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_SUBSCRIPTIONS_TENANT_STATUS",
+          "table": "SUBSCRIPTIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SUBSCRIPTION_STATUS"]
+        },
+        {
+          "name": "IX_SUBSCRIPTIONS_STATUS_END",
+          "table": "SUBSCRIPTIONS",
+          "unique": false,
+          "expressions": ["SUBSCRIPTION_STATUS", "ENDS_AT_UTC"]
+        },
+        {
+          "name": "IX_SUBSCRIPTIONS_PLAN",
+          "table": "SUBSCRIPTIONS",
+          "unique": false,
+          "expressions": ["PLAN_ID", "SUBSCRIPTION_STATUS"]
+        },
+        {
+          "name": "UX_SUBSCRIPTIONS_ONE_CURRENT",
+          "table": "SUBSCRIPTIONS",
+          "unique": true,
+          "expressions": [
+            "CASE WHEN SUBSCRIPTION_STATUS IN ('TRIAL','ACTIVE','PAST_DUE','GRACE','SUSPENDED') THEN TENANT_ID END"
+          ]
+        },
+        {
+          "name": "IX_SUB_SCHEDULED_START",
+          "table": "SUBSCRIPTIONS",
+          "unique": false,
+          "expressions": ["SUBSCRIPTION_STATUS", "STARTS_AT_UTC", "SUBSCRIPTION_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000020",
+      "name": "subscription_invoices_and_payments",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/001_subscription_invoices.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/002_subscription_payments.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/003_fk_si_subscription.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/004_fk_subscription_payments_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/005_fk_sp_void_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/006_fk_sp_invoice.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/007_fk_sp_admin_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/008_fk_sp_void_admin.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/009_ix_si_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/010_ix_si_subscription.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/011_ix_fk_si_subscription.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/012_ix_sp_invoice.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/013_ix_subscription_payments_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/014_ix_fk_sp_void_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/015_ix_fk_sp_invoice.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/016_ix_fk_sp_admin_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000020_subscription_invoices_and_payments/017_ix_sp_void_admin.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SUBSCRIPTION_INVOICES",
+          "columns": [
+            {
+              "name": "SUBSCRIPTION_INVOICE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SUBSCRIPTION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INVOICE_NUMBER",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "AMOUNT_DUE",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INVOICE_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ISSUED'",
+              "identity": false
+            },
+            {
+              "name": "ISSUED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DUE_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAID_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PERIOD_STARTS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PERIOD_ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "SUBSCRIPTION_PAYMENTS",
+          "columns": [
+            {
+              "name": "SUBSCRIPTION_PAYMENT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SUBSCRIPTION_INVOICE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_METHOD",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "AMOUNT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_REFERENCE",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'RECEIVED'",
+              "identity": false
+            },
+            {
+              "name": "RECEIVED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RECORDED_BY_USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOIDED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOID_REASON",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOIDED_BY_USER_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RECORDED_BY_PLATFORM_ADMIN_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOIDED_BY_PLATFORM_ADMIN_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_SUBSCRIPTION_INVOICES",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "P",
+          "columns": ["SUBSCRIPTION_INVOICE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_SI_TENANT_ID",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "U",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_INVOICE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_SI_NUMBER",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "U",
+          "columns": ["TENANT_ID", "INVOICE_NUMBER"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SI_SUBSCRIPTION",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "R",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_ID", "CURRENCY_CODE"],
+          "referencedTable": "SUBSCRIPTIONS",
+          "referencedColumns": ["TENANT_ID", "SUBSCRIPTION_ID", "CURRENCY_CODE"],
+          "expression": null
+        },
+        {
+          "name": "UQ_INVOICE_CURRENCY",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "U",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_INVOICE_ID", "CURRENCY_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_SI_AMOUNT",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "amount_due >= 0"
+        },
+        {
+          "name": "CK_SI_STATUS",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "invoice_status IN ('DRAFT','ISSUED','PAID','OVERDUE','VOID')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_INVOICES_CURRENCY_CODE",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_INVOICES_ID_POSITIVE",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "SUBSCRIPTION_INVOICE_ID>0 AND SUBSCRIPTION_INVOICE_ID=TRUNC(SUBSCRIPTION_INVOICE_ID)"
+        },
+        {
+          "name": "CK_SI_PERIOD",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "period_ends_at_utc>period_starts_at_utc"
+        },
+        {
+          "name": "CK_SI_DUE_ORDER",
+          "table": "SUBSCRIPTION_INVOICES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "due_at_utc IS NULL OR due_at_utc>=issued_at_utc"
+        },
+        {
+          "name": "PK_SUBSCRIPTION_PAYMENTS",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "P",
+          "columns": ["SUBSCRIPTION_PAYMENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_SP_TENANT_ID",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_PAYMENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SUBSCRIPTION_PAYMENTS_USER",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "R",
+          "columns": ["RECORDED_BY_USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_SUBSCRIPTION_PAYMENTS_PUBLIC_ID",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SP_VOID_USER",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "R",
+          "columns": ["VOIDED_BY_USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_SP_INVOICE",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "SUBSCRIPTION_INVOICE_ID", "CURRENCY_CODE"],
+          "referencedTable": "SUBSCRIPTION_INVOICES",
+          "referencedColumns": ["TENANT_ID", "SUBSCRIPTION_INVOICE_ID", "CURRENCY_CODE"],
+          "expression": null
+        },
+        {
+          "name": "FK_SP_ADMIN_ACTOR",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "R",
+          "columns": ["RECORDED_BY_PLATFORM_ADMIN_ID", "RECORDED_BY_USER_ID"],
+          "referencedTable": "PLATFORM_ADMINS",
+          "referencedColumns": ["PLATFORM_ADMIN_ID", "USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_SP_VOID_ADMIN",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "R",
+          "columns": ["VOIDED_BY_PLATFORM_ADMIN_ID", "VOIDED_BY_USER_ID"],
+          "referencedTable": "PLATFORM_ADMINS",
+          "referencedColumns": ["PLATFORM_ADMIN_ID", "USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_SP_METHOD",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payment_method IN ('CASH','BANK_TRANSFER','CARD','OTHER')"
+        },
+        {
+          "name": "CK_SP_STATUS",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payment_status IN ('RECEIVED','VOIDED')"
+        },
+        {
+          "name": "CK_SP_AMOUNT",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "amount > 0"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PAYMENTS_CURRENCY_CODE",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PAYMENTS_UUID",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PAYMENTS_ID_POSITIVE",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "SUBSCRIPTION_PAYMENT_ID>0 AND SUBSCRIPTION_PAYMENT_ID=TRUNC(SUBSCRIPTION_PAYMENT_ID)"
+        },
+        {
+          "name": "CK_SUBSCRIPTION_PAYMENTS_VOID",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(payment_status='RECEIVED' AND voided_at_utc IS NULL AND void_reason IS NULL AND voided_by_user_id IS NULL AND voided_by_platform_admin_id IS NULL) OR (payment_status='VOIDED' AND voided_at_utc IS NOT NULL AND void_reason IS NOT NULL AND voided_by_user_id IS NOT NULL AND voided_by_platform_admin_id IS NOT NULL)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_SI_STATUS",
+          "table": "SUBSCRIPTION_INVOICES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "INVOICE_STATUS", "DUE_AT_UTC"]
+        },
+        {
+          "name": "IX_SI_SUBSCRIPTION",
+          "table": "SUBSCRIPTION_INVOICES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SUBSCRIPTION_ID", "ISSUED_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_SI_SUBSCRIPTION",
+          "table": "SUBSCRIPTION_INVOICES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SUBSCRIPTION_ID", "CURRENCY_CODE"]
+        },
+        {
+          "name": "IX_SP_INVOICE",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SUBSCRIPTION_INVOICE_ID"]
+        },
+        {
+          "name": "IX_SUBSCRIPTION_PAYMENTS_USER",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "unique": false,
+          "expressions": ["RECORDED_BY_USER_ID", "RECEIVED_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_SP_VOID_USER",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "unique": false,
+          "expressions": ["VOIDED_BY_USER_ID"]
+        },
+        {
+          "name": "IX_FK_SP_INVOICE",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SUBSCRIPTION_INVOICE_ID", "CURRENCY_CODE"]
+        },
+        {
+          "name": "IX_FK_SP_ADMIN_ACTOR",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "unique": false,
+          "expressions": ["RECORDED_BY_PLATFORM_ADMIN_ID", "RECORDED_BY_USER_ID"]
+        },
+        {
+          "name": "IX_SP_VOID_ADMIN",
+          "table": "SUBSCRIPTION_PAYMENTS",
+          "unique": false,
+          "expressions": ["VOIDED_BY_PLATFORM_ADMIN_ID", "VOIDED_BY_USER_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000021",
+      "name": "tenant_website_configuration",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000021_tenant_website_configuration/001_website_themes.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000021_tenant_website_configuration/002_website_settings.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000021_tenant_website_configuration/003_fk_website_settings_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000021_tenant_website_configuration/004_fk_website_settings_theme.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000021_tenant_website_configuration/005_ix_website_settings_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000021_tenant_website_configuration/006_ix_website_settings_theme.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "WEBSITE_THEMES",
+          "columns": [
+            {
+              "name": "THEME_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "THEME_CODE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "THEME_NAME",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DESCRIPTION",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_ACTIVE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "WEBSITE_SETTINGS",
+          "columns": [
+            {
+              "name": "WEBSITE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "THEME_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SUBDOMAIN_SLUG",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "WEBSITE_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'DRAFT'",
+              "identity": false
+            },
+            {
+              "name": "PAGE_TITLE",
+              "type": "VARCHAR2(180 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "META_DESCRIPTION",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PRIMARY_COLOR",
+              "type": "CHAR(7 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SECONDARY_COLOR",
+              "type": "CHAR(7 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CANCELLATION_POLICY",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TERMS_AND_CONDITIONS",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PUBLISHED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_WEBSITE_THEMES",
+          "table": "WEBSITE_THEMES",
+          "type": "P",
+          "columns": ["THEME_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_THEMES_CODE",
+          "table": "WEBSITE_THEMES",
+          "type": "U",
+          "columns": ["THEME_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_WEBSITE_THEMES_ACTIVE",
+          "table": "WEBSITE_THEMES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_active IN ('Y','N')"
+        },
+        {
+          "name": "CK_WEBSITE_THEMES_ID_POSITIVE",
+          "table": "WEBSITE_THEMES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "THEME_ID>0 AND THEME_ID=TRUNC(THEME_ID)"
+        },
+        {
+          "name": "PK_WEBSITE_SETTINGS",
+          "table": "WEBSITE_SETTINGS",
+          "type": "P",
+          "columns": ["WEBSITE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_SETTINGS_TENANT_ID",
+          "table": "WEBSITE_SETTINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "WEBSITE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_SETTINGS_BUSINESS",
+          "table": "WEBSITE_SETTINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_SETTINGS_SUBDOMAIN",
+          "table": "WEBSITE_SETTINGS",
+          "type": "U",
+          "columns": ["SUBDOMAIN_SLUG"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_WEBSITE_SETTINGS_BUSINESS",
+          "table": "WEBSITE_SETTINGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_WEBSITE_SETTINGS_THEME",
+          "table": "WEBSITE_SETTINGS",
+          "type": "R",
+          "columns": ["THEME_ID"],
+          "referencedTable": "WEBSITE_THEMES",
+          "referencedColumns": ["THEME_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_SETTINGS_PUBLIC_ID",
+          "table": "WEBSITE_SETTINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_WEBSITE_SETTINGS_STATUS",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "website_status IN ('DRAFT','PUBLISHED','UNPUBLISHED')"
+        },
+        {
+          "name": "CK_WEBSITE_SETTINGS_SLUG",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(subdomain_slug,'^[a-z0-9]([a-z0-9-]{0,98}[a-z0-9])?$','c')"
+        },
+        {
+          "name": "CK_WEBSITE_SETTINGS_UUID",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_WEBSITE_SETTINGS_ID_POSITIVE",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "WEBSITE_ID>0 AND WEBSITE_ID=TRUNC(WEBSITE_ID)"
+        },
+        {
+          "name": "CK_WEBSITE_DNS_LABEL",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "LENGTH(subdomain_slug)<=63"
+        },
+        {
+          "name": "CK_WEBSITE_HOST_CANONICAL",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "NOT REGEXP_LIKE(subdomain_slug,'[^a-z0-9-]','c') AND subdomain_slug NOT IN ('admin','api','dashboard')"
+        },
+        {
+          "name": "CK_WEBSITE_PUBLISHED",
+          "table": "WEBSITE_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "website_status<>'PUBLISHED' OR published_at_utc IS NOT NULL"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_WEBSITE_SETTINGS_STATUS",
+          "table": "WEBSITE_SETTINGS",
+          "unique": false,
+          "expressions": ["WEBSITE_STATUS", "SUBDOMAIN_SLUG"]
+        },
+        {
+          "name": "IX_WEBSITE_SETTINGS_THEME",
+          "table": "WEBSITE_SETTINGS",
+          "unique": false,
+          "expressions": ["THEME_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000022",
+      "name": "website_media",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000022_website_media/001_website_media.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000022_website_media/002_fk_website_media_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000022_website_media/003_fk_website_media_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000022_website_media/004_fk_website_media_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000022_website_media/005_ix_website_media_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000022_website_media/006_ix_website_media_location.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "WEBSITE_MEDIA",
+          "columns": [
+            {
+              "name": "WEBSITE_MEDIA_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OBJECT_KEY",
+              "type": "VARCHAR2(700 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ORIGINAL_FILENAME",
+              "type": "VARCHAR2(255 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CONTENT_TYPE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SIZE_BYTES",
+              "type": "NUMBER(12)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MEDIA_KIND",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ALT_TEXT",
+              "type": "VARCHAR2(300 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DISPLAY_ORDER",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "0",
+              "identity": false
+            },
+            {
+              "name": "MEDIA_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_WEBSITE_MEDIA",
+          "table": "WEBSITE_MEDIA",
+          "type": "P",
+          "columns": ["WEBSITE_MEDIA_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_MEDIA_TENANT_ID",
+          "table": "WEBSITE_MEDIA",
+          "type": "U",
+          "columns": ["TENANT_ID", "WEBSITE_MEDIA_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_MEDIA_OBJECT_KEY",
+          "table": "WEBSITE_MEDIA",
+          "type": "U",
+          "columns": ["OBJECT_KEY"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_WEBSITE_MEDIA_BUSINESS",
+          "table": "WEBSITE_MEDIA",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_WEBSITE_MEDIA_LOCATION",
+          "table": "WEBSITE_MEDIA",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_WEBSITE_MEDIA_RESOURCE",
+          "table": "WEBSITE_MEDIA",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_WEBSITE_MEDIA_PUBLIC_ID",
+          "table": "WEBSITE_MEDIA",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_WEBSITE_MEDIA_OWNER",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "resource_id IS NULL OR location_id IS NOT NULL"
+        },
+        {
+          "name": "CK_WEBSITE_MEDIA_SIZE",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "size_bytes > 0"
+        },
+        {
+          "name": "CK_WEBSITE_MEDIA_KIND",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "media_kind IN ('LOGO','COVER','BUSINESS','LOCATION','RESOURCE','OTHER')"
+        },
+        {
+          "name": "CK_WEBSITE_MEDIA_STATUS",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "media_status IN ('ACTIVE','ARCHIVED','DELETED')"
+        },
+        {
+          "name": "CK_WEBSITE_MEDIA_UUID",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_WEBSITE_MEDIA_ID_POSITIVE",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "WEBSITE_MEDIA_ID>0 AND WEBSITE_MEDIA_ID=TRUNC(WEBSITE_MEDIA_ID)"
+        },
+        {
+          "name": "CK_WEBSITE_OBJECT_KEY",
+          "table": "WEBSITE_MEDIA",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(object_key,'^[A-Za-z0-9][A-Za-z0-9/_.-]*$','c') AND NOT REGEXP_LIKE(object_key,'[^A-Za-z0-9/_.-]','c') AND INSTR('/'||object_key||'/','/../')=0 AND INSTR('/'||object_key||'/','/./')=0"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_WEBSITE_MEDIA_BUSINESS",
+          "table": "WEBSITE_MEDIA",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BUSINESS_ID", "DISPLAY_ORDER"]
+        },
+        {
+          "name": "IX_WEBSITE_MEDIA_LOCATION",
+          "table": "WEBSITE_MEDIA",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000023",
+      "name": "audit_records",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000023_audit_records/001_audit_logs.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/002_fk_audit_logs_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/003_fk_audit_logs_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/004_fk_audit_logs_membership_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/005_fk_audit_admin_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/006_ix_audit_logs_tenant_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/007_ix_audit_logs_actor_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/008_ix_audit_logs_entity.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/009_ix_audit_logs_membership.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/010_ix_fk_audit_logs_membership_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000023_audit_records/011_ix_fk_audit_admin_user.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "AUDIT_LOGS",
+          "columns": [
+            {
+              "name": "AUDIT_LOG_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTOR_USER_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTOR_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTION_CODE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ENTITY_TYPE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ENTITY_PUBLIC_ID",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BEFORE_DATA",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "AFTER_DATA",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REQUEST_ID",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IP_ADDRESS",
+              "type": "VARCHAR2(45 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "USER_AGENT",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SCOPE_KIND",
+              "type": "VARCHAR2(8 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTOR_TYPE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTOR_PLATFORM_ADMIN_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTOR_SERVICE",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTOR_KEY",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYLOAD_VERSION",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "1",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_AUDIT_LOGS",
+          "table": "AUDIT_LOGS",
+          "type": "P",
+          "columns": ["AUDIT_LOG_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_AUDIT_LOGS_TENANT",
+          "table": "AUDIT_LOGS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_AUDIT_LOGS_USER",
+          "table": "AUDIT_LOGS",
+          "type": "R",
+          "columns": ["ACTOR_USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_AUDIT_LOGS_MEMBERSHIP_ACTOR",
+          "table": "AUDIT_LOGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "ACTOR_MEMBERSHIP_ID", "ACTOR_USER_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID", "USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_AUDIT_LOGS_PUBLIC_ID",
+          "table": "AUDIT_LOGS",
+          "type": "U",
+          "columns": ["PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_AUDIT_ADMIN_USER",
+          "table": "AUDIT_LOGS",
+          "type": "R",
+          "columns": ["ACTOR_PLATFORM_ADMIN_ID", "ACTOR_USER_ID"],
+          "referencedTable": "PLATFORM_ADMINS",
+          "referencedColumns": ["PLATFORM_ADMIN_ID", "USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_AUDIT_LOGS_MEMBERSHIP",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "actor_membership_id IS NULL OR (tenant_id IS NOT NULL AND actor_user_id IS NOT NULL)"
+        },
+        {
+          "name": "CK_AUDIT_LOGS_UUID",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_AUDIT_LOGS_ID_POSITIVE",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "AUDIT_LOG_ID>0 AND AUDIT_LOG_ID=TRUNC(AUDIT_LOG_ID)"
+        },
+        {
+          "name": "CK_AUDIT_LOGS_SCOPE",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL)"
+        },
+        {
+          "name": "CK_AUDIT_ACTOR",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(actor_type='USER' AND actor_user_id IS NOT NULL AND actor_platform_admin_id IS NULL AND actor_service IS NULL AND actor_key IS NULL AND ((tenant_id IS NULL AND actor_membership_id IS NULL) OR (tenant_id IS NOT NULL AND actor_membership_id IS NOT NULL))) OR (actor_type='PLATFORM_ADMIN' AND actor_platform_admin_id IS NOT NULL AND actor_user_id IS NOT NULL AND actor_membership_id IS NULL AND actor_service IS NULL AND actor_key IS NULL) OR (actor_type IN ('WORKER','SYSTEM') AND actor_service IS NOT NULL AND actor_user_id IS NULL AND actor_membership_id IS NULL AND actor_platform_admin_id IS NULL AND actor_key IS NULL) OR (actor_type='GUEST' AND tenant_id IS NOT NULL AND actor_key IS NOT NULL AND actor_user_id IS NULL AND actor_membership_id IS NULL AND actor_platform_admin_id IS NULL AND actor_service IS NULL)"
+        },
+        {
+          "name": "CK_AUDIT_BEFORE_DATA_JSON",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "BEFORE_DATA IS JSON STRICT WITH UNIQUE KEYS"
+        },
+        {
+          "name": "CK_AUDIT_AFTER_DATA_JSON",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "AFTER_DATA IS JSON STRICT WITH UNIQUE KEYS"
+        },
+        {
+          "name": "CK_AUDIT_PAYLOAD_VERSION",
+          "table": "AUDIT_LOGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payload_version>0"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_AUDIT_LOGS_TENANT_TIME",
+          "table": "AUDIT_LOGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_AUDIT_LOGS_ACTOR_TIME",
+          "table": "AUDIT_LOGS",
+          "unique": false,
+          "expressions": ["ACTOR_USER_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_AUDIT_LOGS_ENTITY",
+          "table": "AUDIT_LOGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "ENTITY_TYPE", "ENTITY_PUBLIC_ID"]
+        },
+        {
+          "name": "IX_AUDIT_LOGS_MEMBERSHIP",
+          "table": "AUDIT_LOGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "ACTOR_MEMBERSHIP_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_AUDIT_LOGS_MEMBERSHIP_ACTOR",
+          "table": "AUDIT_LOGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "ACTOR_MEMBERSHIP_ID", "ACTOR_USER_ID"]
+        },
+        {
+          "name": "IX_FK_AUDIT_ADMIN_USER",
+          "table": "AUDIT_LOGS",
+          "unique": false,
+          "expressions": ["ACTOR_PLATFORM_ADMIN_ID", "ACTOR_USER_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000024",
+      "name": "transactional_outbox",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000024_transactional_outbox/001_outbox_events.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000024_transactional_outbox/002_fk_outbox_events_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000024_transactional_outbox/003_ix_outbox_events_ready.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000024_transactional_outbox/004_ix_outbox_events_tenant.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "OUTBOX_EVENTS",
+          "columns": [
+            {
+              "name": "OUTBOX_EVENT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "AGGREGATE_TYPE",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "AGGREGATE_ID",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EVENT_TYPE",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYLOAD",
+              "type": "CLOB",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EVENT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PENDING'",
+              "identity": false
+            },
+            {
+              "name": "ATTEMPT_COUNT",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "0",
+              "identity": false
+            },
+            {
+              "name": "AVAILABLE_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PROCESSED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "SCOPE_KIND",
+              "type": "VARCHAR2(8 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MAX_ATTEMPTS",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYLOAD_VERSION",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "1",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_OUTBOX_EVENTS",
+          "table": "OUTBOX_EVENTS",
+          "type": "P",
+          "columns": ["OUTBOX_EVENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_OUTBOX_EVENTS_TENANT",
+          "table": "OUTBOX_EVENTS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_OUTBOX_SCOPE_ID",
+          "table": "OUTBOX_EVENTS",
+          "type": "U",
+          "columns": ["SCOPE_KIND", "OUTBOX_EVENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_OUTBOX_TENANT_ID",
+          "table": "OUTBOX_EVENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "OUTBOX_EVENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_OUTBOX_EVENTS_STATUS",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "event_status IN ('PENDING','PROCESSING','PROCESSED','FAILED')"
+        },
+        {
+          "name": "CK_OUTBOX_EVENTS_ID_POSITIVE",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "OUTBOX_EVENT_ID>0 AND OUTBOX_EVENT_ID=TRUNC(OUTBOX_EVENT_ID)"
+        },
+        {
+          "name": "CK_OUTBOX_EVENTS_SCOPE",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL)"
+        },
+        {
+          "name": "CK_OUTBOX_ATTEMPTS",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "attempt_count>=0 AND max_attempts>0 AND attempt_count<=max_attempts"
+        },
+        {
+          "name": "CK_OUTBOX_EVENTS_PAYLOAD_VERSION",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payload_version>0"
+        },
+        {
+          "name": "CK_OUTBOX_PAYLOAD_JSON",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payload IS JSON STRICT WITH UNIQUE KEYS"
+        },
+        {
+          "name": "CK_OUTBOX_PROCESSED",
+          "table": "OUTBOX_EVENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(event_status='PROCESSED' AND processed_at_utc IS NOT NULL AND processed_at_utc>=created_at_utc) OR (event_status<>'PROCESSED' AND processed_at_utc IS NULL)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_OUTBOX_EVENTS_READY",
+          "table": "OUTBOX_EVENTS",
+          "unique": false,
+          "expressions": ["EVENT_STATUS", "AVAILABLE_AT_UTC", "OUTBOX_EVENT_ID"]
+        },
+        {
+          "name": "IX_OUTBOX_EVENTS_TENANT",
+          "table": "OUTBOX_EVENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "EVENT_STATUS", "AVAILABLE_AT_UTC"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000025",
+      "name": "job_queue",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000025_job_queue/001_job_queue.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/002_fk_job_queue_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/003_fk_job_event_scope.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/004_fk_job_event_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/005_ix_job_queue_ready.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/006_ux_job_queue_dedupe.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/007_ix_job_queue_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/008_ix_job_lease_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/009_ix_job_event_scope.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000025_job_queue/010_ix_job_event_tenant.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "JOB_QUEUE",
+          "columns": [
+            {
+              "name": "JOB_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "JOB_TYPE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYLOAD",
+              "type": "CLOB",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "JOB_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PENDING'",
+              "identity": false
+            },
+            {
+              "name": "ATTEMPT_COUNT",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "0",
+              "identity": false
+            },
+            {
+              "name": "MAX_ATTEMPTS",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RUN_AFTER_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCKED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCKED_BY",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LAST_ERROR",
+              "type": "VARCHAR2(2000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DEDUPE_KEY",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "COMPLETED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SCOPE_KIND",
+              "type": "VARCHAR2(8 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYLOAD_VERSION",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "1",
+              "identity": false
+            },
+            {
+              "name": "LEASE_TOKEN",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LEASE_EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SOURCE_OUTBOX_EVENT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CONSUMER_CODE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FAILED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_JOB_QUEUE",
+          "table": "JOB_QUEUE",
+          "type": "P",
+          "columns": ["JOB_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_JOB_QUEUE_TENANT",
+          "table": "JOB_QUEUE",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_JOB_EVENT_SCOPE",
+          "table": "JOB_QUEUE",
+          "type": "R",
+          "columns": ["SCOPE_KIND", "SOURCE_OUTBOX_EVENT_ID"],
+          "referencedTable": "OUTBOX_EVENTS",
+          "referencedColumns": ["SCOPE_KIND", "OUTBOX_EVENT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_JOB_EVENT_TENANT",
+          "table": "JOB_QUEUE",
+          "type": "R",
+          "columns": ["TENANT_ID", "SOURCE_OUTBOX_EVENT_ID"],
+          "referencedTable": "OUTBOX_EVENTS",
+          "referencedColumns": ["TENANT_ID", "OUTBOX_EVENT_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_JOB_EVENT_CONSUMER",
+          "table": "JOB_QUEUE",
+          "type": "U",
+          "columns": ["SOURCE_OUTBOX_EVENT_ID", "CONSUMER_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_JOB_QUEUE_STATUS",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "job_status IN ('PENDING','RUNNING','COMPLETED','FAILED','CANCELLED')"
+        },
+        {
+          "name": "CK_JOB_QUEUE_ATTEMPTS",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "attempt_count>=0 AND max_attempts>0 AND attempt_count<=max_attempts"
+        },
+        {
+          "name": "CK_JOB_QUEUE_ID_POSITIVE",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "JOB_ID>0 AND JOB_ID=TRUNC(JOB_ID)"
+        },
+        {
+          "name": "CK_JOB_QUEUE_SCOPE",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL)"
+        },
+        {
+          "name": "CK_JOB_QUEUE_PAYLOAD_VERSION",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payload_version>0"
+        },
+        {
+          "name": "CK_JOB_LEASE",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(job_status='RUNNING' AND lease_token IS NOT NULL AND lease_expires_at_utc IS NOT NULL AND locked_by IS NOT NULL AND locked_at_utc IS NOT NULL AND lease_expires_at_utc>locked_at_utc AND locked_at_utc>=created_at_utc AND attempt_count>0) OR (job_status<>'RUNNING' AND lease_token IS NULL AND lease_expires_at_utc IS NULL AND locked_by IS NULL AND locked_at_utc IS NULL)"
+        },
+        {
+          "name": "CK_JOB_PAYLOAD_JSON",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payload IS JSON STRICT WITH UNIQUE KEYS"
+        },
+        {
+          "name": "CK_JOB_SOURCE_PAIR",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(source_outbox_event_id IS NULL AND consumer_code IS NULL) OR (source_outbox_event_id IS NOT NULL AND consumer_code IS NOT NULL AND TRIM(consumer_code) IS NOT NULL)"
+        },
+        {
+          "name": "CK_JOB_FENCE_UUID",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "lease_token IS NULL OR REGEXP_LIKE(lease_token,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_JOB_TERMINAL",
+          "table": "JOB_QUEUE",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(job_status='COMPLETED' AND completed_at_utc IS NOT NULL AND completed_at_utc>=created_at_utc AND failed_at_utc IS NULL) OR (job_status='FAILED' AND failed_at_utc IS NOT NULL AND failed_at_utc>=created_at_utc AND completed_at_utc IS NULL) OR (job_status IN ('PENDING','RUNNING','CANCELLED') AND completed_at_utc IS NULL AND failed_at_utc IS NULL)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_JOB_QUEUE_READY",
+          "table": "JOB_QUEUE",
+          "unique": false,
+          "expressions": ["JOB_STATUS", "RUN_AFTER_UTC", "JOB_ID"]
+        },
+        {
+          "name": "UX_JOB_QUEUE_DEDUPE",
+          "table": "JOB_QUEUE",
+          "unique": true,
+          "expressions": [
+            "CASE WHEN DEDUPE_KEY IS NOT NULL THEN SCOPE_KIND END",
+            "CASE WHEN DEDUPE_KEY IS NOT NULL THEN TENANT_ID END",
+            "CASE WHEN DEDUPE_KEY IS NOT NULL THEN JOB_TYPE END",
+            "CASE WHEN DEDUPE_KEY IS NOT NULL THEN DEDUPE_KEY END"
+          ]
+        },
+        {
+          "name": "IX_JOB_QUEUE_TENANT",
+          "table": "JOB_QUEUE",
+          "unique": false,
+          "expressions": ["TENANT_ID", "JOB_STATUS", "RUN_AFTER_UTC"]
+        },
+        {
+          "name": "IX_JOB_LEASE_EXPIRY",
+          "table": "JOB_QUEUE",
+          "unique": false,
+          "expressions": ["JOB_STATUS", "LEASE_EXPIRES_AT_UTC", "JOB_ID"]
+        },
+        {
+          "name": "IX_JOB_EVENT_SCOPE",
+          "table": "JOB_QUEUE",
+          "unique": false,
+          "expressions": ["SCOPE_KIND", "SOURCE_OUTBOX_EVENT_ID"]
+        },
+        {
+          "name": "IX_JOB_EVENT_TENANT",
+          "table": "JOB_QUEUE",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SOURCE_OUTBOX_EVENT_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000026",
+      "name": "request_idempotency",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000026_request_idempotency/001_idempotency_keys.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000026_request_idempotency/002_fk_idempotency_keys_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000026_request_idempotency/003_ix_idem_tenant_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000026_request_idempotency/004_ix_idempotency_expiry.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "IDEMPOTENCY_KEYS",
+          "columns": [
+            {
+              "name": "IDEMPOTENCY_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OPERATION_SCOPE",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IDEMPOTENCY_KEY",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REQUEST_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESPONSE_STATUS",
+              "type": "NUMBER(3)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESPONSE_BODY",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "OWNER_SCOPE",
+              "type": "VARCHAR2(64 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OWNER_TYPE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXECUTION_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PROCESSING'",
+              "identity": false
+            },
+            {
+              "name": "LEASE_TOKEN",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LEASE_EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SCOPE_KIND",
+              "type": "VARCHAR2(8 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESPONSE_VERSION",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": "1",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_IDEMPOTENCY_KEYS",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "P",
+          "columns": ["IDEMPOTENCY_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_IDEMPOTENCY_KEYS_TENANT",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_IDEMPOTENCY_OWNER_KEY",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "U",
+          "columns": [
+            "SCOPE_KIND",
+            "TENANT_ID",
+            "OPERATION_SCOPE",
+            "OWNER_TYPE",
+            "OWNER_SCOPE",
+            "IDEMPOTENCY_KEY"
+          ],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_IDEMPOTENCY_KEYS_REQUEST_HASH",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(REQUEST_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_IDEMPOTENCY_KEYS_ID_POSITIVE",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "IDEMPOTENCY_ID>0 AND IDEMPOTENCY_ID=TRUNC(IDEMPOTENCY_ID)"
+        },
+        {
+          "name": "CK_IDEM_STATE",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "owner_type IN ('USER','GUEST') AND execution_status IN ('PROCESSING','COMPLETED','FAILED') AND expires_at_utc>created_at_utc AND REGEXP_LIKE(owner_scope,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_IDEM_LEASE",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(execution_status='PROCESSING' AND lease_token IS NOT NULL AND lease_expires_at_utc IS NOT NULL AND lease_expires_at_utc>created_at_utc AND lease_expires_at_utc<=expires_at_utc) OR (execution_status<>'PROCESSING' AND lease_token IS NULL AND lease_expires_at_utc IS NULL)"
+        },
+        {
+          "name": "CK_IDEM_HTTP_STATUS",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "response_status IS NULL OR response_status BETWEEN 100 AND 599"
+        },
+        {
+          "name": "CK_IDEM_SCOPE",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(scope_kind='PLATFORM' AND tenant_id IS NULL) OR (scope_kind='TENANT' AND tenant_id IS NOT NULL)"
+        },
+        {
+          "name": "CK_IDEM_RESPONSE_JSON",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "response_body IS JSON STRICT WITH UNIQUE KEYS"
+        },
+        {
+          "name": "CK_IDEM_RESPONSE_VERSION",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "response_version>0"
+        },
+        {
+          "name": "CK_IDEM_KEY_LENGTH",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "LENGTH(idempotency_key) BETWEEN 8 AND 160"
+        },
+        {
+          "name": "CK_IDEM_FENCE_UUID",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "lease_token IS NULL OR REGEXP_LIKE(lease_token,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_IDEM_RESULT_STATE",
+          "table": "IDEMPOTENCY_KEYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(execution_status='PROCESSING' AND response_status IS NULL AND response_body IS NULL) OR (execution_status='COMPLETED' AND response_status IS NOT NULL AND response_status BETWEEN 200 AND 599) OR (execution_status='FAILED' AND (response_status IS NULL OR response_status BETWEEN 400 AND 599))"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_IDEM_TENANT_EXPIRY",
+          "table": "IDEMPOTENCY_KEYS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "EXPIRES_AT_UTC"]
+        },
+        {
+          "name": "IX_IDEMPOTENCY_EXPIRY",
+          "table": "IDEMPOTENCY_KEYS",
+          "unique": false,
+          "expressions": ["EXPIRES_AT_UTC"]
+        }
+      ],
+      "seeds": []
     }
   ]
 }

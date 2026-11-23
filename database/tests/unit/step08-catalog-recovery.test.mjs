@@ -5,9 +5,13 @@ import {
   caseCatalogRepairManifest,
   reconcileCaseCatalogFailure,
 } from '../step08/catalog-recovery.mjs';
+async function baseline() {
+  const release = await loadManifest(fileURLToPath(new URL('../../', import.meta.url)));
+  return { ...release, migrations: release.migrations.slice(0, 17) };
+}
 describe('Step 08 explicit catalog repair (unit only)', () => {
   it('preserves all source entries and appends only deterministic isolated repair metadata', async () => {
-    const base = await loadManifest(fileURLToPath(new URL('../../', import.meta.url)));
+    const base = await baseline();
     const { manifest, repair } = caseCatalogRepairManifest(base);
     expect(manifest.migrations.slice(0, 17)).toEqual(base.migrations);
     expect(repair.repairOf).toBe('000017');
@@ -22,7 +26,7 @@ describe('Step 08 explicit catalog repair (unit only)', () => {
     expect(execute).not.toHaveBeenCalled();
   });
   it('refuses an unrecognized installed history before any repair write', async () => {
-    const base = await loadManifest(fileURLToPath(new URL('../../', import.meta.url)));
+    const base = await baseline();
     const execute = vi.fn(async (sql) => {
       if (sql.includes('DBMS_LOCK.ALLOCATE_UNIQUE'))
         return { outBinds: { result: 0, handle: 'unit-lock' } };

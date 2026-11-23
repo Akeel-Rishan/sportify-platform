@@ -22,10 +22,15 @@ export function runtimeVerificationConfigs(environment) {
 }
 
 export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
-  assert.ok(['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP08_TEST_OWNER'].includes(owner));
+  assert.ok(
+    ['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP08_TEST_OWNER', 'SPORTIFY_STEP09_TEST_OWNER'].includes(
+      owner,
+    ),
+  );
   for (const entry of entries) {
     const database = await createDatabase(entry.config, entry.role);
     let cleanupFailed = false;
+    let phase = 'identity';
     try {
       const identity = (
         await database.query(
@@ -34,7 +39,9 @@ export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
       ).rows?.[0];
       assert.equal(identity?.TARGET, expectedTarget);
       assert.equal(identity?.IDENTITY, entry.config.ORACLE_USER);
+      phase = 'dependency-probe';
       assert.equal(await database.check(), true);
+      phase = 'session-privileges';
       assert.deepEqual((await database.query('SELECT PRIVILEGE FROM SESSION_PRIVS')).rows, [
         { PRIVILEGE: 'CREATE SESSION' },
       ]);
@@ -42,6 +49,7 @@ export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
         (await database.query('SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS')).rows?.length,
         0,
       );
+      phase = 'object-privileges';
       assert.equal(
         (
           await database.query('SELECT GRANTEE FROM USER_TAB_PRIVS WHERE GRANTEE=:identity', {
@@ -73,13 +81,40 @@ export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
         assert.equal(await database.check(), true);
       }
       // WHERE 1=0 prevents data mutation even if an unexpected grant exists.
+      phase = 'access-denials';
       await denied(`UPDATE ${owner}.SCHEMA_MIGRATIONS SET DESCRIPTION=DESCRIPTION WHERE 1=0`);
       await denied(`SELECT VERSION FROM ${owner}.SCHEMA_MIGRATIONS WHERE 1=0`);
+      if (owner === 'SPORTIFY_STEP09_TEST_OWNER') {
+        for (const table of [
+          'SUBSCRIPTIONS',
+          'SUBSCRIPTION_PAYMENTS',
+          'WEBSITE_SETTINGS',
+          'AUDIT_LOGS',
+          'OUTBOX_EVENTS',
+          'JOB_QUEUE',
+          'IDEMPOTENCY_KEYS',
+        ])
+          await denied(`SELECT * FROM ${owner}.${table} WHERE 1=0`);
+        await denied(`UPDATE ${owner}.AUDIT_LOGS SET ACTION_CODE=ACTION_CODE WHERE 1=0`);
+        await denied(`DELETE FROM ${owner}.AUDIT_LOGS WHERE 1=0`);
+        await denied(`INSERT INTO ${owner}.AUDIT_LOGS (AUDIT_LOG_ID) SELECT 1 FROM DUAL WHERE 1=0`);
+      }
       // Only the expressly disposable owner is named, never a runtime schema or
       // application owner. Unexpected success leaves a named test-only column
       // for operator reconciliation rather than dropping any existing object.
       const column = 'S7_DENY_' + randomUUID().replaceAll('-', '').slice(0, 12).toUpperCase();
       await denied(`ALTER TABLE ${owner}.SCHEMA_MIGRATIONS ADD (${column} NUMBER)`);
+    } catch (error) {
+      console.error(
+        JSON.stringify({
+          event: 'oracle.runtime.verification.failed',
+          role: entry.role,
+          phase,
+          oracle: Number.isInteger(error?.errorNum) ? error.errorNum : null,
+          driver: /^(?:NJS|DPI)-\d+$/.test(error?.code ?? '') ? error.code : null,
+        }),
+      );
+      throw error;
     } finally {
       try {
         await database.close();

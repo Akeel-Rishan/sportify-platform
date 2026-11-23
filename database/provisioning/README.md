@@ -102,3 +102,17 @@ The old SPORTIFY_TEST_OWNER retains Step 07 test-only versions 000012-000015. Pr
 Use the [complete operator sequence](../../Docs/database/step08-verification.md#separate-disposable-operator-preparation). Configure the new initial password privately in Database Actions, with Password Expired/Account Locked OFF and Web/REST/Graph/OML disabled. Verify before first use. The private oracle-step08-tests.env file is prepared outside source with its new owner password empty; the tracked step08-test-migrations.env.example remains placeholders. Never reuse owner/runtime credentials for the new identity automatically or paste a password into chat/SQL/history. D-21 policy acceptance is recorded; the new test-account preparation, authentication and full preflight must precede any migration/fixture execution.
 
 D-22 current-target note: the operator completed Step 08 account creation/authentication and the full Oracle suite/application migration sequence passed. Do not rerun provisioning against that existing owner. Source scripts remain one-time preparation tools with existing-account refusal; preserve both test owners and repair histories. [Executed evidence and remaining limits](../../Docs/database/step08-verification.md).
+
+## Step 09 separate disposable owner
+
+Do not reuse or clear the used Step 07/08 schemas/history. Reviewed scripts provision-step09-test-owner.sql and verify-step09-test-owner.sql admit only exact SPORTIFY_STEP09_TEST_OWNER on the designated development target. Initial creation is locked/NO AUTHENTICATION, finite quota, narrow object-creation/session rights and SYS.DBMS_LOCK EXECUTE only. Non-atomic DDL can partially commit: stop and inspect; no automatic recreate/regrant/reset.
+
+The owner is not yet provisioned. Its separate restricted private oracle-step09-tests.env has an empty new-owner password; no old password was copied into that field. [Exact ADMIN/client/initial-password/postcondition and operator suite commands](../../Docs/database/step09-verification.md), [safe template](step09-test-migrations.env.example). Runtime grants stay none until actual reviewed duties exist.
+
+## D-24 staged prerequisites
+
+Step 09 structural approval is complete. Follow the separate read-only ADMIN identity/COMPATIBLE block first, then initial test-owner provisioning/authentication/postconditions, in the [updated operator sequence](../../Docs/database/step09-verification.md). Only after those results are recorded can technical manifest holds clear for isolated testing. Policy approval itself is not provisioning or a live Oracle pass; no migration is executed during reconciliation.
+
+## Step 09 installed-state checkpoint
+
+Compatibility and the exact initial postconditions passed, the complete isolated suite passed through its guarded retained CASE recovery, and application 000018-000026 applied/repeated/verified. No further account preparation is required. Do not rerun creation or initial empty-schema verification against the now-installed test owner. Preserve all original/repair histories and private credentials. [Current verification commands and limitations](../../Docs/database/step09-verification.md).

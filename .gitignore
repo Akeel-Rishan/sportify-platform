@@ -6,6 +6,8 @@ coverage/
 test-results/
 playwright-report/
 *.tsbuildinfo
+__pycache__/
+*.py[cod]
 *.log
 .pnpm-store/
 .env
