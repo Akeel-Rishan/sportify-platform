@@ -31,7 +31,9 @@
     "db:status": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-status.mjs",
     "db:migrate": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-migrate.mjs",
     "db:verify": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-verify.mjs",
-    "test:oracle:runner": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-migration-runner.mjs"
+    "test:oracle:runner": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-migration-runner.mjs",
+    "test:oracle:step07": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-migration-runner.mjs",
+    "db:lock-check": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-lock-check.mjs"
   },
   "devDependencies": {
     "@types/node": "22.20.5",

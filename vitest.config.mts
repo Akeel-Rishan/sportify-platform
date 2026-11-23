@@ -31,6 +31,7 @@ export default defineConfig({
       'apps/{api,worker}/src/**/*.test.ts',
       'packages/{validation,database,migrations}/src/**/*.test.ts',
       'apps/api/test/**/*.e2e-spec.ts',
+      'database/tests/unit/**/*.test.mjs',
     ],
     clearMocks: true,
     restoreMocks: true,

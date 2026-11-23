@@ -1,5 +1,7 @@
 # Operator-only migration tooling
 
-`@sportify/migrations` owns artifact loading/checksums, owner-only configuration, one-session Oracle execution/locking, the sole SCHEMA_MIGRATIONS history and catalog comparisons. It is never imported by applications and never runs on startup. It uses the existing pinned Thin mTLS driver and public wallet preflight from `@sportify/database`; no owner credentials enter shared-config or runtime schemas.
+`@sportify/migrations` owns artifact loading/checksums, owner-only configuration, one-session Oracle execution/locking, the sole SCHEMA_MIGRATIONS history and catalog comparisons. Applications never import or run it at startup. It uses the existing pinned Thin mTLS driver and public wallet preflight from `@sportify/database`.
 
-Current artifacts remain **review-gated** pending the Step 05 structural decisions identified in the [migration guide](../../Docs/database/migration-guide.md). Local tests are driver/metadata unit evidence, not Oracle execution. See [implementation inventory](../../Docs/database/implemented-schema.md), [reference seeds](../../Docs/database/reference-seeds.md) and [live gates](../../Docs/database/oracle-verification.md).
+D-18 approves the scoped Step 07 release. Manifest ready means design-approved, not Oracle-verified. Protected target/identity/lock/catalog and disposable live-suite gates remain mandatory. See [migration guide](../../Docs/database/migration-guide.md), [SQL inventory](../../Docs/database/implemented-schema.md) and [live evidence](../../Docs/database/oracle-verification.md).
+
+23 November 2026: actual application-owner clean apply/repeat/catalog and the isolated recovery/integrity/privilege suite passed. The verifier recognizes only matched declared LOB/extended VARCHAR2 storage. Existing SQL/checksums remain immutable; [evidence and retained first-run repair](../../Docs/database/step07-verification.md) distinguish test-only history from the original application release.

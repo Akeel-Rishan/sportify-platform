@@ -1,3 +1,5 @@
-# Reference seed artifacts
+# Step 07 reference seed artifacts
 
-The initial eight launch sports use one insert-only natural-key MERGE under `000003_launch_sports`, declared/checksummed in the same migration manifest as schema changes. It does not update existing customizations, hardcode identity IDs, seed OTHER or create a default administrator/tenant/demo record. Permission seed selection remains pending the explicit Q-18 choice. All artifacts are review-gated and unexecuted on Oracle. See [seed ownership](../../Docs/database/reference-seeds.md).
+D-18 explicitly approves eight sports in 000003 and all 20 tenant permission codes in 000011. Actual Oracle deployment and twice-executed customization-preserving seed tests passed; see [evidence](../../Docs/database/step07-verification.md). Both MERGE by stable natural key, insert missing records only and preserve existing customization. Generated IDs are not hardcoded; no tenant/role assignment, sample account, password, platform permission or business fixture is seeded.
+
+See [reference catalog](../../Docs/database/reference-seeds.md), [release manifest](../migrations/manifest.json) and [disposable seed verification](../tests/README.md).

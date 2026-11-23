@@ -88,6 +88,18 @@ Design evidence only; all Oracle enforcement, concurrency, grants and business w
 
 The [three new MVP ERDs](../database/README.md) and repeatable structural checker support review only. They do not replace the required future tests or supersede the preserved source uploads without acceptance.
 
-## Step 07 implementation overlay
+## Historical Step 07 initial implementation overlay
 
 REQ-048/REQ-050 are **In progress, Oracle verification blocked**: operator-only manifest/runner, history/reference SQL and unit evidence exist, but the required authentication/tenancy/facility subset still needs the explicitly identified Step 05 structural decisions. REQ-010 is **In progress, SQL only** for eight-sport deployment seed artifacts, not executed/runtime-configurable behavior. REQ-001/002/003/004/005/006/007/009/011-017 remain unverified and application behavior is not started; no authentication, tenant authorization or booking capability is marked complete. [Exact inventory](../database/implemented-schema.md) and [progress](progress.md) distinguish designed, SQL-written, Oracle-executed and real-tested states. Existing requirement IDs/source mappings above remain stable.
+
+## Historical Step 07 draft artifact evidence
+
+REQ-048/REQ-050 now have a prepared review-gated 26-table SQL draft, one-ledger runner, static design/artifact verification and explicit disposable Oracle integrity/recovery/denial suite. REQ-010 tenant scope is represented by composite keys/FKs and test cases, not verified application authorization. Security/schedule/permission approvals, owner/test credentials, narrow lock capability and actual Oracle execution remain pending. No authentication, onboarding, availability/pricing service or booking requirement is marked complete from DDL/fixtures. See [inventory](../database/implemented-schema.md) and [current progress](progress.md).
+
+## D-18 scoped acceptance
+
+The user explicitly approves the Step 07 structures/grid and 20 tenant permission codes; manifest ready clears design approval only. REQ-048/050 remain in progress pending Oracle migration/integrity/recovery/privilege evidence. No authentication, tenant authorization, booking or commercial behavior is marked complete. Existing requirement IDs and unrelated Q-ID gates remain unchanged.
+
+## Step 07 Oracle verification evidence, 23 November 2026
+
+The scoped database portion of REQ-048/REQ-050 now has real application clean apply/repeat/catalog and isolated integrity/lock/recovery/runtime-denial evidence. REQ-010 has actual eight-sport/20-permission seed verification and tenant-safe structural tests; runtime configuration/authorization behavior remains future work. These broad requirements retain in-progress status for later tables/workflows/deployment concerns; no authentication, tenant authorization, onboarding, pricing/availability or booking requirement is completed from DDL alone. [Dated results](../database/step07-verification.md) and [progress](progress.md) supersede the historical pending statements above without changing requirement IDs.

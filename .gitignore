@@ -11,6 +11,8 @@ playwright-report/
 .env
 .env.*
 !.env.example
+# Filled migration operator files; keep only *.env.example templates in source.
+database/provisioning/*.env
 *.pem
 *.key
 *.p12

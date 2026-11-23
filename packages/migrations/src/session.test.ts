@@ -43,6 +43,14 @@ function fixture() {
   return { connection, factory };
 }
 describe('migration owner identity/lifecycle and advisory-lock protocol (unit)', () => {
+  it('rejects a JS caller bypassing the owner parser before connecting', async () => {
+    const f = fixture();
+    const untrusted = { ...config, ORACLE_MIGRATION_USER: 'ADMIN' } as unknown as typeof config;
+    await expect(withOwnerSession(untrusted, vi.fn(), f.factory)).rejects.toThrow(
+      /ORACLE_MIGRATION_USER/,
+    );
+    expect(f.factory).not.toHaveBeenCalled();
+  });
   it('verifies identity/schema/target before session changes, forwards mTLS and releases', async () => {
     const f = fixture();
     const work = vi.fn().mockResolvedValue('done');

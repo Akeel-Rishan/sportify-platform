@@ -1,6 +1,6 @@
 # MVP development roadmap
 
-Current status: **Step 07 partial: migration foundation awaiting user verification, dependent schema decisions pending**. Step 06 live verification remains incomplete. The current scoped prompt authorizes only authentication/tenancy/facility database infrastructure; Step 08 and application authentication are unstarted. Each step ends at its actual verification gate.
+Current status: **Step 07 executed and verified on Oracle; awaiting user verification**. D-18 design choices are approved; the original 11 migrations applied cleanly, repeated as a no-op and passed catalog/reference checks plus isolated integrity/locking/recovery/privilege verification. Final local checks passed 188 tests and all builds. [Dated evidence](../database/step07-verification.md) and [progress](progress.md) are the current record. Step 08 and application authentication remain unstarted; the next scoped prompt must explicitly define its scope/dependencies rather than assuming historical step labels mean the required application services exist.
 
 The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. The explicit Step 05 prompt assigns database design only; earlier UI/auth/Oracle implementation milestones remain deferred. The scoped Step 06 prompt now authorizes account preparation/connectivity only, as recorded below; business implementation remains deferred.
 
@@ -77,8 +77,8 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 ## Step 06 - Account preparation and secure Oracle connectivity (scoped prompt)
 
 - **Scope:** Operator SQLcl scripts/runbook, separate owner/API/worker identities, server-only Thin connection package, configuration, pools/UTC/transaction helpers, Oracle-required readiness and explicit verification tools.
-- **Status:** Local implementation awaiting user verification; the user selected mTLS and reports creating the development instance, but exact target identity, protected wallet and runtime credentials remain unverified, so account provisioning/live Oracle verification remains BLOCKED. No business tables or migration runner.
-- **Gate:** Local quality/build checks plus actual target confirmation, provisioning postconditions, TLS/session/privilege and real readiness verification. Driver mocks are not Oracle evidence. Stop here; Step 07 is not authorized.
+- **Status:** Scoped Step 06 runtime connectivity/privilege/readiness and built process checks passed, with deployment/remote-outage/PUBLIC-baseline limits recorded separately. Step 07 subsequently installed its approved schema through the operator-only runner; this does not implement business workflows. See current evidence/progress.
+- **Gate:** Local quality/build checks plus actual target confirmation, provisioning postconditions, TLS/session/privilege and real readiness verification. Scoped evidence passed; driver mocks alone are not Oracle evidence. The later explicit Step 07 prompt and D-18 approval authorized that work.
 
 ## Deferred onboarding and business configuration (historical Step 06)
 
@@ -92,8 +92,8 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 ## Step 07 - Authentication, tenancy and facility database migrations (scoped prompt)
 
 - **Scope:** One migration ledger, operator-only runner, approved auth/tenancy/permissions/configuration SQL, reference seeds, minimal runtime grants and actual Oracle verification.
-- **Current:** Partial independent foundation/SQL artifacts awaiting user verification; structural questions and real Oracle gates remain open. Manifest is review-gated; no business/application behavior is complete.
-- **Gate:** Required structural decisions, full scoped SQL/integrity tests and verified target execution. No application login/guards/tenant-routing, booking workflows or Step 08.
+- **Current:** D-18-approved original 000001-000011 applied and verified on the designated Oracle target; 26 tables, 259 columns, 206 named constraints, 30 explicit indexes, eight sports and 20 permission codes. Repeat/checksum/seed, 33 integrity cases, concurrent DDL locking, retained failure/recovery and runtime-denial checks passed. Original application history has 11 APPLIED/no repairs or pending versions. Awaiting user verification; no application authentication/booking behavior implemented.
+- **Gate:** Required structural decisions, scoped SQL/integrity tests and actual target execution passed; see dated evidence for the corrected catalog verifier and retained test-only recovery history. Stop after Step 07. The next explicit prompt must establish Step 08 scope and prerequisites; no application login/guards/tenant-routing or booking workflow is inferred from the schema.
 
 ## Deferred availability, pricing, holds and reservation engine (historical Step 07)
 

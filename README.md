@@ -2,7 +2,7 @@
 
 A multi-tenant indoor sports booking and business management platform for Sri Lanka.
 
-**Current stage: Step 07 partial migration foundation, awaiting user verification and structural decisions.** Operator-only migration tooling and initial history/reference SQL exist; the remaining authentication/tenancy/facility structures need the explicitly requested Step 05 decisions. The manifest refuses execution while under review. Operator account postconditions and actual API/worker connectivity, runtime privilege metadata and real-pool HTTP readiness passed; remaining live limitations are recorded in progress. No Step 07 migration was executed. The mTLS API/worker foundation remains unchanged; authentication, business workflows and Step 08 are unimplemented.
+**Current stage: Step 07 executed and verified on Oracle; awaiting user verification.** The approved 11 migrations applied cleanly, repeated as a no-op and passed exact catalog checks: 26 tables, 259 columns, 206 constraints, 30 explicit indexes, eight sports and 20 permissions. The isolated real suite passed integrity/locking/recovery/privilege checks after a documented verifier correction and retained test-only repair. Local checks passed all 188 tests and builds. No application authentication, booking workflow or Step 08 work. See [dated evidence](Docs/database/step07-verification.md) and [progress](Docs/planning/progress.md).
 
 API/worker now require separate Oracle runtime configuration. Without a target, run `pnpm dev:web`; local checks/builds use no real credentials. Follow [setup](Docs/development/local-setup.md) before `pnpm dev` or production API/worker starts.
 

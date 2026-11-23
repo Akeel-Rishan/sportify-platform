@@ -1,6 +1,6 @@
 # SPORTIFY MVP database design
 
-**Step 05 design: awaiting user review. Step 06 operator provisioning/postconditions passed; actual runtime connectivity/privilege metadata and real-pool HTTP readiness passed; remaining live gates are recorded in progress.** The user reports creating the Always Free mTLS development instance and supplied passing account postconditions after private Database Actions password setup. No account provisioning, migration execution, actual driver connection or business feature was performed by the agent. Existing Steps 01-04 and web application are preserved. This folder is the working MVP design; uploaded documents remain immutable historical inputs.
+**Current: D-18-approved Step 07 executed and verified on Oracle; awaiting user verification.** All original 11 versions applied cleanly and repeated as a no-op, with exact 26-table catalog/reference checks and the real isolated integrity/locking/recovery/privilege suite passed. The initial verifier failure and explicit retained test-only repair remain documented. Broader Step 05 proposals and later application features retain their gates. [Dated evidence](step07-verification.md), [inventory](implemented-schema.md) and [progress](../planning/progress.md). Uploaded sources remain immutable historical input.
 
 ## Document ownership
 
@@ -46,12 +46,12 @@ Official references consulted on 20 November 2026:
 
 The [Step 05 decision register](../planning/decision-register.md#step-05-design-review) distinguishes explicit user direction from recommendations. Approve/revise MVP additions, locking/maintenance, buffers/overnight contract, protected hold pricing, partial/refund/zero-value policy, token reconstruction, scoped operational records and subscription history before dependent DDL/workflows. Trial/grace/retention/retry timing and customer matching remain named policy gates; no guessed value is a commercial approval.
 
-This package is ready for design review. It is **not yet unconditionally ready to execute database implementation**: accept structural/security blockers, verify actual target capabilities and prepare reviewed migrations first. All Oracle tests remain unexecuted. Step 06 is not started.
+This package is ready for design review. It is **not yet unconditionally ready to execute database implementation**: accept structural/security blockers, verify actual target capabilities and prepare reviewed migrations first. That was the historical Step 05 design-only checkpoint. Current Step 06 runtime evidence and D-18 Step 07 approval are recorded above; actual Step 07 migration tests remain unexecuted.
 
 ## Step 06 implementation links
 
-[Accounts/privileges](account-and-privilege-model.md), [secure connection mode](secure-connectivity.md), [pool/session/transactions](connection-pooling.md), [Oracle verification gates](oracle-verification.md), and [operator provisioning](../../database/provisioning/README.md). The earlier source/missing-artifact inventory describes Step 05; local account scripts and driver code now exist, while actual ATP execution, business baseline and migration runner remain absent.
+[Accounts/privileges](account-and-privilege-model.md), [secure connection mode](secure-connectivity.md), [pool/session/transactions](connection-pooling.md), [Oracle verification](oracle-verification.md) and [operator provisioning](../../database/provisioning/README.md) record the implemented and verified runtime foundation.
 
 ## Step 07 implementation overlay
 
-The [migration guide](migration-guide.md), [SQL inventory](implemented-schema.md) and [seed policy](reference-seeds.md) describe the operator-only runner and initial independent artifacts. The broader dictionary/ERDs remain proposed; the required auth/tenancy/facility remainder still needs the explicitly requested structural choices. No real schema or Oracle enforcement is claimed. The scoped prompt uses small phases in the same ledger, not the broad source bootstrap or a second history. The review-gated manifest refuses execution before a connection is made.
+The [migration guide](migration-guide.md), [SQL inventory](implemented-schema.md), [seed policy](reference-seeds.md) and [real evidence](step07-verification.md) describe the approved and verified 11-phase release. The application history is exactly 11 APPLIED; disposable recovery fixtures remain in a separate owner, not the production manifest. Current runtime object grants remain none; positive DUAL and exact negative schema/history checks passed. Authentication, tenant authorization and booking behavior are not implemented by these tables. Stop after Step 07.

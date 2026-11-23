@@ -92,11 +92,12 @@ Source `UQ_PLATFORM_ADMINS_ID` also duplicates the PK and is removed from the pr
 
 ## ROLES
 
-| Name                               | Unique | Ordered columns / expression | Query purpose                                                                                 | Origin |
-| ---------------------------------- | ------ | ---------------------------- | --------------------------------------------------------------------------------------------- | ------ |
-| `PK_ROLES` backing key             | Y      | `ROLE_ID`                    | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | source |
-| `UQ_ROLES_TENANT_ROLE` backing key | Y      | `TENANT_ID, ROLE_ID`         | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | source |
-| `UQ_ROLES_TENANT_CODE` backing key | Y      | `TENANT_ID, ROLE_CODE`       | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | source |
+| Name                               | Unique | Ordered columns / expression | Query purpose                                                                                 | Origin              |
+| ---------------------------------- | ------ | ---------------------------- | --------------------------------------------------------------------------------------------- | ------------------- |
+| `PK_ROLES` backing key             | Y      | `ROLE_ID`                    | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | source              |
+| `UQ_ROLES_TENANT_ROLE` backing key | Y      | `TENANT_ID, ROLE_ID`         | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | source              |
+| `UQ_ROLES_TENANT_CODE` backing key | Y      | `TENANT_ID, ROLE_CODE`       | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | source              |
+| `UQ_ROLES_TENANT_NAME` backing key | Y      | `TENANT_ID, ROLE_NAME`       | Step 07 requires tenant-scoped display-name uniqueness; no redundant explicit index.          | Step 07 requirement |
 
 ## PERMISSIONS
 
@@ -537,3 +538,7 @@ Source `UQ_PLATFORM_ADMINS_ID` also duplicates the PK and is removed from the pr
 | Name                                   | Unique | Ordered columns / expression               | Query purpose                                                                                 | Origin   |
 | -------------------------------------- | ------ | ------------------------------------------ | --------------------------------------------------------------------------------------------- | -------- |
 | `PK_SUB_FEATURE_SNAPSHOTS` backing key | Y      | `TENANT_ID, SUBSCRIPTION_ID, FEATURE_CODE` | Exact identity/uniqueness and leading-prefix parent/FK access; do not add an identical index. | proposed |
+
+D-18 approves the scoped Step 07 structure/index inventory, including tenant role-name uniqueness. Actual index validity/query plans remain Oracle verification work; broader future-table indexes remain design proposals.
+
+23 November 2026: all 30 explicit Step 07 indexes plus required PK/UK/LOB backing metadata passed actual Oracle verification. Query-plan/capacity benchmarking and broader future-table indexes are not claimed. [Evidence](step07-verification.md).

@@ -36,6 +36,7 @@ interface ColumnRow {
   DATA_TYPE: string;
   DATA_PRECISION: number | null;
   DATA_SCALE: number | null;
+  DATA_LENGTH: number;
   CHAR_LENGTH: number;
   CHAR_USED: string | null;
   NULLABLE: string;
@@ -125,7 +126,7 @@ export async function verifyCatalog(
   const columns = await rows<ColumnRow>(
     session,
     `SELECT c.TABLE_NAME, c.COLUMN_NAME, c.DATA_TYPE, c.DATA_PRECISION,
-    c.DATA_SCALE, c.CHAR_LENGTH, c.CHAR_USED, c.NULLABLE, c.DATA_DEFAULT, c.IDENTITY_COLUMN, c.DEFAULT_ON_NULL,
+    c.DATA_SCALE, c.DATA_LENGTH, c.CHAR_LENGTH, c.CHAR_USED, c.NULLABLE, c.DATA_DEFAULT, c.IDENTITY_COLUMN, c.DEFAULT_ON_NULL,
     i.GENERATION_TYPE FROM USER_TAB_COLUMNS c LEFT JOIN USER_TAB_IDENTITY_COLS i
     ON i.TABLE_NAME=c.TABLE_NAME AND i.COLUMN_NAME=c.COLUMN_NAME`,
   );
@@ -204,11 +205,16 @@ export async function verifyCatalog(
     session,
     'SELECT TABLE_NAME, COLUMN_NAME, SEGMENT_NAME, INDEX_NAME FROM USER_LOBS',
   );
-  const expectedLobs = [...tables.values()].flatMap((table) =>
-    table.columns
-      .filter((column) => ['CLOB', 'NCLOB', 'BLOB'].includes(column.type))
-      .map((column) => ({ table: table.name, column: column.name })),
-  );
+  // Oracle stores extended VARCHAR2 columns using internal LOBs. The exact
+  // declared column type/length was verified above; accept storage only for
+  // those matched columns whose actual maximum byte length exceeds 4000.
+  const expectedLobs = columns
+    .filter(
+      (column) =>
+        ['CLOB', 'NCLOB', 'BLOB'].includes(column.DATA_TYPE) ||
+        (column.DATA_TYPE === 'VARCHAR2' && column.DATA_LENGTH > 4000),
+    )
+    .map((column) => ({ table: column.TABLE_NAME, column: column.COLUMN_NAME }));
   if (
     lobs.length !== expectedLobs.length ||
     lobs.some(

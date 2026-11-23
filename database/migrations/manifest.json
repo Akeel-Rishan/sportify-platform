@@ -1,11 +1,7 @@
 {
   "format": 1,
-  "status": "review",
-  "blockedBy": [
-    "STEP05_SECURITY_DECISIONS",
-    "STEP05_SCHEDULE_DECISIONS",
-    "PERMISSION_CATALOG_REVIEW"
-  ],
+  "status": "ready",
+  "blockedBy": [],
   "migrations": [
     {
       "version": "000001",
@@ -364,6 +360,4224 @@
             "TENNIS",
             "TABLE_TENNIS",
             "SWIMMING"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "000004",
+      "name": "security_roots",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000004_security_roots/001_tenants.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000004_security_roots/002_users.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000004_security_roots/003_platform_admins.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000004_security_roots/004_fk_platform_admins_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000004_security_roots/005_ix_tenants_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000004_security_roots/006_ix_users_mobile.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TENANTS",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TENANT_CODE",
+              "type": "VARCHAR2(60 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TENANT_NAME",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'TRIAL'",
+              "identity": false
+            },
+            {
+              "name": "DEFAULT_CURRENCY",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": "'LKR'",
+              "identity": false
+            },
+            {
+              "name": "TIMEZONE_NAME",
+              "type": "VARCHAR2(64 CHAR)",
+              "nullable": false,
+              "default": "'Asia/Colombo'",
+              "identity": false
+            },
+            {
+              "name": "DEFAULT_LANGUAGE",
+              "type": "VARCHAR2(10 CHAR)",
+              "nullable": false,
+              "default": "'en'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "DELETED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "USERS",
+          "columns": [
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FULL_NAME",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL_NORMALIZED",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MOBILE_E164",
+              "type": "VARCHAR2(16 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PASSWORD_HASH",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACCOUNT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PENDING'",
+              "identity": false
+            },
+            {
+              "name": "EMAIL_VERIFIED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PHONE_VERIFIED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LAST_LOGIN_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "PLATFORM_ADMINS",
+          "columns": [
+            {
+              "name": "PLATFORM_ADMIN_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ADMIN_ROLE_CODE",
+              "type": "VARCHAR2(40 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ADMIN_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_TENANTS",
+          "table": "TENANTS",
+          "type": "P",
+          "columns": ["TENANT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_TENANTS_PUBLIC_ID",
+          "table": "TENANTS",
+          "type": "U",
+          "columns": ["PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_TENANTS_CODE",
+          "table": "TENANTS",
+          "type": "U",
+          "columns": ["TENANT_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_TENANTS_STATUS",
+          "table": "TENANTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "status IN ('TRIAL','ACTIVE','SUSPENDED','CLOSED')"
+        },
+        {
+          "name": "CK_TENANTS_CURRENCY",
+          "table": "TENANTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(default_currency, '^[A-Z]{3}$')"
+        },
+        {
+          "name": "CK_TENANTS_UUID",
+          "table": "TENANTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_TENANTS_DEFAULT_CURRENCY",
+          "table": "TENANTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(DEFAULT_CURRENCY,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_TENANTS_ID_POSITIVE",
+          "table": "TENANTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "TENANT_ID>0 AND TENANT_ID=TRUNC(TENANT_ID)"
+        },
+        {
+          "name": "PK_USERS",
+          "table": "USERS",
+          "type": "P",
+          "columns": ["USER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_USERS_PUBLIC_ID",
+          "table": "USERS",
+          "type": "U",
+          "columns": ["PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_USERS_EMAIL_NORMALIZED",
+          "table": "USERS",
+          "type": "U",
+          "columns": ["EMAIL_NORMALIZED"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_USERS_STATUS",
+          "table": "USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "account_status IN ('PENDING','ACTIVE','LOCKED','DISABLED')"
+        },
+        {
+          "name": "CK_USERS_EMAIL_PAIR",
+          "table": "USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(email IS NULL AND email_normalized IS NULL) OR (email IS NOT NULL AND email_normalized IS NOT NULL)"
+        },
+        {
+          "name": "CK_USERS_UUID",
+          "table": "USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_USERS_ID_POSITIVE",
+          "table": "USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "USER_ID>0 AND USER_ID=TRUNC(USER_ID)"
+        },
+        {
+          "name": "PK_PLATFORM_ADMINS",
+          "table": "PLATFORM_ADMINS",
+          "type": "P",
+          "columns": ["PLATFORM_ADMIN_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PLATFORM_ADMINS_USER",
+          "table": "PLATFORM_ADMINS",
+          "type": "U",
+          "columns": ["USER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_PLATFORM_ADMINS_USER",
+          "table": "PLATFORM_ADMINS",
+          "type": "R",
+          "columns": ["USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_ADMIN_USER_PAIR",
+          "table": "PLATFORM_ADMINS",
+          "type": "U",
+          "columns": ["PLATFORM_ADMIN_ID", "USER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_PLATFORM_ADMINS_ROLE",
+          "table": "PLATFORM_ADMINS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "admin_role_code IN ('SUPER_ADMIN','PLATFORM_ADMIN','SUPPORT_AGENT')"
+        },
+        {
+          "name": "CK_PLATFORM_ADMINS_STATUS",
+          "table": "PLATFORM_ADMINS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "admin_status IN ('ACTIVE','DISABLED')"
+        },
+        {
+          "name": "CK_PLATFORM_ADMINS_ID_POSITIVE",
+          "table": "PLATFORM_ADMINS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "PLATFORM_ADMIN_ID>0 AND PLATFORM_ADMIN_ID=TRUNC(PLATFORM_ADMIN_ID)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_TENANTS_STATUS",
+          "table": "TENANTS",
+          "unique": false,
+          "expressions": ["STATUS"]
+        },
+        {
+          "name": "IX_USERS_MOBILE",
+          "table": "USERS",
+          "unique": false,
+          "expressions": ["MOBILE_E164"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000005",
+      "name": "memberships_and_roles",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000005_memberships_and_roles/001_tenant_users.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/002_roles.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/003_role_permissions.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/004_user_roles.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/005_fk_tenant_users_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/006_fk_tenant_users_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/007_fk_tenant_users_inviter.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/008_fk_roles_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/009_fk_role_permissions_role.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/010_fk_role_permissions_permission.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/011_fk_user_roles_membership.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/012_fk_user_roles_role.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/013_fk_user_roles_assigner.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/014_ix_tenant_users_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/015_ix_tenant_users_inviter.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/016_ix_role_permissions_permission.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/017_ix_user_roles_role.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000005_memberships_and_roles/018_ix_fk_user_roles_assigner.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TENANT_USERS",
+          "columns": [
+            {
+              "name": "MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MEMBERSHIP_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'INVITED'",
+              "identity": false
+            },
+            {
+              "name": "INVITED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "JOINED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "ROLES",
+          "columns": [
+            {
+              "name": "ROLE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ROLE_CODE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ROLE_NAME",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_SYSTEM_ROLE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'N'",
+              "identity": false
+            },
+            {
+              "name": "IS_ACTIVE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "ROLE_PERMISSIONS",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ROLE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PERMISSION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "GRANTED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "USER_ROLES",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ROLE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ASSIGNED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "ASSIGNED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_TENANT_USERS",
+          "table": "TENANT_USERS",
+          "type": "P",
+          "columns": ["MEMBERSHIP_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_TU_TENANT_MEMBER",
+          "table": "TENANT_USERS",
+          "type": "U",
+          "columns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_TU_TENANT_MEMBER_USER",
+          "table": "TENANT_USERS",
+          "type": "U",
+          "columns": ["TENANT_ID", "MEMBERSHIP_ID", "USER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_TENANT_USERS_TENANT_USER",
+          "table": "TENANT_USERS",
+          "type": "U",
+          "columns": ["TENANT_ID", "USER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_TENANT_USERS_TENANT",
+          "table": "TENANT_USERS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_TENANT_USERS_USER",
+          "table": "TENANT_USERS",
+          "type": "R",
+          "columns": ["USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_TENANT_USERS_INVITER",
+          "table": "TENANT_USERS",
+          "type": "R",
+          "columns": ["TENANT_ID", "INVITED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_TENANT_USERS_PUBLIC_ID",
+          "table": "TENANT_USERS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_TENANT_USERS_STATUS",
+          "table": "TENANT_USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "membership_status IN ('INVITED','ACTIVE','SUSPENDED','REVOKED')"
+        },
+        {
+          "name": "CK_TENANT_USERS_UUID",
+          "table": "TENANT_USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_TENANT_USERS_ID_POSITIVE",
+          "table": "TENANT_USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "MEMBERSHIP_ID>0 AND MEMBERSHIP_ID=TRUNC(MEMBERSHIP_ID)"
+        },
+        {
+          "name": "PK_ROLES",
+          "table": "ROLES",
+          "type": "P",
+          "columns": ["ROLE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_ROLES_TENANT_ROLE",
+          "table": "ROLES",
+          "type": "U",
+          "columns": ["TENANT_ID", "ROLE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_ROLES_TENANT_CODE",
+          "table": "ROLES",
+          "type": "U",
+          "columns": ["TENANT_ID", "ROLE_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_ROLES_TENANT_NAME",
+          "table": "ROLES",
+          "type": "U",
+          "columns": ["TENANT_ID", "ROLE_NAME"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_ROLES_TENANT",
+          "table": "ROLES",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_ROLES_SYSTEM",
+          "table": "ROLES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_system_role IN ('Y','N')"
+        },
+        {
+          "name": "CK_ROLES_ACTIVE",
+          "table": "ROLES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_active IN ('Y','N')"
+        },
+        {
+          "name": "CK_ROLES_ID_POSITIVE",
+          "table": "ROLES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ROLE_ID>0 AND ROLE_ID=TRUNC(ROLE_ID)"
+        },
+        {
+          "name": "PK_ROLE_PERMISSIONS",
+          "table": "ROLE_PERMISSIONS",
+          "type": "P",
+          "columns": ["TENANT_ID", "ROLE_ID", "PERMISSION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_ROLE_PERMISSIONS_ROLE",
+          "table": "ROLE_PERMISSIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "ROLE_ID"],
+          "referencedTable": "ROLES",
+          "referencedColumns": ["TENANT_ID", "ROLE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_ROLE_PERMISSIONS_PERMISSION",
+          "table": "ROLE_PERMISSIONS",
+          "type": "R",
+          "columns": ["PERMISSION_ID"],
+          "referencedTable": "PERMISSIONS",
+          "referencedColumns": ["PERMISSION_ID"],
+          "expression": null
+        },
+        {
+          "name": "PK_USER_ROLES",
+          "table": "USER_ROLES",
+          "type": "P",
+          "columns": ["TENANT_ID", "MEMBERSHIP_ID", "ROLE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_USER_ROLES_MEMBERSHIP",
+          "table": "USER_ROLES",
+          "type": "R",
+          "columns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_USER_ROLES_ROLE",
+          "table": "USER_ROLES",
+          "type": "R",
+          "columns": ["TENANT_ID", "ROLE_ID"],
+          "referencedTable": "ROLES",
+          "referencedColumns": ["TENANT_ID", "ROLE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_USER_ROLES_ASSIGNER",
+          "table": "USER_ROLES",
+          "type": "R",
+          "columns": ["TENANT_ID", "ASSIGNED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_TENANT_USERS_USER",
+          "table": "TENANT_USERS",
+          "unique": false,
+          "expressions": ["USER_ID", "MEMBERSHIP_STATUS"]
+        },
+        {
+          "name": "IX_TENANT_USERS_INVITER",
+          "table": "TENANT_USERS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "INVITED_BY_MEMBERSHIP_ID"]
+        },
+        {
+          "name": "IX_ROLE_PERMISSIONS_PERMISSION",
+          "table": "ROLE_PERMISSIONS",
+          "unique": false,
+          "expressions": ["PERMISSION_ID"]
+        },
+        {
+          "name": "IX_USER_ROLES_ROLE",
+          "table": "USER_ROLES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "ROLE_ID"]
+        },
+        {
+          "name": "IX_FK_USER_ROLES_ASSIGNER",
+          "table": "USER_ROLES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "ASSIGNED_BY_MEMBERSHIP_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000006",
+      "name": "businesses_and_locations",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000006_businesses_and_locations/001_businesses.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/002_business_profiles.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/003_locations.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/004_business_sports.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/005_fk_businesses_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/006_fk_business_profiles_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/007_fk_locations_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/008_fk_business_sports_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/009_fk_business_sports_sport.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/010_ix_locations_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000006_businesses_and_locations/011_ix_business_sports_sport.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "BUSINESSES",
+          "columns": [
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_NAME",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_SLUG",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LEGAL_NAME",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'SETUP'",
+              "identity": false
+            },
+            {
+              "name": "CONTACT_EMAIL",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CONTACT_MOBILE",
+              "type": "VARCHAR2(16 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "COUNTRY_CODE",
+              "type": "CHAR(2 CHAR)",
+              "nullable": false,
+              "default": "'LK'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "BUSINESS_PROFILES",
+          "columns": [
+            {
+              "name": "BUSINESS_PROFILE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DESCRIPTION",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ADDRESS_LINE_1",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ADDRESS_LINE_2",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CITY",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DISTRICT",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "POSTAL_CODE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "COUNTRY_CODE",
+              "type": "CHAR(2 CHAR)",
+              "nullable": false,
+              "default": "'LK'",
+              "identity": false
+            },
+            {
+              "name": "LATITUDE",
+              "type": "NUMBER(10,7)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LONGITUDE",
+              "type": "NUMBER(10,7)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "WEBSITE_URL",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FACEBOOK_URL",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INSTAGRAM_URL",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "LOCATIONS",
+          "columns": [
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_CODE",
+              "type": "VARCHAR2(40 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_NAME",
+              "type": "VARCHAR2(180 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PHONE_E164",
+              "type": "VARCHAR2(16 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ADDRESS_LINE_1",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ADDRESS_LINE_2",
+              "type": "VARCHAR2(200 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CITY",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DISTRICT",
+              "type": "VARCHAR2(100 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "POSTAL_CODE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "COUNTRY_CODE",
+              "type": "CHAR(2 CHAR)",
+              "nullable": false,
+              "default": "'LK'",
+              "identity": false
+            },
+            {
+              "name": "TIMEZONE_NAME",
+              "type": "VARCHAR2(64 CHAR)",
+              "nullable": false,
+              "default": "'Asia/Colombo'",
+              "identity": false
+            },
+            {
+              "name": "LATITUDE",
+              "type": "NUMBER(10,7)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LONGITUDE",
+              "type": "NUMBER(10,7)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "BUSINESS_SPORTS",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SPORT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "ENABLED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_BUSINESSES",
+          "table": "BUSINESSES",
+          "type": "P",
+          "columns": ["BUSINESS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BUSINESSES_TENANT_ID",
+          "table": "BUSINESSES",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BUSINESSES_ONE_PER_TENANT",
+          "table": "BUSINESSES",
+          "type": "U",
+          "columns": ["TENANT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BUSINESSES_SLUG",
+          "table": "BUSINESSES",
+          "type": "U",
+          "columns": ["BUSINESS_SLUG"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BUSINESSES_TENANT",
+          "table": "BUSINESSES",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_BUSINESSES_PUBLIC_ID",
+          "table": "BUSINESSES",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_BUSINESSES_STATUS",
+          "table": "BUSINESSES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "business_status IN ('SETUP','ACTIVE','SUSPENDED','CLOSED')"
+        },
+        {
+          "name": "CK_BUSINESSES_UUID",
+          "table": "BUSINESSES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_BUSINESSES_ID_POSITIVE",
+          "table": "BUSINESSES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "BUSINESS_ID>0 AND BUSINESS_ID=TRUNC(BUSINESS_ID)"
+        },
+        {
+          "name": "PK_BUSINESS_PROFILES",
+          "table": "BUSINESS_PROFILES",
+          "type": "P",
+          "columns": ["BUSINESS_PROFILE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BUSINESS_PROFILES_BUSINESS",
+          "table": "BUSINESS_PROFILES",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BUSINESS_PROFILES_BUSINESS",
+          "table": "BUSINESS_PROFILES",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_BUSINESS_PROFILES_LAT",
+          "table": "BUSINESS_PROFILES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "latitude IS NULL OR latitude BETWEEN -90 AND 90"
+        },
+        {
+          "name": "CK_BUSINESS_PROFILES_LON",
+          "table": "BUSINESS_PROFILES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "longitude IS NULL OR longitude BETWEEN -180 AND 180"
+        },
+        {
+          "name": "CK_BUSINESS_PROFILES_ID_POSITIVE",
+          "table": "BUSINESS_PROFILES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "BUSINESS_PROFILE_ID>0 AND BUSINESS_PROFILE_ID=TRUNC(BUSINESS_PROFILE_ID)"
+        },
+        {
+          "name": "PK_LOCATIONS",
+          "table": "LOCATIONS",
+          "type": "P",
+          "columns": ["LOCATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_LOCATIONS_TENANT_ID",
+          "table": "LOCATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "LOCATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_LOCATIONS_BUSINESS_LOCATION",
+          "table": "LOCATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_LOCATIONS_BUSINESS_CODE",
+          "table": "LOCATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_LOCATIONS_BUSINESS",
+          "table": "LOCATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_LOCATIONS_PUBLIC_ID",
+          "table": "LOCATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_LOCATIONS_STATUS",
+          "table": "LOCATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "location_status IN ('ACTIVE','INACTIVE','CLOSED')"
+        },
+        {
+          "name": "CK_LOCATIONS_LAT",
+          "table": "LOCATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "latitude IS NULL OR latitude BETWEEN -90 AND 90"
+        },
+        {
+          "name": "CK_LOCATIONS_LON",
+          "table": "LOCATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "longitude IS NULL OR longitude BETWEEN -180 AND 180"
+        },
+        {
+          "name": "CK_LOCATIONS_UUID",
+          "table": "LOCATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_LOCATIONS_ID_POSITIVE",
+          "table": "LOCATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "LOCATION_ID>0 AND LOCATION_ID=TRUNC(LOCATION_ID)"
+        },
+        {
+          "name": "PK_BUSINESS_SPORTS",
+          "table": "BUSINESS_SPORTS",
+          "type": "P",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "SPORT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BUSINESS_SPORTS_BUSINESS",
+          "table": "BUSINESS_SPORTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BUSINESS_SPORTS_SPORT",
+          "table": "BUSINESS_SPORTS",
+          "type": "R",
+          "columns": ["SPORT_ID"],
+          "referencedTable": "SPORTS",
+          "referencedColumns": ["SPORT_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_BUSINESS_SPORTS_STATUS",
+          "table": "BUSINESS_SPORTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "status IN ('ACTIVE','INACTIVE')"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_LOCATIONS_TENANT",
+          "table": "LOCATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_STATUS"]
+        },
+        {
+          "name": "IX_BUSINESS_SPORTS_SPORT",
+          "table": "BUSINESS_SPORTS",
+          "unique": false,
+          "expressions": ["SPORT_ID", "STATUS"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000007",
+      "name": "sessions_and_tokens",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000007_sessions_and_tokens/001_auth_sessions.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/002_email_verification_tokens.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/003_password_reset_tokens.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/004_fk_auth_sessions_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/005_fk_session_active_member.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/006_fk_email_verification_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/007_fk_password_reset_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/008_ix_auth_sessions_user_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/009_ix_fk_session_active_member.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/010_ix_email_verification_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000007_sessions_and_tokens/011_ix_password_reset_user.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "AUTH_SESSIONS",
+          "columns": [
+            {
+              "name": "SESSION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REVOKED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LAST_SEEN_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IP_ADDRESS",
+              "type": "VARCHAR2(45 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "USER_AGENT",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "AUDIENCE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTIVE_TENANT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTIVE_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "EMAIL_VERIFICATION_TOKENS",
+          "columns": [
+            {
+              "name": "VERIFICATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CONSUMED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_KEY_VERSION",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REVOKED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "PASSWORD_RESET_TOKENS",
+          "columns": [
+            {
+              "name": "RESET_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CONSUMED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_KEY_VERSION",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REVOKED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_AUTH_SESSIONS",
+          "table": "AUTH_SESSIONS",
+          "type": "P",
+          "columns": ["SESSION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_AUTH_SESSIONS_TOKEN",
+          "table": "AUTH_SESSIONS",
+          "type": "U",
+          "columns": ["TOKEN_HASH"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_AUTH_SESSIONS_USER",
+          "table": "AUTH_SESSIONS",
+          "type": "R",
+          "columns": ["USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_SESSION_ACTIVE_MEMBER",
+          "table": "AUTH_SESSIONS",
+          "type": "R",
+          "columns": ["ACTIVE_TENANT_ID", "ACTIVE_MEMBERSHIP_ID", "USER_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID", "USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_AUTH_SESSIONS_EXPIRY",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "expires_at_utc > created_at_utc"
+        },
+        {
+          "name": "CK_AUTH_SESSIONS_TOKEN_HASH",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(TOKEN_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_AUTH_SESSIONS_ID_POSITIVE",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "SESSION_ID>0 AND SESSION_ID=TRUNC(SESSION_ID)"
+        },
+        {
+          "name": "CK_SESSION_AUDIENCE",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "audience IN ('DASHBOARD','ADMIN')"
+        },
+        {
+          "name": "CK_SESSION_MEMBER_PAIR",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(active_tenant_id IS NULL AND active_membership_id IS NULL) OR (audience='DASHBOARD' AND active_tenant_id IS NOT NULL AND active_membership_id IS NOT NULL)"
+        },
+        {
+          "name": "PK_EMAIL_VERIFICATION_TOKENS",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "P",
+          "columns": ["VERIFICATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_EMAIL_VERIFICATION_TOKEN",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "U",
+          "columns": ["TOKEN_HASH"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_EMAIL_VERIFICATION_USER",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "R",
+          "columns": ["USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_EMAIL_VERIFICATION_TOKENS_PUBLIC",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "U",
+          "columns": ["PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_EMAIL_VERIFICATION_TOKENS_TOKEN_HASH",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(TOKEN_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_EMAIL_VERIFICATION_TOKENS_UUID",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_EMAIL_VERIFICATION_TOKENS_ID_POSITIVE",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "VERIFICATION_ID>0 AND VERIFICATION_ID=TRUNC(VERIFICATION_ID)"
+        },
+        {
+          "name": "CK_EMAIL_VERIFICATION_TOKENS_EXPIRY",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "expires_at_utc>created_at_utc"
+        },
+        {
+          "name": "PK_PASSWORD_RESET_TOKENS",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "P",
+          "columns": ["RESET_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PASSWORD_RESET_TOKEN",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "U",
+          "columns": ["TOKEN_HASH"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_PASSWORD_RESET_USER",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "R",
+          "columns": ["USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_PASSWORD_RESET_TOKENS_PUBLIC",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "U",
+          "columns": ["PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_PASSWORD_RESET_TOKENS_TOKEN_HASH",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(TOKEN_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_PASSWORD_RESET_TOKENS_UUID",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_PASSWORD_RESET_TOKENS_ID_POSITIVE",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "RESET_ID>0 AND RESET_ID=TRUNC(RESET_ID)"
+        },
+        {
+          "name": "CK_PASSWORD_RESET_TOKENS_EXPIRY",
+          "table": "PASSWORD_RESET_TOKENS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "expires_at_utc>created_at_utc"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_AUTH_SESSIONS_USER_EXPIRY",
+          "table": "AUTH_SESSIONS",
+          "unique": false,
+          "expressions": ["USER_ID", "EXPIRES_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_SESSION_ACTIVE_MEMBER",
+          "table": "AUTH_SESSIONS",
+          "unique": false,
+          "expressions": ["ACTIVE_TENANT_ID", "ACTIVE_MEMBERSHIP_ID", "USER_ID"]
+        },
+        {
+          "name": "IX_EMAIL_VERIFICATION_USER",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "unique": false,
+          "expressions": ["USER_ID", "EXPIRES_AT_UTC"]
+        },
+        {
+          "name": "IX_PASSWORD_RESET_USER",
+          "table": "PASSWORD_RESET_TOKENS",
+          "unique": false,
+          "expressions": ["USER_ID", "EXPIRES_AT_UTC"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000008",
+      "name": "resources",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000008_resources/001_resources.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/002_resource_features.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/003_fk_resources_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/004_fk_resources_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/005_fk_resources_business_sport.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/006_fk_resource_features_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/007_ix_resources_tenant_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/008_ix_resources_tenant_sport.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000008_resources/009_ix_fk_resources_business_sport.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "RESOURCES",
+          "columns": [
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SPORT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_CODE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_NAME",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_TYPE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DESCRIPTION",
+              "type": "VARCHAR2(2000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CAPACITY",
+              "type": "NUMBER(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SLOT_INTERVAL_MINUTES",
+              "type": "NUMBER(3)",
+              "nullable": false,
+              "default": "15",
+              "identity": false
+            },
+            {
+              "name": "MINIMUM_DURATION_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": "60",
+              "identity": false
+            },
+            {
+              "name": "MAXIMUM_DURATION_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": "180",
+              "identity": false
+            },
+            {
+              "name": "ADVANCE_BOOKING_DAYS",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": "30",
+              "identity": false
+            },
+            {
+              "name": "BUFFER_BEFORE_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": "0",
+              "identity": false
+            },
+            {
+              "name": "BUFFER_AFTER_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": "0",
+              "identity": false
+            },
+            {
+              "name": "IS_BOOKABLE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "RESOURCE_FEATURES",
+          "columns": [
+            {
+              "name": "RESOURCE_FEATURE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FEATURE_CODE",
+              "type": "VARCHAR2(60 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FEATURE_NAME",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FEATURE_VALUE",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_RESOURCES",
+          "table": "RESOURCES",
+          "type": "P",
+          "columns": ["RESOURCE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_RESOURCES_TENANT_ID",
+          "table": "RESOURCES",
+          "type": "U",
+          "columns": ["TENANT_ID", "RESOURCE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_RES_TENANT_LOC_ID",
+          "table": "RESOURCES",
+          "type": "U",
+          "columns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_RES_BIZ_LOC_ID",
+          "table": "RESOURCES",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_RESOURCES_LOCATION_CODE",
+          "table": "RESOURCES",
+          "type": "U",
+          "columns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_RESOURCES_BUSINESS",
+          "table": "RESOURCES",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_RESOURCES_LOCATION",
+          "table": "RESOURCES",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_RESOURCES_BUSINESS_SPORT",
+          "table": "RESOURCES",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "SPORT_ID"],
+          "referencedTable": "BUSINESS_SPORTS",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID", "SPORT_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_RESOURCES_PUBLIC_ID",
+          "table": "RESOURCES",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_RESOURCES_SLOT_INTERVAL",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "slot_interval_minutes = 15"
+        },
+        {
+          "name": "CK_RESOURCES_DURATIONS",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "minimum_duration_minutes > 0 AND maximum_duration_minutes >= minimum_duration_minutes AND MOD(minimum_duration_minutes,15) = 0 AND MOD(maximum_duration_minutes,15) = 0"
+        },
+        {
+          "name": "CK_RESOURCES_CAPACITY",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "capacity IS NULL OR capacity > 0"
+        },
+        {
+          "name": "CK_RESOURCES_BOOKABLE",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_bookable IN ('Y','N')"
+        },
+        {
+          "name": "CK_RESOURCES_STATUS",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "resource_status IN ('ACTIVE','INACTIVE','MAINTENANCE','CLOSED')"
+        },
+        {
+          "name": "CK_RESOURCES_UUID",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_RESOURCES_ID_POSITIVE",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "RESOURCE_ID>0 AND RESOURCE_ID=TRUNC(RESOURCE_ID)"
+        },
+        {
+          "name": "CK_RESOURCE_BUFFERS",
+          "table": "RESOURCES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "buffer_before_minutes>=0 AND buffer_after_minutes>=0 AND MOD(buffer_before_minutes,15)=0 AND MOD(buffer_after_minutes,15)=0 AND advance_booking_days>=0"
+        },
+        {
+          "name": "PK_RESOURCE_FEATURES",
+          "table": "RESOURCE_FEATURES",
+          "type": "P",
+          "columns": ["RESOURCE_FEATURE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_RESOURCE_FEATURES_TENANT_ID",
+          "table": "RESOURCE_FEATURES",
+          "type": "U",
+          "columns": ["TENANT_ID", "RESOURCE_FEATURE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_RESOURCE_FEATURES_CODE",
+          "table": "RESOURCE_FEATURES",
+          "type": "U",
+          "columns": ["TENANT_ID", "RESOURCE_ID", "FEATURE_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_RESOURCE_FEATURES_RESOURCE",
+          "table": "RESOURCE_FEATURES",
+          "type": "R",
+          "columns": ["TENANT_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_RESOURCE_FEATURES_ID_POSITIVE",
+          "table": "RESOURCE_FEATURES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "RESOURCE_FEATURE_ID>0 AND RESOURCE_FEATURE_ID=TRUNC(RESOURCE_FEATURE_ID)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_RESOURCES_TENANT_LOCATION",
+          "table": "RESOURCES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_ID", "RESOURCE_STATUS"]
+        },
+        {
+          "name": "IX_RESOURCES_TENANT_SPORT",
+          "table": "RESOURCES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SPORT_ID", "RESOURCE_STATUS"]
+        },
+        {
+          "name": "IX_FK_RESOURCES_BUSINESS_SPORT",
+          "table": "RESOURCES",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BUSINESS_ID", "SPORT_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000009",
+      "name": "staff_and_invitations",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000009_staff_and_invitations/001_staff_assignments.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/002_tenant_invitations.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/003_invitation_locations.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/004_fk_staff_member.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/005_fk_staff_assignments_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/006_fk_tenant_invitations_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/007_fk_tenant_invitations_role.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/008_fk_tenant_invitations_inviter.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/009_fk_il_invitation.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/010_fk_il_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/011_ix_staff_membership.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/012_ix_staff_assignments_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/013_ix_tenant_invitations_email.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/014_ix_tenant_invitations_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/015_ix_tenant_invitations_role.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/016_ix_tenant_invitations_inviter.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000009_staff_and_invitations/017_ix_fk_il_location.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "STAFF_ASSIGNMENTS",
+          "columns": [
+            {
+              "name": "STAFF_ASSIGNMENT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ASSIGNMENT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "ASSIGNED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "ENDED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "TENANT_INVITATIONS",
+          "columns": [
+            {
+              "name": "INVITATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL_NORMALIZED",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ROLE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INVITATION_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PENDING'",
+              "identity": false
+            },
+            {
+              "name": "INVITED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACCEPTED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_KEY_VERSION",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "INVITATION_LOCATIONS",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "INVITATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_STAFF_ASSIGNMENTS",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "P",
+          "columns": ["STAFF_ASSIGNMENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_STAFF_ASSIGNMENTS_TENANT_ID",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "STAFF_ASSIGNMENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_STAFF_MEMBER_LOC",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "MEMBERSHIP_ID", "LOCATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_STAFF_MEMBER",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_STAFF_ASSIGNMENTS_LOCATION",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_STAFF_ASSIGNMENTS_PUBLIC_ID",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_STAFF_ASSIGNMENTS_STATUS",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "assignment_status IN ('ACTIVE','ENDED')"
+        },
+        {
+          "name": "CK_STAFF_ASSIGNMENTS_UUID",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_STAFF_ASSIGNMENTS_ID_POSITIVE",
+          "table": "STAFF_ASSIGNMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "STAFF_ASSIGNMENT_ID>0 AND STAFF_ASSIGNMENT_ID=TRUNC(STAFF_ASSIGNMENT_ID)"
+        },
+        {
+          "name": "PK_TENANT_INVITATIONS",
+          "table": "TENANT_INVITATIONS",
+          "type": "P",
+          "columns": ["INVITATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_TENANT_INVITATIONS_TOKEN",
+          "table": "TENANT_INVITATIONS",
+          "type": "U",
+          "columns": ["TOKEN_HASH"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_INV_TENANT_ID",
+          "table": "TENANT_INVITATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "INVITATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_TENANT_INVITATIONS_TENANT",
+          "table": "TENANT_INVITATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_TENANT_INVITATIONS_ROLE",
+          "table": "TENANT_INVITATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "ROLE_ID"],
+          "referencedTable": "ROLES",
+          "referencedColumns": ["TENANT_ID", "ROLE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_TENANT_INVITATIONS_INVITER",
+          "table": "TENANT_INVITATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "INVITED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_TENANT_INVITATIONS_PUBLIC_ID",
+          "table": "TENANT_INVITATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_TENANT_INVITATIONS_STATUS",
+          "table": "TENANT_INVITATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "invitation_status IN ('PENDING','ACCEPTED','EXPIRED','REVOKED')"
+        },
+        {
+          "name": "CK_TENANT_INVITATIONS_TOKEN_HASH",
+          "table": "TENANT_INVITATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(TOKEN_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_TENANT_INVITATIONS_UUID",
+          "table": "TENANT_INVITATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_TENANT_INVITATIONS_ID_POSITIVE",
+          "table": "TENANT_INVITATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "INVITATION_ID>0 AND INVITATION_ID=TRUNC(INVITATION_ID)"
+        },
+        {
+          "name": "CK_TENANT_INVITATIONS_EXPIRY",
+          "table": "TENANT_INVITATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "expires_at_utc>created_at_utc"
+        },
+        {
+          "name": "PK_INVITATION_LOCATIONS",
+          "table": "INVITATION_LOCATIONS",
+          "type": "P",
+          "columns": ["TENANT_ID", "INVITATION_ID", "LOCATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_IL_INVITATION",
+          "table": "INVITATION_LOCATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "INVITATION_ID"],
+          "referencedTable": "TENANT_INVITATIONS",
+          "referencedColumns": ["TENANT_ID", "INVITATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_IL_LOCATION",
+          "table": "INVITATION_LOCATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID"],
+          "expression": null
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_STAFF_MEMBERSHIP",
+          "table": "STAFF_ASSIGNMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "MEMBERSHIP_ID", "ASSIGNMENT_STATUS"]
+        },
+        {
+          "name": "IX_STAFF_ASSIGNMENTS_LOCATION",
+          "table": "STAFF_ASSIGNMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_ID", "ASSIGNMENT_STATUS"]
+        },
+        {
+          "name": "IX_TENANT_INVITATIONS_EMAIL",
+          "table": "TENANT_INVITATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "EMAIL_NORMALIZED", "INVITATION_STATUS"]
+        },
+        {
+          "name": "IX_TENANT_INVITATIONS_EXPIRY",
+          "table": "TENANT_INVITATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "INVITATION_STATUS", "EXPIRES_AT_UTC"]
+        },
+        {
+          "name": "IX_TENANT_INVITATIONS_ROLE",
+          "table": "TENANT_INVITATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "ROLE_ID", "INVITATION_STATUS"]
+        },
+        {
+          "name": "IX_TENANT_INVITATIONS_INVITER",
+          "table": "TENANT_INVITATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "INVITED_BY_MEMBERSHIP_ID"]
+        },
+        {
+          "name": "IX_FK_IL_LOCATION",
+          "table": "INVITATION_LOCATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000010",
+      "name": "schedules_and_pricing",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000010_schedules_and_pricing/001_operating_hours.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/002_holidays.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/003_availability_blocks.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/004_pricing_rules.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/005_fk_operating_hours_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/006_fk_operating_hours_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/007_fk_holidays_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/008_fk_avail_loc.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/009_fk_avail_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/010_fk_availability_blocks_creator.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/011_fk_pricing_rules_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/012_ix_operating_hours_location.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/013_ix_avail_resource_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/014_ix_avail_location_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/015_ix_fk_avail_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/016_ix_fk_availability_blocks_creator.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000010_schedules_and_pricing/017_ix_pricing_rules_lookup.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "OPERATING_HOURS",
+          "columns": [
+            {
+              "name": "OPERATING_HOUR_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DAY_OF_WEEK",
+              "type": "NUMBER(1)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OPEN_MINUTE",
+              "type": "NUMBER(4)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CLOSE_MINUTE",
+              "type": "NUMBER(4)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_CLOSED",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'N'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SEGMENT_NO",
+              "type": "NUMBER(3)",
+              "nullable": false,
+              "default": "1",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "HOLIDAYS",
+          "columns": [
+            {
+              "name": "HOLIDAY_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLIDAY_DATE",
+              "type": "DATE",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLIDAY_NAME",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IS_CLOSED",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "OPEN_MINUTE",
+              "type": "NUMBER(4)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CLOSE_MINUTE",
+              "type": "NUMBER(4)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLIDAY_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "AVAILABILITY_BLOCKS",
+          "columns": [
+            {
+              "name": "AVAILABILITY_BLOCK_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "STARTS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BLOCK_TYPE",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REASON",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BLOCK_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "PRICING_RULES",
+          "columns": [
+            {
+              "name": "PRICING_RULE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RULE_CODE",
+              "type": "VARCHAR2(50 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": "'LKR'",
+              "identity": false
+            },
+            {
+              "name": "HOURLY_RATE",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EFFECTIVE_FROM_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EFFECTIVE_TO_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RULE_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_OPERATING_HOURS",
+          "table": "OPERATING_HOURS",
+          "type": "P",
+          "columns": ["OPERATING_HOUR_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_OPERATING_HOURS_TENANT_ID",
+          "table": "OPERATING_HOURS",
+          "type": "U",
+          "columns": ["TENANT_ID", "OPERATING_HOUR_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_OPERATING_HOURS_LOCATION",
+          "table": "OPERATING_HOURS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_OPERATING_HOURS_RESOURCE",
+          "table": "OPERATING_HOURS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_OPERATING_HOURS_PUBLIC_ID",
+          "table": "OPERATING_HOURS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_OPERATING_HOURS_SEGMENT",
+          "table": "OPERATING_HOURS",
+          "type": "U",
+          "columns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID", "DAY_OF_WEEK", "SEGMENT_NO"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_OPERATING_HOURS_DAY",
+          "table": "OPERATING_HOURS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "day_of_week BETWEEN 1 AND 7"
+        },
+        {
+          "name": "CK_OPERATING_HOURS_CLOSED",
+          "table": "OPERATING_HOURS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_closed IN ('Y','N')"
+        },
+        {
+          "name": "CK_OPERATING_HOURS_UUID",
+          "table": "OPERATING_HOURS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_OPERATING_HOURS_ID_POSITIVE",
+          "table": "OPERATING_HOURS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "OPERATING_HOUR_ID>0 AND OPERATING_HOUR_ID=TRUNC(OPERATING_HOUR_ID)"
+        },
+        {
+          "name": "CK_OH_SEGMENT",
+          "table": "OPERATING_HOURS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "segment_no BETWEEN 1 AND 999"
+        },
+        {
+          "name": "CK_OPERATING_HOURS_TIMES",
+          "table": "OPERATING_HOURS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(is_closed='Y' AND open_minute IS NULL AND close_minute IS NULL) OR (is_closed='N' AND open_minute IS NOT NULL AND close_minute IS NOT NULL AND open_minute BETWEEN 0 AND 1439 AND close_minute BETWEEN 1 AND 1440 AND close_minute>open_minute AND MOD(open_minute,15)=0 AND MOD(close_minute,15)=0)"
+        },
+        {
+          "name": "PK_HOLIDAYS",
+          "table": "HOLIDAYS",
+          "type": "P",
+          "columns": ["HOLIDAY_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_HOLIDAYS_TENANT_ID",
+          "table": "HOLIDAYS",
+          "type": "U",
+          "columns": ["TENANT_ID", "HOLIDAY_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_HOLIDAYS_LOCATION_DATE",
+          "table": "HOLIDAYS",
+          "type": "U",
+          "columns": ["TENANT_ID", "LOCATION_ID", "HOLIDAY_DATE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_HOLIDAYS_LOCATION",
+          "table": "HOLIDAYS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_HOLIDAYS_PUBLIC_ID",
+          "table": "HOLIDAYS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_HOLIDAYS_DATE",
+          "table": "HOLIDAYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "holiday_date = TRUNC(holiday_date)"
+        },
+        {
+          "name": "CK_HOLIDAYS_CLOSED",
+          "table": "HOLIDAYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "is_closed IN ('Y','N')"
+        },
+        {
+          "name": "CK_HOLIDAYS_UUID",
+          "table": "HOLIDAYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_HOLIDAYS_ID_POSITIVE",
+          "table": "HOLIDAYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "HOLIDAY_ID>0 AND HOLIDAY_ID=TRUNC(HOLIDAY_ID)"
+        },
+        {
+          "name": "CK_HOLIDAYS_TIMES",
+          "table": "HOLIDAYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(is_closed='Y' AND open_minute IS NULL AND close_minute IS NULL) OR (is_closed='N' AND open_minute IS NOT NULL AND close_minute IS NOT NULL AND open_minute BETWEEN 0 AND 1439 AND close_minute BETWEEN 1 AND 1440 AND close_minute>open_minute AND MOD(open_minute,15)=0 AND MOD(close_minute,15)=0)"
+        },
+        {
+          "name": "CK_HOLIDAY_STATUS",
+          "table": "HOLIDAYS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "holiday_status IN ('ACTIVE','INACTIVE')"
+        },
+        {
+          "name": "PK_AVAILABILITY_BLOCKS",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "P",
+          "columns": ["AVAILABILITY_BLOCK_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_AVAIL_BLK_TENANT_ID",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "U",
+          "columns": ["TENANT_ID", "AVAILABILITY_BLOCK_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_AVAIL_LOC",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID"],
+          "referencedTable": "LOCATIONS",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_AVAIL_RESOURCE",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "R",
+          "columns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_AVAILABILITY_BLOCKS_CREATOR",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "R",
+          "columns": ["TENANT_ID", "CREATED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_AVAILABILITY_BLOCKS_PUBLIC_ID",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_AVAILABILITY_BLOCKS_RANGE",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ends_at_utc > starts_at_utc"
+        },
+        {
+          "name": "CK_AVAILABILITY_BLOCKS_TYPE",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "block_type IN ('MAINTENANCE','REPAIR','PRIVATE_EVENT','CLEANING','CLOSURE','OTHER')"
+        },
+        {
+          "name": "CK_AVAILABILITY_BLOCKS_STATUS",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "block_status IN ('ACTIVE','CANCELLED')"
+        },
+        {
+          "name": "CK_AVAILABILITY_BLOCKS_UUID",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_AVAILABILITY_BLOCKS_ID_POSITIVE",
+          "table": "AVAILABILITY_BLOCKS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "AVAILABILITY_BLOCK_ID>0 AND AVAILABILITY_BLOCK_ID=TRUNC(AVAILABILITY_BLOCK_ID)"
+        },
+        {
+          "name": "PK_PRICING_RULES",
+          "table": "PRICING_RULES",
+          "type": "P",
+          "columns": ["PRICING_RULE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PRICING_RULES_TENANT_ID",
+          "table": "PRICING_RULES",
+          "type": "U",
+          "columns": ["TENANT_ID", "PRICING_RULE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PRICING_RULES_CODE",
+          "table": "PRICING_RULES",
+          "type": "U",
+          "columns": ["TENANT_ID", "RESOURCE_ID", "RULE_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_PRICING_RULES_RESOURCE",
+          "table": "PRICING_RULES",
+          "type": "R",
+          "columns": ["TENANT_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_PRICING_RULES_PUBLIC_ID",
+          "table": "PRICING_RULES",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PRICE_RESOURCE_KEY",
+          "table": "PRICING_RULES",
+          "type": "U",
+          "columns": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_PRICING_RULES_RATE",
+          "table": "PRICING_RULES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "hourly_rate >= 0"
+        },
+        {
+          "name": "CK_PRICING_RULES_RANGE",
+          "table": "PRICING_RULES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "effective_to_utc IS NULL OR effective_to_utc > effective_from_utc"
+        },
+        {
+          "name": "CK_PRICING_RULES_STATUS",
+          "table": "PRICING_RULES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "rule_status IN ('ACTIVE','INACTIVE')"
+        },
+        {
+          "name": "CK_PRICING_RULES_CURRENCY_CODE",
+          "table": "PRICING_RULES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_PRICING_RULES_UUID",
+          "table": "PRICING_RULES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_PRICING_RULES_ID_POSITIVE",
+          "table": "PRICING_RULES",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "PRICING_RULE_ID>0 AND PRICING_RULE_ID=TRUNC(PRICING_RULE_ID)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_OPERATING_HOURS_LOCATION",
+          "table": "OPERATING_HOURS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_ID", "DAY_OF_WEEK"]
+        },
+        {
+          "name": "IX_AVAIL_RESOURCE_TIME",
+          "table": "AVAILABILITY_BLOCKS",
+          "unique": false,
+          "expressions": [
+            "TENANT_ID",
+            "RESOURCE_ID",
+            "STARTS_AT_UTC",
+            "ENDS_AT_UTC",
+            "BLOCK_STATUS"
+          ]
+        },
+        {
+          "name": "IX_AVAIL_LOCATION_TIME",
+          "table": "AVAILABILITY_BLOCKS",
+          "unique": false,
+          "expressions": [
+            "TENANT_ID",
+            "LOCATION_ID",
+            "STARTS_AT_UTC",
+            "ENDS_AT_UTC",
+            "BLOCK_STATUS"
+          ]
+        },
+        {
+          "name": "IX_FK_AVAIL_RESOURCE",
+          "table": "AVAILABILITY_BLOCKS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_ID", "RESOURCE_ID"]
+        },
+        {
+          "name": "IX_FK_AVAILABILITY_BLOCKS_CREATOR",
+          "table": "AVAILABILITY_BLOCKS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "CREATED_BY_MEMBERSHIP_ID"]
+        },
+        {
+          "name": "IX_PRICING_RULES_LOOKUP",
+          "table": "PRICING_RULES",
+          "unique": false,
+          "expressions": [
+            "TENANT_ID",
+            "RESOURCE_ID",
+            "RULE_STATUS",
+            "EFFECTIVE_FROM_UTC",
+            "EFFECTIVE_TO_UTC"
+          ]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000011",
+      "name": "tenant_permissions",
+      "kind": "seed",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "seeds/000011_tenant_permissions/001_permissions.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [],
+      "constraints": [],
+      "indexes": [],
+      "seeds": [
+        {
+          "table": "PERMISSIONS",
+          "key": "PERMISSION_CODE",
+          "values": [
+            "business.read",
+            "business.manage",
+            "location.manage",
+            "resource.manage",
+            "booking.read",
+            "booking.create",
+            "booking.cancel",
+            "payment.read",
+            "payment.record",
+            "staff.manage",
+            "report.read",
+            "website.manage",
+            "subscription.read",
+            "subscription.manage",
+            "location.read",
+            "resource.read",
+            "customer.read",
+            "customer.manage",
+            "booking.manage",
+            "payment.refund"
           ]
         }
       ]

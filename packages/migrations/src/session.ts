@@ -1,6 +1,6 @@
 import oracledb from 'oracledb';
 import type { Connection, ConnectionAttributes } from 'oracledb';
-import type { MigrationConfig } from './config.js';
+import { parseMigrationConfig, type MigrationConfig } from './config.js';
 import { validateWallet } from '@sportify/database';
 import { MigrationError } from './errors.js';
 
@@ -24,6 +24,8 @@ export async function withOwnerSession<T>(
   factory: OwnerConnectionFactory = (options) => oracledb.getConnection(options),
   log: MigrationLog = safeLog,
 ): Promise<T> {
+  // Public JS callers must satisfy the same owner-only boundary as the CLI.
+  config = parseMigrationConfig(config);
   await validateWallet(config);
   let connection: Connection;
   try {

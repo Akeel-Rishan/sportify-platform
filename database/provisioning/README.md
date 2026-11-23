@@ -50,6 +50,43 @@ If preparation fails, its SQLcl exit is FAILURE and prior DDL can remain. Reconn
 
 For later rotation, explicitly authorize the identity/target, stop that application, use hidden PASSWORD prompts, update only its protected secret, recreate its process-local pool by restarting the process, verify readiness/connectivity and retire the old secret. Rotation does not update already-authenticated pooled sessions automatically. Owner rotation is an independent controlled migration operation. Do not run initial provisioning for rotation. No automation here resets an existing password.
 
+## Step 07 owner lock and disposable tests
+
+**Executed operator preparation, 23 November 2026.** The user supplied successful narrow owner-lock grant and locked test-owner creation output, then privately set initial authentication. Independent actual test-owner privilege/quota/empty-state preflight and the complete isolated suite passed. The application owner now contains the verified 11-phase release. [Dated evidence](../../Docs/database/step07-verification.md). Instructions below remain the sequence for an explicitly new target; do not rerun initial provisioning or empty-schema postconditions on these installed schemas. Existing application runtimes retain CREATE SESSION only. Never rerun the original initial-account script for these existing identities.
+
+To enable only the migration-owner lock capability, connect as ADMIN to the designated development target, independently recheck database/account identity, disable echo/verify/spooling and set the reviewed binds:
+
+```sql
+VARIABLE expected_db_unique_name VARCHAR2(128)
+VARIABLE operator_confirmation VARCHAR2(32)
+EXEC :expected_db_unique_name := '<operator-confirmed database unique name>';
+EXEC :operator_confirmation := 'MIGRATION_LOCK_ONLY';
+@database/provisioning/migration-lock-grants.sql
+```
+
+This grants only EXECUTE on SYS.DBMS_LOCK to SPORTIFY_SCHEMA_OWNER when absent, refuses unexpected existing grants/grant options and gives neither runtime lock privileges. It does not create business objects. Actual ATP grant/execute acceptance remains a prerequisite; do not replace failure with broad privileges or a transaction row lock. Run `db:lock-check` with protected owner configuration afterward. The old Step 06 zero-object-grant verification applies before this deliberate Step 07 owner-only capability, not after it.
+
+For the destructive-failure/DDL fixtures, explicitly designate the separate **empty disposable SPORTIFY_TEST_OWNER**, never the application owner. Only if this new owner is absent and the operator accepts its purpose/quota:
+
+```sql
+VARIABLE owner_quota_mb NUMBER
+EXEC :operator_confirmation := 'DISPOSABLE_TEST_OWNER';
+EXEC :owner_quota_mb := 256;
+@database/provisioning/provision-test-owner.sql
+```
+
+The script checks target/ADMIN/confirmation/quota/absence before mutation, creates the new owner NO AUTHENTICATION ACCOUNT LOCK, grants CREATE SESSION/TABLE/SEQUENCE plus only DBMS_LOCK EXECUTE, and assigns the finite DATA quota. It never drops users, creates business tables or changes runtime grants. DDL/grants are not a multi-statement transaction; failure can leave a locked partial account. Inspect actual state and approve exact recovery rather than rerunning, resetting existing passwords or clearing schemas.
+
+After successful preparation, set the test owner's initial password privately through the existing Database Actions edit-user form; preserve quota/roles and leave Web/REST/Graph/OML disabled. Set Password Expired and Account Locked OFF, then in the same verified ADMIN session run:
+
+```sql
+@database/provisioning/verify-test-owner.sql
+```
+
+This verifies OPEN/PASSWORD, exact grants/no roles/grant option, finite quota and an initially empty schema. It is a before-first-suite postcondition, not a cleanup command for a used test schema. Store the test password outside source/API/worker files. The [test operator example](test-migrations.env.example) requires an explicit isolated-disposable-empty marker; missing configuration fails, not skips. Fixtures never clear existing application data or automatically recreate this owner. See [migration guide](../../Docs/database/migration-guide.md) and [test safety](../tests/README.md).
+
+Script paths above assume SQLcl's working directory is the repository. With a different trusted working directory, use reviewed relative paths accordingly. No secret belongs in any bind shown here, shell history or SQL text.
+
 ## Official references consulted, 20 November 2026
 
 - [ATP user creation and DATA quota](https://docs.oracle.com/en-us/iaas/autonomous-database-serverless/doc/manage-users-create.html).

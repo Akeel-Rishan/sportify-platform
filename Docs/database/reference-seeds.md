@@ -1,6 +1,6 @@
 # Step 07 reference seeds
 
-Only the eight sports already named in the MVP have SQL seed artifacts. They are **not executed on Oracle** and the release remains review-gated.
+The eight MVP sports and all **20 approved** tenant permission codes have insert-only SQL artifacts. D-18 records explicit user approval; Oracle application/catalog verification now confirms exactly eight sports and 20 permission codes.
 
 | Stable sport code | Name           | Resource label | Display order |
 | ----------------- | -------------- | -------------- | ------------- |
@@ -17,10 +17,12 @@ Only the eight sports already named in the MVP have SQL seed artifacts. They are
 
 OTHER remains unseeded. There are no themes, plans/prices, tenants, business/customer/staff records, default passwords or administrator accounts in deployment seeds. Test fixtures are separate from seeds.
 
-## Permission catalog awaiting choice
+## Approved permission catalog
 
 Source tenant codes: business.read, business.manage, location.manage, resource.manage, booking.read, booking.create, booking.cancel, payment.read, payment.record, staff.manage, report.read, website.manage, subscription.read, subscription.manage.
 
-Q-18's proposed additions: location.read, resource.read, customer.read, customer.manage, booking.manage and payment.refund. The user has been asked to select the source-only catalog or approve the documented combined tenant catalog. No permission seed artifact is represented as approved/executed before that choice. These identifiers do not activate future booking/finance/website features.
+Approved additions to the source 14: location.read, resource.read, customer.read, customer.manage, booking.manage and payment.refund. D-18 explicitly selects the combined 20-code catalog. Version 000011 inserts missing codes only, without WHEN MATCHED updates. No role/user receives permissions from this seed; later authorized onboarding and role management must assign them deliberately. The codes do not activate future booking/finance/website functionality.
 
 Platform authority remains in the separately controlled administrator model; platform.* codes are not tenant-grantable seed data. Tenant roles are tenant-owned, so no global Owner/Manager/Receptionist instances or assignments can be seeded without a real tenant. Later onboarding must create tenant-owned defaults transactionally under the approved action/permission policy. Repeated seeds must never overwrite manual role/permission assignments.
+
+The disposable suite executes each seed SQL twice within a rollback-only customization fixture and compares IDs, labels/flags, descriptions and exact cardinality. This actual Oracle seed-rerun fixture passed, preserving IDs/customization/cardinality and rolling back its synthetic changes. See [dated evidence](step07-verification.md).

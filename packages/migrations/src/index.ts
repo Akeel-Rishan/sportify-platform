@@ -4,3 +4,4 @@ export { parseMigrationConfig } from './config.js';
 export { withOwnerSession, withMigrationLock } from './session.js';
 export { migrateSession, statusSession, verifySession, assertReady } from './runner.js';
 export { MigrationError } from './errors.js';
+export { verifyCatalog } from './catalog.js';

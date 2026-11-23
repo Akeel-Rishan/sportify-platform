@@ -43,6 +43,7 @@ function fixture() {
         DATA_TYPE: 'NUMBER',
         DATA_PRECISION: 5,
         DATA_SCALE: 0,
+        DATA_LENGTH: 22,
         CHAR_LENGTH: 0,
         CHAR_USED: null,
         NULLABLE: 'N',
@@ -67,6 +68,12 @@ function fixture() {
         CONDITION_SQL: null,
       },
     ],
+    lobs: [] as Array<{
+      TABLE_NAME: string;
+      COLUMN_NAME: string;
+      SEGMENT_NAME: string;
+      INDEX_NAME: string;
+    }>,
     indexes: [
       {
         INDEX_NAME: 'PK_UNIT_TABLE',
@@ -86,6 +93,7 @@ function fixture() {
     else if (sql.includes('FROM USER_CONS_COLUMNS'))
       rows = [{ CONSTRAINT_NAME: 'PK_UNIT_TABLE', COLUMN_NAME: 'ID' }];
     else if (sql.includes('FROM USER_INDEXES')) rows = actual.indexes;
+    else if (sql.includes('FROM USER_LOBS')) rows = actual.lobs;
     else if (sql.includes('FROM USER_IND_COLUMNS'))
       rows = [{ INDEX_NAME: 'PK_UNIT_TABLE', COLUMN_NAME: 'ID', COLUMN_POSITION: 1 }];
     return Promise.resolve({ rows });
@@ -102,6 +110,49 @@ describe('Oracle catalog comparison (unit metadata fixtures)', () => {
     await expect(
       verifyCatalog(f.session, [f.migration], 'SPORTIFY_TEST_OWNER'),
     ).resolves.toBeUndefined();
+  });
+  it('accepts internal LOB storage only for a matched extended VARCHAR2 column', async () => {
+    const f = fixture();
+    f.migration.tables[0]!.columns[0]!.type = 'VARCHAR2(2000 CHAR)';
+    Object.assign(f.actual.columns[0]!, {
+      DATA_TYPE: 'VARCHAR2',
+      CHAR_LENGTH: 2000,
+      CHAR_USED: 'C',
+      DATA_LENGTH: 8000,
+    });
+    f.actual.lobs.push({
+      TABLE_NAME: 'UNIT_TABLE',
+      COLUMN_NAME: 'ID',
+      SEGMENT_NAME: 'SYS_LOB_UNIT',
+      INDEX_NAME: 'SYS_IL_UNIT',
+    });
+    f.actual.indexes.push({
+      INDEX_NAME: 'SYS_IL_UNIT',
+      TABLE_NAME: 'UNIT_TABLE',
+      STATUS: 'VALID',
+      INDEX_TYPE: 'LOB',
+      UNIQUENESS: 'UNIQUE',
+      FUNCIDX_STATUS: null,
+    });
+    await expect(
+      verifyCatalog(f.session, [f.migration], 'SPORTIFY_TEST_OWNER'),
+    ).resolves.toBeUndefined();
+    f.actual.lobs[0]!.COLUMN_NAME = 'UNEXPECTED_COLUMN';
+    await expect(verifyCatalog(f.session, [f.migration], 'SPORTIFY_TEST_OWNER')).rejects.toThrow(
+      /CATALOG_MISMATCH/,
+    );
+  });
+  it('rejects an internal LOB claim for an ordinary bounded column', async () => {
+    const f = fixture();
+    f.actual.lobs.push({
+      TABLE_NAME: 'UNIT_TABLE',
+      COLUMN_NAME: 'ID',
+      SEGMENT_NAME: 'SYS_LOB_UNIT',
+      INDEX_NAME: 'SYS_IL_UNIT',
+    });
+    await expect(verifyCatalog(f.session, [f.migration], 'SPORTIFY_TEST_OWNER')).rejects.toThrow(
+      /CATALOG_MISMATCH/,
+    );
   });
   it.each([
     'extra_table',
