@@ -9,6 +9,16 @@ export function canonicalSql(sql: string | null): string {
     .map((token) => (token.startsWith("'") ? token : token.replaceAll('"', '').toUpperCase()))
     .join('');
 }
+export function canonicalIndexExpression(sql: string): string {
+  // Oracle can store a single equality CASE as simple CASE. Normalize only
+  // identifier / string-literal / identifier with one arm and no ELSE.
+  // Leave general SQL, literal contents and differing branches unchanged.
+  const simple =
+    /^\s*CASE\s+("(?:""|[^"])*"|[A-Z][A-Z0-9_$#]*)\s+WHEN\s+('(?:''|[^'])*')\s+THEN\s+("(?:""|[^"])*"|[A-Z][A-Z0-9_$#]*)\s+END\s*$/i.exec(
+      sql,
+    );
+  return canonicalSql(simple ? `CASE WHEN ${simple[1]} = ${simple[2]} THEN ${simple[3]} END` : sql);
+}
 export async function rows<Row>(session: MigrationSession, sql: string): Promise<Row[]> {
   const result = await session.execute<Row>(
     sql,
@@ -267,8 +277,8 @@ export async function verifyCatalog(
       !index ||
       index.TABLE_NAME !== expected.table ||
       (index.UNIQUENESS === 'UNIQUE') !== expected.unique ||
-      JSON.stringify(actual.map(canonicalSql)) !==
-        JSON.stringify(expected.expressions.map(canonicalSql))
+      JSON.stringify(actual.map(canonicalIndexExpression)) !==
+        JSON.stringify(expected.expressions.map(canonicalIndexExpression))
     )
       throw new MigrationError('CATALOG_MISMATCH');
   }

@@ -1,6 +1,8 @@
 # MVP development roadmap
 
-Current status: **Step 07 executed and verified on Oracle; awaiting user verification**. D-18 design choices are approved; the original 11 migrations applied cleanly, repeated as a no-op and passed catalog/reference checks plus isolated integrity/locking/recovery/privilege verification. Final local checks passed 188 tests and all builds. [Dated evidence](../database/step07-verification.md) and [progress](progress.md) are the current record. Step 08 and application authentication remain unstarted; the next scoped prompt must explicitly define its scope/dependencies rather than assuming historical step labels mean the required application services exist.
+Latest scope: the explicit Step 08 prompt authorizes database-only facilities/booking/venue-finance/reservation migrations and actual Oracle tests, superseding historical Step 08 UI scope. D-21 policies and D-22 verification are recorded. Application 000012-000017 applied/repeated/verified; the dedicated Step 08 suite passed integrity/A-E races/cleanup/runtime denials while preserving Step 07 history. See [current Step 08 status](../database/step08-verification.md). No application service, product screen or Step 09 is authorized.
+
+Previous verified baseline: **Step 07 executed and verified on Oracle; awaiting user verification**. D-18 design choices are approved; the original 11 migrations applied cleanly, repeated as a no-op and passed catalog/reference checks plus isolated integrity/locking/recovery/privilege verification. Final local checks passed 188 tests and all builds. [Dated evidence](../database/step07-verification.md) and [progress](progress.md) are the current record. The explicit Step 08 database-only prompt below now defines its new draft scope; application authentication/booking services remain unstarted and are not implied by database structures.
 
 The explicit Step 03 prompt assigns environment validation, lint/format/testing and CI to this step and excludes Oracle and business functionality. The original Oracle milestone is retained below as a deferred prerequisite, without an invented new step number. Later product step numbers remain historical planning references; the next scoped prompt must reconcile their Oracle dependency before implementation. The explicit Step 04 prompt now authorizes API transport conventions, logging and application health only; authentication and Oracle remain deferred. The explicit Step 05 prompt assigns database design only; earlier UI/auth/Oracle implementation milestones remain deferred. The scoped Step 06 prompt now authorizes account preparation/connectivity only, as recorded below; business implementation remains deferred.
 
@@ -159,3 +161,9 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Status:** Not started.
 
 Marketplace, custom domains, gateways, recurrence and other excluded features have no implementation step here. Architecture extension points are permitted only when needed for the current MVP, not as hidden future-feature work.
+
+## Step 08 - Booking, slot and venue finance database migrations (scoped prompt)
+
+- Scope: reuse seven existing facility/schedule structures; ten new customer/hold/booking/slot/cancellation/payment/refund table drafts, indexes, minimal grants and real Oracle tests only.
+- Current: 000012-000017 applied/repeated/catalog-verified after complete isolated Oracle suite success. Original 11 entries unchanged; Step 08 awaiting user verification. No Step 09.
+- Gate: local quality/build checks and actual clean/repeat/catalog, exact relationship/slot integrity and A-E Oracle races. Mocks/static tests do not satisfy this gate. No application services/UI or Step 09.

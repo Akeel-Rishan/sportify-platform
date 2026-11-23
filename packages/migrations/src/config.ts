@@ -6,8 +6,16 @@ const schema = z
   .strictObject({
     ORACLE_MIGRATION_CONFIRM: z.literal('designated-development'),
     ORACLE_MIGRATION_DB_UNIQUE_NAME: z.string().regex(/^[A-Za-z0-9_$#.-]{1,128}$/),
-    ORACLE_MIGRATION_SCHEMA: z.enum(['SPORTIFY_SCHEMA_OWNER', 'SPORTIFY_TEST_OWNER']),
-    ORACLE_MIGRATION_USER: z.enum(['SPORTIFY_SCHEMA_OWNER', 'SPORTIFY_TEST_OWNER']),
+    ORACLE_MIGRATION_SCHEMA: z.enum([
+      'SPORTIFY_SCHEMA_OWNER',
+      'SPORTIFY_TEST_OWNER',
+      'SPORTIFY_STEP08_TEST_OWNER',
+    ]),
+    ORACLE_MIGRATION_USER: z.enum([
+      'SPORTIFY_SCHEMA_OWNER',
+      'SPORTIFY_TEST_OWNER',
+      'SPORTIFY_STEP08_TEST_OWNER',
+    ]),
     ORACLE_MIGRATION_PASSWORD: z.string().min(1).max(1024),
     ORACLE_CONNECT_STRING: z
       .string()
@@ -40,7 +48,8 @@ export function parseMigrationConfig(environment: Environment): MigrationConfig 
   return parseEnvironment(schema, input, {
     ORACLE_MIGRATION_CONFIRM: 'explicit designated-development target confirmation required',
     ORACLE_MIGRATION_DB_UNIQUE_NAME: 'explicit expected development database unique name required',
-    ORACLE_MIGRATION_SCHEMA: 'expected SPORTIFY_SCHEMA_OWNER or isolated SPORTIFY_TEST_OWNER',
+    ORACLE_MIGRATION_SCHEMA:
+      'expected application owner or explicitly isolated SPORTIFY_TEST_OWNER / SPORTIFY_STEP08_TEST_OWNER',
     ORACLE_MIGRATION_USER: 'must be the exact selected owner schema, never ADMIN/API/worker',
     ORACLE_MIGRATION_PASSWORD: 'securely injected nonempty migration-only password required',
     ORACLE_CONNECT_STRING: 'expected option-free TCPS host:port/service from the designated target',

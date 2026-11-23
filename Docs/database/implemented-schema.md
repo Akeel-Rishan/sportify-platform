@@ -36,3 +36,9 @@ Owner configuration/identity/target/locking, separate restricted test-owner prep
 PLATFORM_SETTINGS and ONBOARDING_PROGRESS have no current implemented dependency and remain omitted. Booking/hold/slot/payment/refund/subscription/website/domain/outbox/job/marketplace/recurrence tables remain excluded; no dangling placeholder FKs or broad bootstrap are used.
 
 See [scoped ERD](erd-step07.md), [migration guide](migration-guide.md), [test safety](../../database/tests/README.md) and [reference seed ownership](reference-seeds.md). Static artifact agreement is not Oracle SQL compilation or enforcement.
+
+## Step 08 executed inventory
+
+Application 000012 CUSTOMERS; 000013 BUSINESS_PAYMENT_SETTINGS; 000014 BOOKING_HOLDS/BOOKING_HOLD_ITEMS; 000015 BOOKINGS/BOOKING_ITEMS; 000016 RESOURCE_SLOT_RESERVATIONS/BOOKING_CANCELLATIONS; 000017 PAYMENTS/REFUNDS all applied cleanly, repeated no-op and passed actual Oracle catalog verification after full isolated-suite success. Delta ten tables/135 columns/114 constraints/37 indexes; combined 36 tables/394 columns/320 constraints/67 explicit indexes. All 17 source entries/SQL are now immutable. Existing facilities/schedules and original 11 entries are unchanged; PAYMENT_TRANSACTIONS is excluded.
+
+D-21 policies remain approved; D-22 records comparator and harness corrections plus test-only retained FAILED 000017->APPLIED 000018. Application history has only 17 APPLIED and no repair/pending. The separate used Step 07 test history is preserved. Actual 40 integrity cases, A-E races, cleanup and runtime denials passed. Runtime grants remain unchanged. [Dated complete evidence and limits](step08-verification.md); [scoped diagram](erd-step08.md). No production booking/payment/maintenance service or Step 09. Step 08 awaiting user verification.

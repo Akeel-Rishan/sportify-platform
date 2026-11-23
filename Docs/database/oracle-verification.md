@@ -87,3 +87,17 @@ Both runtimes additionally received exact Oracle access denials for actual appli
 See [complete dated evidence, commands and limits](step07-verification.md). Ordinary check/coverage passed 188 tests and all builds. Default live-suite invocation still requires a genuinely empty separately prepared test owner; the retained used schema is not automatically reused/cleared. [One-shot reconciliation safety](../../database/tests/README.md#explicit-first-run-extended-string-reconciliation) applies only to its exact original state, already reconciled here.
 
 **Step 07 Oracle verification gate passed; awaiting user verification.** No authentication, booking, schema-version readiness, commercial-readiness or Step 08 implementation is implied. Earlier Step 06 deployment/remote-outage/PUBLIC-baseline limitations remain separate.
+
+## Step 08 draft and live gate
+
+Step 08 baseline history and the exact original Step 07 catalog were independently rechecked successfully. A read-only DUAL probe passed decimal-string/six-digit timestamp expressions only. The new Step 08 table/integrity/A-E concurrency suite has not run, and the new SPORTIFY_STEP08_TEST_OWNER was absent in metadata. Design questions remain unanswered; manifest review/three STEP08 blockers refuse mutation. [Current complete gate/operator record](step08-verification.md) is not superseded by the earlier Step 07 passes.
+
+The separate owner preserves retained Step 07 test repair history and avoids version collisions. No production/unidentified target, application-schema recreation, broad grants or runtime DDL is authorized. New real tests require exact identity/target/empty state/privileges, explicit disposable marker and private password. Step 08 remains awaiting user verification with Oracle gate incomplete; Step 09 is not started.
+
+## D-21 Step 08 approval continuation
+
+All three policies are approved and reconciled; manifest ready is not a live pass. Current read-only designated-target inspection confirms exactly original 11 APPLIED records, no Step 08 test owner and an empty private Step 08 test password. No Step 08 account/grant/migration/fixture has been executed. The new suite adds PENDING_PAYMENT acceptance, zero-total PAID/no-receipt and rejection of a zero-total unpaid header, duplicate effective receipt/refund rejection, and retained excluded finance history. Existing A-E transaction harnesses remain unexecuted. Full payment/refund amounts and maintenance coordination are future transaction responsibilities, not inferred from these cases. Stop for the user's exact separate test-owner preparation per [current operator sequence](step08-verification.md); preserve Step 07 repair history.
+
+## Current D-22 Step 08 executed acceptance
+
+This supersedes the historical blocked statements above. The full isolated suite exited 0 after explicit retained 000017->000018 verifier recovery: 40 integrity rejections/positive fixtures, all A-E races, exact catalog/repeat/checksum, known cleanup and both runtime denials. Application 000012-000017 then applied cleanly, repeated no-op, passed verify and returned 17 APPLIED/no pending. Independent three-owner audit confirms 36 tables/394 columns/320 constraints/67 explicit indexes, no invalid objects/business rows, preserved old test repairs and no new runtime grants. [Exact failures, recovery, commands and limits](step08-verification.md). Step 08 awaiting user verification; no further setup blocker or Step 09.

@@ -34,3 +34,9 @@ node --env-file="<protected-test-owner-env-file>" database/tests/oracle-migratio
 The initial failed invocation remains a failed result. Only actually completed reconciliation/continuation/component checks may be reported as passed; the application-owner release must still prove all 11 original phases from a clean schema.
 
 23 November execution result: explicit reconciled full suite exited 0; all 33 integrity cases, seed/customization, concurrent DDL lock, controlled failure/repair and both real runtime-denial checks passed. Separate final catalog/history verification confirmed 15 rows, 13 APPLIED and retained repaired failures 000008->000012 and 000013->000015. Application owner independently applied all original 11 phases cleanly with no repairs and a repeat no-op. The used test owner remains retained, not eligible for another clean/one-shot invocation.
+
+## Step 08 separate suite
+
+Use test:oracle:step08 and a newly prepared SPORTIFY_STEP08_TEST_OWNER; keep the used Step 07 owner/repair history intact. New source fixtures and barrier-coordinated races live in step08/. They delete only their verified synthetic tenant roots/children and keep schema/reference/history. The new suite is prepared, not executed; D-21 policy approval is recorded, while explicit target/test-owner credentials/preflight gates are still required. [Current safety and commands](../../Docs/database/step08-verification.md).
+
+D-22: the Step 08 target is now installed and its full suite passed. Normal invocation still requires an empty owner. The explicit `--reconcile-case-catalog` flag accepts only the exact original verifier-failure state or its verified linked repair, never a generic populated schema. It preserves FAILED 000017->APPLIED test-only 000018 and requires zero fixture/business rows before reuse. No application manifest repair entry or automatic clearing is added. [Actual results](../../Docs/database/step08-verification.md).

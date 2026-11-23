@@ -22,7 +22,7 @@ export function runtimeVerificationConfigs(environment) {
 }
 
 export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
-  assert.equal(owner, 'SPORTIFY_TEST_OWNER');
+  assert.ok(['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP08_TEST_OWNER'].includes(owner));
   for (const entry of entries) {
     const database = await createDatabase(entry.config, entry.role);
     let cleanupFailed = false;
@@ -53,7 +53,8 @@ export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
       assert.equal(
         (
           await database.query(
-            "SELECT GRANTEE FROM ALL_TAB_PRIVS WHERE TABLE_SCHEMA IN ('SPORTIFY_TEST_OWNER','SPORTIFY_SCHEMA_OWNER') AND GRANTEE='PUBLIC' AND TYPE<>'USER'",
+            "SELECT GRANTEE FROM ALL_TAB_PRIVS WHERE (TABLE_SCHEMA=:owner OR TABLE_SCHEMA='SPORTIFY_SCHEMA_OWNER') AND GRANTEE='PUBLIC' AND TYPE<>'USER'",
+            { owner },
           )
         ).rows?.length,
         0,

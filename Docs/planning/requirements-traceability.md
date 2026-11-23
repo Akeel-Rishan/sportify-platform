@@ -1,6 +1,6 @@
 # Requirements traceability
 
-Status: **awaiting user review**. Source codes link to the [source register](../README.md#source-register). Section numbers refer to the document's numbered headings, not PDF page numbers. SQL sources identify tables; OAS sources identify schemas or routes.
+Status: **scoped database evidence through Step 08 is Oracle-verified under D-22; broader application requirements retain their recorded status.** Source codes link to the [source register](../README.md#source-register). Section numbers refer to the document's numbered headings, not PDF page numbers. SQL sources identify tables; OAS sources identify schemas or routes.
 
 IDs `REQ-001` onward are permanent: do not reuse or renumber them. Business behavior remains **Not started**. REQ-047 has scaffold evidence from Step 02; broader deployment, security and API requirements are not complete. Intended verification is a future gate unless evidence is linked. Statuses may be In progress, Blocked (with reason), Verified (with evidence), or Deferred (only with explicit scope decision). Q-IDs resolve in the [decision register](decision-register.md). Owners are logical modules.
 
@@ -103,3 +103,13 @@ The user explicitly approves the Step 07 structures/grid and 20 tenant permissio
 ## Step 07 Oracle verification evidence, 23 November 2026
 
 The scoped database portion of REQ-048/REQ-050 now has real application clean apply/repeat/catalog and isolated integrity/lock/recovery/runtime-denial evidence. REQ-010 has actual eight-sport/20-permission seed verification and tenant-safe structural tests; runtime configuration/authorization behavior remains future work. These broad requirements retain in-progress status for later tables/workflows/deployment concerns; no authentication, tenant authorization, onboarding, pricing/availability or booking requirement is completed from DDL alone. [Dated results](../database/step07-verification.md) and [progress](progress.md) supersede the historical pending statements above without changing requirement IDs.
+
+## Historical Step 08 draft overlay before D-22
+
+REQ-013-028/029-033 and scoped REQ-048/050 gain prepared forward SQL and explicit integrity/A-E transaction-harness test sources. D-21 completes scoped policy acceptance; Oracle migration/integrity/concurrency evidence is still required. All broader workflow requirements remain unverified for Step 08. Existing REQ IDs and Step 07 passes remain stable; no availability/booking/payment/authorization requirement is marked production-complete. [Exact enforcement layers and incomplete gate](../database/step08-verification.md).
+
+D-21 explicitly approves the Step 08 policy subparts of REQ-015-020/026-031 and Q-02/Q-04/Q-05/Q-07/Q-09 as documented in the decision register. New static guards add PENDING_PAYMENT, zero-total PAID and effective receipt/refund uniqueness, with pending Oracle tests. No REQ is marked implemented end-to-end, and unrelated Q-10/Q-16/Q-19/Q-20/Q-23 subparts remain with their owning step. Ready manifest means approved artifact plan only.
+
+## D-22 Step 08 database verification evidence
+
+Database portions of scoped REQ-013-028/029-033/048/050 now have actual Oracle migration/catalog, 40 integrity-case and A-E concurrency evidence plus cleanup/runtime denials. The application schema has 17 APPLIED/no pending versions. This supersedes earlier Step 08 unverified-storage statements only. Requirement IDs and end-to-end application/UI/authorization statuses remain unchanged: production booking/payment/schedule/maintenance/refund services are not implemented or proved by test-only harnesses. [Evidence and boundaries](../database/step08-verification.md).

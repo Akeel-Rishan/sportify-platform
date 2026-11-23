@@ -1,6 +1,6 @@
 # Relationships and constraints
 
-**Proposed target, not executed DDL.** Source definitions are retained unless the row is marked proposed. Names/columns below are exact for the review design; the dictionary links here rather than duplicating definitions. Each FK targets the listed exact PK/UK order. No FK has ON DELETE CASCADE. All constraints are intended ENABLE VALIDATE, nondeferrable/immediate unless a later reviewed migration explicitly changes them.
+**Step 07 scope is installed; D-21-approved Step 08 artifacts are installed and catalog/integrity-verified under D-22; broader future definitions are proposed.** Source/proposed labels record provenance, while approved marks identify explicit D-21 amendments. Names/columns below are exact; the dictionary links here rather than duplicating definitions. Each FK targets the listed exact PK/UK order. No FK has ON DELETE CASCADE. All constraints are intended ENABLE VALIDATE, nondeferrable/immediate unless a later reviewed migration explicitly changes them.
 
 ## Isolation rules
 
@@ -599,7 +599,8 @@ NOT NULL declarations are in the dictionary. Oracle CHECK accepts TRUE or UNKNOW
 
 <a id="ck_bookings_status"></a>
 
-- `CK_BOOKINGS_STATUS` (source): `CHECK (booking_status IN ('CONFIRMED','CANCELLED','COMPLETED','NO_SHOW'))`
+- `CK_BOOKINGS_STATUS` (approved): `CHECK (booking_status IN ('PENDING_PAYMENT','CONFIRMED','CANCELLED','COMPLETED','NO_SHOW'))`
+- `CK_BOOKINGS_ZERO_PAYMENT` (approved): `CHECK (total_amount <> 0 OR payment_status = 'PAID')`
   <a id="ck_bookings_payment_status"></a>
 - `CK_BOOKINGS_PAYMENT_STATUS` (source): `CHECK (payment_status IN ('UNPAID','PARTIALLY_PAID','PAID','PARTIALLY_REFUNDED','REFUNDED'))`
   <a id="ck_bookings_source"></a>
@@ -940,3 +941,13 @@ Step 07 explicit delta: tenant-owned ROLES also has UQ_ROLES_TENANT_NAME(TENANT_
 D-18 explicitly approves the Step 07 constraint shapes, including quarter-hour resource duration/buffer checks, segmented/conditional schedule times, holiday activation and tenant-safe identity/access links. Other tables and application transitions remain at their owning-step gates.
 
 23 November 2026: scoped Step 07 constraint definitions are installed and metadata-verified; all 33 actual named-constraint integrity cases passed in the disposable owner. Broader future-table definitions and application transactions retain their gates. [Evidence](step07-verification.md).
+
+## Step 08 draft enforcement overlay
+
+Forward SQL 000012-000017 mirrors the ten scoped table definitions/checks and existing source conditional UX_BOOKINGS_SOURCE_HOLD. The slot PK is exactly TENANT_ID/RESOURCE_ID/SLOT_START_UTC; owner XOR and the two item FKs include the same tenant/resource and candidate keys. EXTRACT SECOND=0 rejects seconds and fractional seconds; no status uniqueness bucket or time-dependent expiry check. Conditional conversion keys are both null for manual bookings; a plain tenant/null-source composite UK must not replace that index.
+
+PAYMENTS references booking with tenant/currency; REFUNDS references payment with tenant/currency and derives the booking from that parent. No redundant refund booking identifier exists to disagree. CHECKs are row-local: complete coverage, interval containment, immutable snapshots, aggregate money caps, payment summaries and state transitions require future authorized transactions/reconciliation. External bank references are not globally unique idempotency keys. Restrictive deletion preserves histories; no trigger/cascade/purge. D-21 approves the scoped policies; these definitions passed actual Oracle catalog/integrity verification under D-22 without claiming production workflows. [Matrix](step08-verification.md).
+
+## D-21 approved Step 08 constraint reconciliation
+
+The approved, applied 000015 status CHECK now includes PENDING_PAYMENT. CK_BOOKINGS_ZERO_PAYMENT requires PAID for zero totals; its nonzero branch leaves negative totals exclusively to CK_BOOKINGS_TOTAL, allowing exact failure classification. Booking/payment lifecycles remain independent. Conditional unique indexes UX_PAYMENTS_POSTED_BOOKING and UX_REFUNDS_PROCESSED_PAYMENT enforce only effective successful-record cardinality; voided/requested/rejected history remains separately retained. These are indexes, not fabricated UNIQUE constraints on nullable status tuples. Full-amount equality, parent receipt eligibility, aggregate limits and summary maintenance need future locked transactions. No time-dependent CHECK or trigger is introduced. D-22 records the successful isolated Oracle suite; policy acceptance alone was not treated as enforcement evidence. Earlier Step 08 review-gate notes are superseded by D-21; broader future definitions remain proposed.

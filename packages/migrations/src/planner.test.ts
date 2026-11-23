@@ -156,7 +156,20 @@ it('requires owner-only designated configuration and never echoes secret/descrip
     ORACLE_WALLET_PASSWORD: 'WALLET_SENTINEL',
   };
   expect(parseMigrationConfig(input).ORACLE_MIGRATION_USER).toBe('SPORTIFY_SCHEMA_OWNER');
-  for (const user of ['ADMIN', 'SPORTIFY_API', 'SPORTIFY_WORKER', 'SPORTIFY_TEST_OWNER']) {
+  expect(
+    parseMigrationConfig({
+      ...input,
+      ORACLE_MIGRATION_SCHEMA: 'SPORTIFY_STEP08_TEST_OWNER',
+      ORACLE_MIGRATION_USER: 'SPORTIFY_STEP08_TEST_OWNER',
+    }).ORACLE_MIGRATION_USER,
+  ).toBe('SPORTIFY_STEP08_TEST_OWNER');
+  for (const user of [
+    'ADMIN',
+    'SPORTIFY_API',
+    'SPORTIFY_WORKER',
+    'SPORTIFY_TEST_OWNER',
+    'SPORTIFY_STEP08_TEST_OWNER',
+  ]) {
     let failure: unknown;
     try {
       parseMigrationConfig({ ...input, ORACLE_MIGRATION_USER: user });

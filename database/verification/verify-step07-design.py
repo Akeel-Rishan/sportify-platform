@@ -31,7 +31,8 @@ dictionary = sections((DOC / "data-dictionary.md").read_text(encoding="utf-8"), 
 register = (DOC / "relationships-and-constraints.md").read_text(encoding="utf-8")
 checks = sections(register, 3)
 index_plan = sections((DOC / "index-plan.md").read_text(encoding="utf-8"), 2)
-entries = manifest["migrations"]
+entries = manifest["migrations"][:11]
+assert len(entries) == 11, "Step 07 baseline must remain complete."
 tables = {table["name"]: table for entry in entries for table in entry["tables"]}
 expected = set("SCHEMA_MIGRATIONS TENANTS USERS TENANT_USERS AUTH_SESSIONS EMAIL_VERIFICATION_TOKENS PASSWORD_RESET_TOKENS PLATFORM_ADMINS ROLES PERMISSIONS ROLE_PERMISSIONS USER_ROLES STAFF_ASSIGNMENTS TENANT_INVITATIONS BUSINESSES BUSINESS_PROFILES LOCATIONS SPORTS BUSINESS_SPORTS RESOURCES RESOURCE_FEATURES OPERATING_HOURS HOLIDAYS AVAILABILITY_BLOCKS PRICING_RULES INVITATION_LOCATIONS".split())
 assert set(tables) == expected and len(tables) == 26

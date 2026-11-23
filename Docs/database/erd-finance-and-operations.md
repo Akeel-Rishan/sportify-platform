@@ -1,5 +1,7 @@
 # Finance And Operations
 
+Step 08 overlay: [scoped booking/venue finance draft](erd-step08.md) shows the new structures prepared for this step. Broader entities in this diagram are design proposals, not installed schema; [execution status](step08-verification.md) separates Step 07 evidence from blocked Step 08 verification.
+
 Implementation overlay: this remains the **full proposed Step 05 design**, not an installed Step 07 schema. See [implemented SQL versus pending/Oracle-unverified structures](implemented-schema.md).
 
 Proposed MVP logical diagram. Only included tables appear; shared parent context may repeat across diagrams. Exact columns/composite keys, optional checks and source deviations are in [relationships](relationships-and-constraints.md). Lines summarize multiple related FKs; nullable global scopes do not waive the non-null scope guard. Cardinality shown is schema capacity, not proof of required onboarding/item rows.

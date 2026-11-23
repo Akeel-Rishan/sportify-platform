@@ -1,8 +1,8 @@
 # Decision register
 
-Status: **awaiting user review**. Source codes resolve in the [source register](../README.md#source-register). Requirement IDs resolve in [traceability](requirements-traceability.md); step numbers resolve in the [roadmap](development-roadmap.md).
+Status: **D-18 and D-21 scoped decisions approved; remaining unscoped questions retain their review/verification gates.** Source codes resolve in the [source register](../README.md#source-register). Requirement IDs resolve in [traceability](requirements-traceability.md); step numbers resolve in the [roadmap](development-roadmap.md).
 
-Established D-IDs reflect the user's confirmed Step 01 baseline. Q-IDs remain **open for their stated policy/implementation or verification gates**; proposals are not approvals. Explicitly confirmed subparts (such as D-13 timestamp direction) are identified separately. This register does not silently override a source. To close a Q-ID, record the user's decision, date, affected contracts/migrations/requirements and verification evidence. No Q-ID has been approved in this step.
+Established D-IDs record the user's confirmed direction and later scoped approvals. D-18 and D-21 supersede the corresponding historical proposals; unrelated Q-ID subparts remain open for their stated policy/implementation or verification gates. Approval does not establish implementation or Oracle evidence. To resolve a Q-ID, record the user's decision, date, affected contracts/migrations/requirements and actual verification separately.
 
 ## Established direction
 
@@ -35,6 +35,8 @@ Step 05 clarification: the user's confirmed direction explicitly selects TIMESTA
 
 ### Q-02 — Partial payments and refunds
 
+**Approved scoped resolution, 23 November 2026:** D-21 resolves this Step 08 policy subpart: full-only payment/refund, zero-total PAID/no receipt, dormant partial labels, effective-record uniqueness and ledger-derived transactional summary. The proposal below is retained as source reconciliation; policy approval is no longer pending, while actual Oracle and production-transaction verification remain incomplete.
+
 - **Evidence:** MVP §6.10 and API §5.11 allow only `UNPAID`, `PAID`, `REFUNDED` in active workflows. SQL-001 bookings permits `PARTIALLY_PAID` and `PARTIALLY_REFUNDED`. API §7.4 caps receipt/refund amounts but does not require a full settlement/refund; its error catalog mentions partial-payment exclusion.
 - **Impact:** A valid smaller receipt/refund has no agreed MVP display state; totals and labels could disagree. REQ-029–032.
 - **Proposed resolution:** Keep schema superset states dormant and allow only full outstanding settlement and full remaining refundable amount in MVP. Obtain explicit product confirmation; otherwise approve an intentional scope/contract expansion for partial states. Define zero-value bookings and receipt corrections too. Never silently map a partial amount to `PAID` or `REFUNDED`.
@@ -48,6 +50,8 @@ Step 05 clarification: the user's confirmed direction explicitly selects TIMESTA
 - **Gate:** Step 03 needs a target Oracle environment and restricted connection access. This does not block Step 02 foundation planning.
 
 ### Q-04 — Maintenance concurrency and locking order
+
+**Approved scoped resolution, 23 November 2026:** D-21 approves Tenant -> Location -> Resource -> Hold -> Booking -> Payment and conservative maintenance conflict rejection. PENDING_PAYMENT/CONFIRMED are active; expired holds still conflict while their slot rows exist. Keep the proposed broader entitlement/retention/idempotency requirements scoped to future work; no production coordination or complete race proof is claimed.
 
 Step 05 refinement: the latest concrete proposal is the short tenant-row admission mutex and fixed ordering in [booking invariants](../database/booking-invariants.md). It supersedes the earlier unaccepted preference below for finer-grained admission gates. The coarse design is explicit, unmeasured and requires acceptance/load testing before implementation.
 
@@ -71,6 +75,8 @@ Step 05 refinement: the latest concrete proposal is the short tenant-row admissi
 - **Gate:** Step 06 schedule contract and Step 07 boundary tests. Overnight support expectations require user decision before exposing it.
 
 ### Q-07 — Price at hold versus price at confirmation
+
+**Approved scoped resolution, 23 November 2026:** D-21 accepts the recommended valid-hold quote freeze/copy, one start-time rate, exact half-up line calculation and no expired conversion. Pricing edits cannot change the stored valid quote. Actual application pricing/quote enforcement and ambiguous-rule admission remain future transaction verification.
 
 - **Evidence:** MVP §6.6 describes saving price at confirmation. DB §6 and SQL-001 hold items already snapshot rate/total. API §6.3 converts the hold but does not explicitly settle a rate edit during those ten minutes.
 - **Impact:** Repricing at confirmation can contradict the amount the customer reviewed. REQ-016–017, REQ-023.
@@ -258,3 +264,31 @@ D-18 policy is unchanged. Actual target metadata uses internal LOB storage for R
 Explicit same-lock test-only reconciliation verified exact first-run immutable history/full catalog before its own checksummed 000012 RUNNING/APPLIED lifecycle and link from the retained FAILED original. No automatic relabel, clearing, schema recreation or application repair entry. The resumed full suite passed; controlled failure 000013 and explicit 000015 repair also passed and remain retained. The application owner independently applied all original 11 phases cleanly, repeated no-op and passed exact catalog checks. [Executed evidence](../database/step07-verification.md) includes integrity, seeds, locks, runtime denials, cleanup and local results.
 
 Step 07 engineering/Oracle gate passed and is awaiting user verification. Do not start Step 08 automatically, grant speculative runtime object access or mark authentication/authorization/booking implemented. Future deployments and broader Q-ID decisions retain their own gates.
+
+## D-20 - Step 08 scoped database draft and explicit unresolved policy gates
+
+The new prompt authorizes facilities/booking/venue-finance schema migrations and real tests only. Existing seven facility/schedule/price structures are reused. Prepare only ten missing tables in the same application sequence 000012-000017, excluding deferred PAYMENT_TRANSACTIONS and unscheduled infrastructure. Keep original 11 applied entries/SQL immutable; no destructive replacement or invented backfill.
+
+Explicit Step 08 requirements align with the existing conditional UX_BOOKINGS_SOURCE_HOLD index (both expressions null for manual bookings), tenant/resource/item slot owner keys, positive exact money/currency chain and restrictive history. Refund booking identity is normalized through PAYMENTS; no independently mutable REFUNDS.BOOKING_ID is invented. Existing pricing supports one resource/effective rate; introducing dynamic priority rules would exceed MVP.
+
+New questions are precise subparts of Q-02/Q-04/Q-05/Q-07/Q-09/Q-16/Q-20/Q-23: committed quote/snapshot handling, full settlement/refund/zero-value and balance projection policy, and conservative tenant/location/resource/hold/booking/payment lock order. They remain unanswered. Do not infer acceptance from this prompt's request to confirm approved definitions. D-18 grid/UUID/session/invitation decisions remain approved, while new dependent SQL/test execution stays review-gated. Later cryptographic algorithm/TTL, reporting, subscription, retention duration and idempotency-service decisions remain owning-step work; no purge, gateway or automatic refund is added.
+
+Preserve used SPORTIFY_TEST_OWNER and its retained Step 07 repair versions. Prepare exact allowlisted SPORTIFY_STEP08_TEST_OWNER and separate protected credentials for fresh Step 08 tests, without extending runtime identities or granting runtime DDL. No provisioning/migration was executed. [Current evidence/prerequisites](../database/step08-verification.md). This decision records scope/procedure, not approval of the open policies or successful Oracle verification.
+
+## D-21 - Explicit Step 08 policy approval and reconciliation, 23 November 2026
+
+The user explicitly approves all three Step 08 policy groups and their recommendations. Do not request these approvals again. This supersedes D-20's unanswered-policy status only; D-18 and unrelated future Q-ID subparts remain intact.
+
+1. Booking/hold: ACTIVE -> CONVERTED/EXPIRED/RELEASED through the corresponding controlled atomic transaction; UTC expiry; one conversion; expired rows retain protection until safe release. Guest holds need no CUSTOMER and use hashed ownership tokens. Booking states are PENDING_PAYMENT, CONFIRMED, COMPLETED, CANCELLED and NO_SHOW; the first two are active, independently of payment status. Preserve committed valid-hold quotes against price edits, copy original rate/currency/duration/breakdown/buffer/policy snapshots without repricing at conversion, retain historical financial snapshots and reject expired conversion. Recommended one start-time rate and exact half-up line calculation are accepted; no dynamic pricing is enabled.
+2. Venue finance: full payments only, no overpayments and at most one effective successful posted full receipt per booking; retain voided correction history. Full authorized manual refunds only, linked to an eligible successful receipt, in its currency and not exceeding its eligible original amount. No automatic refund or invented cancellation eligibility/penalty. CASH/BANK_TRANSFER/CARD_AT_VENUE remain the recording methods. Zero totals are PAID/no receipt. Retain UNPAID/PARTIALLY_PAID/PAID/PARTIALLY_REFUNDED/REFUNDED vocabulary; normal MVP operations generate only UNPAID/PAID/REFUNDED. Calculate from effective receipts and processed refunds, excluding ineffective states, with refund precedence and transactional summary/reconciliation. Cancellation alone does not alter the summary; partial/recollection workflows remain deferred.
+3. Concurrency/maintenance: Tenant -> Location -> Resource -> Hold -> Booking -> Payment, relevant rows only, deterministic ascending numeric resource IDs, locks held until commit/rollback and current scope/state rechecked after locking. All future reservation/hold/conversion/cancellation/maintenance/payment/refund writers must coordinate through the same relevant order. Reject maintenance overlapping occupied UTC [start,end) intervals including buffers for PENDING_PAYMENT/CONFIRMED bookings, active holds and expired holds whose slot rows remain. Never silently cancel or refund. This is an approved protocol requirement, not implemented production services or a deadlock/throughput proof.
+
+Read-only target/history inspection confirms only 000001-000011 APPLIED and no SPORTIFY_STEP08_TEST_OWNER. Thus 000012-000017 remain unapplied and can be corrected before first execution. Add PENDING_PAYMENT, CK_BOOKINGS_ZERO_PAYMENT, UX_PAYMENTS_POSTED_BOOKING and UX_REFUNDS_PROCESSED_PAYMENT; the conditional indexes exclude ineffective history in both expressions. Preserve all original applied bytes/history; no account/grant/DDL/DML is executed here. Manifest ready/empty blockedBy records completed policy approval, not Oracle success.
+
+Full amounts, receipt/refund eligibility and cross-row caps, legal state transitions, immutable snapshot updates, complete slot coverage and maintenance coordination remain future authorized transaction logic. Row checks/indexes and test-only harnesses do not implement these services. Reporting, subscription, TTL/cryptographic issuance, idempotency and other unscoped future decisions are not implicitly approved. [Current verification gate and operator instructions](../database/step08-verification.md).
+
+## D-22 - Step 08 Oracle execution, verifier correction and retained recovery
+
+23 November 2026. The explicitly designated development target and separate test owner passed identity/least-privilege/quota/empty-state checks. Initial 000017 DDL completed but catalog comparison rejected Oracle's equivalent simple CASE index representation. A narrowly scoped comparator correction preserves literal/branch semantics and has positive/drift regression tests. No migration SQL was changed. Exact-state isolated recovery verifies the full catalog and empty business tables before adding test-only APPLIED 000018 and atomically linking retained FAILED 000017. The old Step 07 test history is unchanged.
+
+Real fixtures also corrected undocumented FK report-order assumptions, invalid :resource bind naming and zero-wait marker-probe contention. No constraint was disabled/relaxed and no schema/history reset occurred. The final complete isolated suite passed 40 integrity cases, A-E races, cleanup and runtime denials. Only then did application 000012-000017 apply cleanly, repeat no-op and pass catalog/status verification. Application history has no repair/failure/pending; test recovery stays separate. Full local checks passed 201 tests/builds and coverage gates. D-21 policies are unchanged; no new policy approval or production booking/payment implementation is inferred. [Executed evidence](../database/step08-verification.md). Step 08 awaiting user verification; stop before Step 09.

@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { canonicalSql, inspectHistoryPresence, verifyCatalog } from './catalog.js';
+import {
+  canonicalSql,
+  canonicalIndexExpression,
+  inspectHistoryPresence,
+  verifyCatalog,
+} from './catalog.js';
 import type { MigrationSession } from './session.js';
 import type { LoadedMigration } from './manifest.js';
 
@@ -81,9 +86,15 @@ function fixture() {
         STATUS: 'VALID',
         INDEX_TYPE: 'NORMAL',
         UNIQUENESS: 'UNIQUE',
-        FUNCIDX_STATUS: null,
+        FUNCIDX_STATUS: null as string | null,
       },
     ],
+    indexColumns: [{ INDEX_NAME: 'PK_UNIT_TABLE', COLUMN_NAME: 'ID', COLUMN_POSITION: 1 }],
+    indexExpressions: [] as Array<{
+      INDEX_NAME: string;
+      COLUMN_POSITION: number;
+      COLUMN_EXPRESSION: string;
+    }>,
   };
   const execute = vi.fn((sql: string) => {
     let rows: unknown[] = [];
@@ -94,13 +105,72 @@ function fixture() {
       rows = [{ CONSTRAINT_NAME: 'PK_UNIT_TABLE', COLUMN_NAME: 'ID' }];
     else if (sql.includes('FROM USER_INDEXES')) rows = actual.indexes;
     else if (sql.includes('FROM USER_LOBS')) rows = actual.lobs;
-    else if (sql.includes('FROM USER_IND_COLUMNS'))
-      rows = [{ INDEX_NAME: 'PK_UNIT_TABLE', COLUMN_NAME: 'ID', COLUMN_POSITION: 1 }];
+    else if (sql.includes('FROM USER_IND_COLUMNS')) rows = actual.indexColumns;
+    else if (sql.includes('FROM USER_IND_EXPRESSIONS')) rows = actual.indexExpressions;
     return Promise.resolve({ rows });
   });
   return { migration, actual, session: { execute } as unknown as MigrationSession };
 }
 describe('Oracle catalog comparison (unit metadata fixtures)', () => {
+  it('matches observed simple CASE metadata only to the equivalent one-arm equality', () => {
+    const searched = "CASE WHEN PAYMENT_STATUS = 'RECEIVED' THEN TENANT_ID END";
+    expect(
+      canonicalIndexExpression('CASE "PAYMENT_STATUS" WHEN \'RECEIVED\' THEN "TENANT_ID" END '),
+    ).toBe(canonicalIndexExpression(searched));
+    for (const different of [
+      "CASE PAYMENT_STATUS WHEN 'received' THEN TENANT_ID END",
+      "CASE PAYMENT_STATUS WHEN 'RECEIVED' THEN BOOKING_ID END",
+      "CASE PAYMENT_STATUS WHEN 'RECEIVED' THEN TENANT_ID ELSE 0 END",
+      "CASE PAYMENT_STATUS WHEN 'RECEIVED' THEN TENANT_ID WHEN 'VOIDED' THEN TENANT_ID END",
+    ])
+      expect(canonicalIndexExpression(different)).not.toBe(canonicalIndexExpression(searched));
+    expect(canonicalIndexExpression("CASE STATUS WHEN 'A''B' THEN ID END")).toBe(
+      canonicalIndexExpression("CASE WHEN STATUS = 'A''B' THEN ID END"),
+    );
+  });
+  it('verifies actual Oracle CASE index spelling and still rejects changed semantics', async () => {
+    const f = fixture();
+    f.migration.tables[0]!.columns[0]!.type = 'VARCHAR2(20 CHAR)';
+    Object.assign(f.actual.columns[0]!, {
+      DATA_TYPE: 'VARCHAR2',
+      DATA_PRECISION: null,
+      DATA_SCALE: null,
+      DATA_LENGTH: 80,
+      CHAR_LENGTH: 20,
+      CHAR_USED: 'C',
+    });
+    f.migration.indexes.push({
+      name: 'UX_UNIT_CASE',
+      table: 'UNIT_TABLE',
+      unique: true,
+      expressions: ["CASE WHEN ID = 'RECEIVED' THEN ID END"],
+    });
+    f.actual.indexes.push({
+      INDEX_NAME: 'UX_UNIT_CASE',
+      TABLE_NAME: 'UNIT_TABLE',
+      STATUS: 'VALID',
+      INDEX_TYPE: 'FUNCTION-BASED NORMAL',
+      UNIQUENESS: 'UNIQUE',
+      FUNCIDX_STATUS: 'ENABLED',
+    });
+    f.actual.indexColumns.push({
+      INDEX_NAME: 'UX_UNIT_CASE',
+      COLUMN_NAME: 'SYS_NC_CASE$',
+      COLUMN_POSITION: 1,
+    });
+    f.actual.indexExpressions.push({
+      INDEX_NAME: 'UX_UNIT_CASE',
+      COLUMN_POSITION: 1,
+      COLUMN_EXPRESSION: 'CASE "ID" WHEN \'RECEIVED\' THEN "ID" END ',
+    });
+    await expect(
+      verifyCatalog(f.session, [f.migration], 'SPORTIFY_STEP08_TEST_OWNER'),
+    ).resolves.toBeUndefined();
+    f.actual.indexExpressions[0]!.COLUMN_EXPRESSION = 'CASE "ID" WHEN \'VOIDED\' THEN "ID" END';
+    await expect(
+      verifyCatalog(f.session, [f.migration], 'SPORTIFY_STEP08_TEST_OWNER'),
+    ).rejects.toThrow(/CATALOG_MISMATCH/);
+  });
   it('ignores Oracle identifier quoting/formatting but preserves literal meaning', () => {
     expect(canonicalSql(' "STATUS" = \'a b\' ')).toBe("STATUS='a b'");
     expect(canonicalSql("STATUS='A B'")).not.toBe(canonicalSql("STATUS='a b'"));

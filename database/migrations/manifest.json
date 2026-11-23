@@ -4581,6 +4581,2635 @@
           ]
         }
       ]
+    },
+    {
+      "version": "000012",
+      "name": "customers",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000012_customers/001_customers.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000012_customers/002_fk_customers_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000012_customers/003_fk_customers_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000012_customers/004_ix_customers_tenant_mobile.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000012_customers/005_ix_customers_tenant_email.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000012_customers/006_ix_customers_tenant_user.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000012_customers/007_ix_fk_customers_user.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "CUSTOMERS",
+          "columns": [
+            {
+              "name": "CUSTOMER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FULL_NAME",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MOBILE_E164",
+              "type": "VARCHAR2(16 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL_NORMALIZED",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CUSTOMER_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "INTERNAL_NOTES",
+              "type": "VARCHAR2(2000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_CUSTOMERS",
+          "table": "CUSTOMERS",
+          "type": "P",
+          "columns": ["CUSTOMER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_CUSTOMERS_TENANT_ID",
+          "table": "CUSTOMERS",
+          "type": "U",
+          "columns": ["TENANT_ID", "CUSTOMER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_CUSTOMERS_PUBLIC",
+          "table": "CUSTOMERS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_CUSTOMERS_TENANT",
+          "table": "CUSTOMERS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_CUSTOMERS_USER",
+          "table": "CUSTOMERS",
+          "type": "R",
+          "columns": ["USER_ID"],
+          "referencedTable": "USERS",
+          "referencedColumns": ["USER_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_CUSTOMERS_EMAIL_PAIR",
+          "table": "CUSTOMERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(email IS NULL AND email_normalized IS NULL) OR (email IS NOT NULL AND email_normalized IS NOT NULL)"
+        },
+        {
+          "name": "CK_CUSTOMERS_STATUS",
+          "table": "CUSTOMERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "customer_status IN ('ACTIVE','INACTIVE','BLOCKED')"
+        },
+        {
+          "name": "CK_CUSTOMERS_UUID",
+          "table": "CUSTOMERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_CUSTOMERS_ID_POSITIVE",
+          "table": "CUSTOMERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "CUSTOMER_ID>0 AND CUSTOMER_ID=TRUNC(CUSTOMER_ID)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_CUSTOMERS_TENANT_MOBILE",
+          "table": "CUSTOMERS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "MOBILE_E164"]
+        },
+        {
+          "name": "IX_CUSTOMERS_TENANT_EMAIL",
+          "table": "CUSTOMERS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "EMAIL_NORMALIZED"]
+        },
+        {
+          "name": "IX_CUSTOMERS_TENANT_USER",
+          "table": "CUSTOMERS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "USER_ID"]
+        },
+        {
+          "name": "IX_FK_CUSTOMERS_USER",
+          "table": "CUSTOMERS",
+          "unique": false,
+          "expressions": ["USER_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000013",
+      "name": "venue_payment_settings",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000013_venue_payment_settings/001_business_payment_settings.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000013_venue_payment_settings/002_fk_bps_business.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "BUSINESS_PAYMENT_SETTINGS",
+          "columns": [
+            {
+              "name": "BUSINESS_PAYMENT_SETTINGS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACCEPT_CASH",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "ACCEPT_BANK_TRANSFER",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'Y'",
+              "identity": false
+            },
+            {
+              "name": "ACCEPT_CARD_AT_VENUE",
+              "type": "CHAR(1 CHAR)",
+              "nullable": false,
+              "default": "'N'",
+              "identity": false
+            },
+            {
+              "name": "BANK_NAME",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BANK_ACCOUNT_NAME",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BANK_ACCOUNT_NUMBER",
+              "type": "VARCHAR2(80 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BANK_BRANCH",
+              "type": "VARCHAR2(120 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TRANSFER_INSTRUCTIONS",
+              "type": "CLOB",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_BUSINESS_PAYMENT_SETTINGS",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "P",
+          "columns": ["BUSINESS_PAYMENT_SETTINGS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BPS_BUSINESS",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BPS_BUSINESS",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_BUSINESS_PAYMENT_CASH",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "accept_cash IN ('Y','N')"
+        },
+        {
+          "name": "CK_BUSINESS_PAYMENT_BANK",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "accept_bank_transfer IN ('Y','N')"
+        },
+        {
+          "name": "CK_BUSINESS_PAYMENT_CARD",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "accept_card_at_venue IN ('Y','N')"
+        },
+        {
+          "name": "CK_BUSINESS_PAYMENT_SETTINGS_ID_POSITIVE",
+          "table": "BUSINESS_PAYMENT_SETTINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "BUSINESS_PAYMENT_SETTINGS_ID>0 AND BUSINESS_PAYMENT_SETTINGS_ID=TRUNC(BUSINESS_PAYMENT_SETTINGS_ID)"
+        }
+      ],
+      "indexes": [],
+      "seeds": []
+    },
+    {
+      "version": "000014",
+      "name": "booking_holds",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000014_booking_holds/001_booking_holds.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/002_booking_hold_items.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/003_fk_booking_holds_tenant.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/004_fk_booking_hold_items_hold.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/005_fk_booking_hold_items_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/006_fk_booking_hold_items_price.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/007_ix_booking_holds_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/008_ix_holds_global_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/009_ix_booking_hold_items_hold.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/010_ix_bhi_resource_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/011_ix_fk_booking_hold_items_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000014_booking_holds/012_ix_fk_booking_hold_items_price.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "BOOKING_HOLDS",
+          "columns": [
+            {
+              "name": "HOLD_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLD_TOKEN_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CHECKOUT_SESSION_KEY",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLD_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "CONVERTED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RELEASED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_KEY_VERSION",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CANCELLATION_POLICY_SNAPSHOT",
+              "type": "CLOB",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "BOOKING_HOLD_ITEMS",
+          "columns": [
+            {
+              "name": "HOLD_ITEM_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLD_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "STARTS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DURATION_MINUTES",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOURLY_RATE_SNAPSHOT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LINE_TOTAL",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "BUFFER_BEFORE_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUFFER_AFTER_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OCCUPIED_START_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OCCUPIED_END_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PRICING_RULE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_BOOKING_HOLDS",
+          "table": "BOOKING_HOLDS",
+          "type": "P",
+          "columns": ["HOLD_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKING_HOLDS_TENANT_ID",
+          "table": "BOOKING_HOLDS",
+          "type": "U",
+          "columns": ["TENANT_ID", "HOLD_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKING_HOLDS_PUBLIC",
+          "table": "BOOKING_HOLDS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKING_HOLDS_TOKEN",
+          "table": "BOOKING_HOLDS",
+          "type": "U",
+          "columns": ["HOLD_TOKEN_HASH"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_HOLDS_TENANT",
+          "table": "BOOKING_HOLDS",
+          "type": "R",
+          "columns": ["TENANT_ID"],
+          "referencedTable": "TENANTS",
+          "referencedColumns": ["TENANT_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_BOOKING_HOLDS_STATUS",
+          "table": "BOOKING_HOLDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "hold_status IN ('ACTIVE','CONVERTED','EXPIRED','RELEASED')"
+        },
+        {
+          "name": "CK_BOOKING_HOLDS_EXPIRY",
+          "table": "BOOKING_HOLDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "expires_at_utc > created_at_utc"
+        },
+        {
+          "name": "CK_BOOKING_HOLDS_UUID",
+          "table": "BOOKING_HOLDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_BOOKING_HOLDS_HOLD_TOKEN_HASH",
+          "table": "BOOKING_HOLDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(HOLD_TOKEN_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_BOOKING_HOLDS_ID_POSITIVE",
+          "table": "BOOKING_HOLDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "HOLD_ID>0 AND HOLD_ID=TRUNC(HOLD_ID)"
+        },
+        {
+          "name": "CK_HOLD_CHECKOUT_DIGEST",
+          "table": "BOOKING_HOLDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(checkout_session_key,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "PK_BOOKING_HOLD_ITEMS",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "P",
+          "columns": ["HOLD_ITEM_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BHI_TENANT_ID",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "U",
+          "columns": ["TENANT_ID", "HOLD_ITEM_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BHI_RESOURCE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "U",
+          "columns": ["TENANT_ID", "HOLD_ITEM_ID", "RESOURCE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_HOLD_ITEMS_HOLD",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "HOLD_ID"],
+          "referencedTable": "BOOKING_HOLDS",
+          "referencedColumns": ["TENANT_ID", "HOLD_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_HOLD_ITEMS_RESOURCE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_HOLD_ITEMS_PRICE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"],
+          "referencedTable": "PRICING_RULES",
+          "referencedColumns": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_RANGE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ends_at_utc > starts_at_utc"
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_DURATION",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "duration_minutes > 0 AND MOD(duration_minutes,15) = 0 AND (ends_at_utc - starts_at_utc) = NUMTODSINTERVAL(duration_minutes,'MINUTE')"
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_GRID",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "MOD(EXTRACT(MINUTE FROM starts_at_utc),15) = 0 AND EXTRACT(SECOND FROM starts_at_utc) = 0"
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_AMOUNTS",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "hourly_rate_snapshot >= 0 AND line_total >= 0"
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_CURRENCY_CODE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_ID_POSITIVE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "HOLD_ITEM_ID>0 AND HOLD_ITEM_ID=TRUNC(HOLD_ITEM_ID)"
+        },
+        {
+          "name": "CK_BOOKING_HOLD_ITEMS_OCCUPANCY",
+          "table": "BOOKING_HOLD_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "buffer_before_minutes>=0 AND buffer_after_minutes>=0 AND MOD(buffer_before_minutes,15)=0 AND MOD(buffer_after_minutes,15)=0 AND occupied_start_utc=starts_at_utc-NUMTODSINTERVAL(buffer_before_minutes,'MINUTE') AND occupied_end_utc=ends_at_utc+NUMTODSINTERVAL(buffer_after_minutes,'MINUTE')"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_BOOKING_HOLDS_EXPIRY",
+          "table": "BOOKING_HOLDS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "HOLD_STATUS", "EXPIRES_AT_UTC"]
+        },
+        {
+          "name": "IX_HOLDS_GLOBAL_EXPIRY",
+          "table": "BOOKING_HOLDS",
+          "unique": false,
+          "expressions": ["HOLD_STATUS", "EXPIRES_AT_UTC", "HOLD_ID"]
+        },
+        {
+          "name": "IX_BOOKING_HOLD_ITEMS_HOLD",
+          "table": "BOOKING_HOLD_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "HOLD_ID"]
+        },
+        {
+          "name": "IX_BHI_RESOURCE_TIME",
+          "table": "BOOKING_HOLD_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "RESOURCE_ID", "STARTS_AT_UTC", "ENDS_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_BOOKING_HOLD_ITEMS_RESOURCE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"]
+        },
+        {
+          "name": "IX_FK_BOOKING_HOLD_ITEMS_PRICE",
+          "table": "BOOKING_HOLD_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000015",
+      "name": "bookings",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000015_bookings/001_bookings.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/002_booking_items.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/003_fk_bookings_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/004_fk_bookings_customer.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/005_fk_bookings_hold.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/006_fk_bookings_creator.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/007_fk_booking_items_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/008_fk_booking_items_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/009_fk_booking_items_price.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/010_fk_bi_currency.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/011_ix_bookings_tenant_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/012_ix_bookings_payment_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/013_ix_bookings_tenant_customer.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/014_ix_bookings_tenant_business.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/015_ux_bookings_source_hold.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/016_ix_bookings_creator.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/017_ix_fk_bookings_hold.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/018_ix_booking_items_resource_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/019_ix_booking_items_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/020_ix_booking_items_location_time.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/021_ix_fk_booking_items_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/022_ix_fk_booking_items_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/023_ix_fk_booking_items_price.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000015_bookings/024_ix_fk_bi_currency.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "BOOKINGS",
+          "columns": [
+            {
+              "name": "BOOKING_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_REFERENCE",
+              "type": "VARCHAR2(40 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CUSTOMER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SOURCE_HOLD_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'CONFIRMED'",
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'UNPAID'",
+              "identity": false
+            },
+            {
+              "name": "BOOKING_SOURCE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOTAL_AMOUNT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CUSTOMER_NAME_SNAPSHOT",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CUSTOMER_MOBILE_SNAPSHOT",
+              "type": "VARCHAR2(16 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CUSTOMER_EMAIL_SNAPSHOT",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_NOTES",
+              "type": "VARCHAR2(2000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CONFIRMED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "CANCELLATION_POLICY_SNAPSHOT",
+              "type": "CLOB",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_PREFERENCE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "BOOKING_ITEMS",
+          "columns": [
+            {
+              "name": "BOOKING_ITEM_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUSINESS_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LOCATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "STARTS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ENDS_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "DURATION_MINUTES",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOURLY_RATE_SNAPSHOT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LINE_TOTAL",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ITEM_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'ACTIVE'",
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "BUFFER_BEFORE_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BUFFER_AFTER_MINUTES",
+              "type": "NUMBER(4)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OCCUPIED_START_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "OCCUPIED_END_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PRICING_RULE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_BOOKINGS",
+          "table": "BOOKINGS",
+          "type": "P",
+          "columns": ["BOOKING_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKINGS_TENANT_ID",
+          "table": "BOOKINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKINGS_REFERENCE",
+          "table": "BOOKINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_REFERENCE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKINGS_BUSINESS_KEY",
+          "table": "BOOKINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ID", "BUSINESS_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKINGS_CUSTOMER_KEY",
+          "table": "BOOKINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ID", "CUSTOMER_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKINGS_PUBLIC",
+          "table": "BOOKINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKINGS_BUSINESS",
+          "table": "BOOKINGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID"],
+          "referencedTable": "BUSINESSES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKINGS_CUSTOMER",
+          "table": "BOOKINGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "CUSTOMER_ID"],
+          "referencedTable": "CUSTOMERS",
+          "referencedColumns": ["TENANT_ID", "CUSTOMER_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKINGS_HOLD",
+          "table": "BOOKINGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "SOURCE_HOLD_ID"],
+          "referencedTable": "BOOKING_HOLDS",
+          "referencedColumns": ["TENANT_ID", "HOLD_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKINGS_CREATOR",
+          "table": "BOOKINGS",
+          "type": "R",
+          "columns": ["TENANT_ID", "CREATED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKING_CURRENCY",
+          "table": "BOOKINGS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_BOOKINGS_STATUS",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "booking_status IN ('PENDING_PAYMENT','CONFIRMED','CANCELLED','COMPLETED','NO_SHOW')"
+        },
+        {
+          "name": "CK_BOOKINGS_PAYMENT_STATUS",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payment_status IN ('UNPAID','PARTIALLY_PAID','PAID','PARTIALLY_REFUNDED','REFUNDED')"
+        },
+        {
+          "name": "CK_BOOKINGS_SOURCE",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "booking_source IN ('ONLINE','WALK_IN','PHONE','WHATSAPP','STAFF')"
+        },
+        {
+          "name": "CK_BOOKINGS_TOTAL",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "total_amount >= 0"
+        },
+        {
+          "name": "CK_BOOKINGS_UUID",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_BOOKINGS_CURRENCY_CODE",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_BOOKINGS_ID_POSITIVE",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "BOOKING_ID>0 AND BOOKING_ID=TRUNC(BOOKING_ID)"
+        },
+        {
+          "name": "CK_BOOKING_PREFERENCE",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payment_preference IS NULL OR payment_preference IN ('CASH_AT_VENUE','BANK_TRANSFER','CARD_AT_VENUE')"
+        },
+        {
+          "name": "CK_ONLINE_PREFERENCE",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "booking_source<>'ONLINE' OR payment_preference IS NOT NULL"
+        },
+        {
+          "name": "PK_BOOKING_ITEMS",
+          "table": "BOOKING_ITEMS",
+          "type": "P",
+          "columns": ["BOOKING_ITEM_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BOOKING_ITEMS_TENANT_ID",
+          "table": "BOOKING_ITEMS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ITEM_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BI_RESOURCE",
+          "table": "BOOKING_ITEMS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ITEM_ID", "RESOURCE_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_ITEMS_BOOKING",
+          "table": "BOOKING_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BOOKING_ID", "BUSINESS_ID"],
+          "referencedTable": "BOOKINGS",
+          "referencedColumns": ["TENANT_ID", "BOOKING_ID", "BUSINESS_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_ITEMS_RESOURCE",
+          "table": "BOOKING_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_ITEMS_PRICE",
+          "table": "BOOKING_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"],
+          "referencedTable": "PRICING_RULES",
+          "referencedColumns": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BI_CURRENCY",
+          "table": "BOOKING_ITEMS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"],
+          "referencedTable": "BOOKINGS",
+          "referencedColumns": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"],
+          "expression": null
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_RANGE",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ends_at_utc > starts_at_utc"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_DURATION",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "duration_minutes > 0 AND MOD(duration_minutes,15) = 0 AND (ends_at_utc - starts_at_utc) = NUMTODSINTERVAL(duration_minutes,'MINUTE')"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_GRID",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "MOD(EXTRACT(MINUTE FROM starts_at_utc),15) = 0 AND EXTRACT(SECOND FROM starts_at_utc) = 0"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_AMOUNTS",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "hourly_rate_snapshot >= 0 AND line_total >= 0"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_STATUS",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "item_status IN ('ACTIVE','CANCELLED','COMPLETED')"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_CURRENCY_CODE",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_ID_POSITIVE",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "BOOKING_ITEM_ID>0 AND BOOKING_ITEM_ID=TRUNC(BOOKING_ITEM_ID)"
+        },
+        {
+          "name": "CK_BOOKING_ITEMS_OCCUPANCY",
+          "table": "BOOKING_ITEMS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "buffer_before_minutes>=0 AND buffer_after_minutes>=0 AND MOD(buffer_before_minutes,15)=0 AND MOD(buffer_after_minutes,15)=0 AND occupied_start_utc=starts_at_utc-NUMTODSINTERVAL(buffer_before_minutes,'MINUTE') AND occupied_end_utc=ends_at_utc+NUMTODSINTERVAL(buffer_after_minutes,'MINUTE')"
+        },
+        {
+          "name": "CK_BOOKINGS_ZERO_PAYMENT",
+          "table": "BOOKINGS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "total_amount <> 0 OR payment_status = 'PAID'"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_BOOKINGS_TENANT_STATUS",
+          "table": "BOOKINGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_STATUS", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_BOOKINGS_PAYMENT_STATUS",
+          "table": "BOOKINGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "PAYMENT_STATUS", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_BOOKINGS_TENANT_CUSTOMER",
+          "table": "BOOKINGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "CUSTOMER_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_BOOKINGS_TENANT_BUSINESS",
+          "table": "BOOKINGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BUSINESS_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "UX_BOOKINGS_SOURCE_HOLD",
+          "table": "BOOKINGS",
+          "unique": true,
+          "expressions": [
+            "CASE WHEN SOURCE_HOLD_ID IS NOT NULL THEN TENANT_ID END",
+            "CASE WHEN SOURCE_HOLD_ID IS NOT NULL THEN SOURCE_HOLD_ID END"
+          ]
+        },
+        {
+          "name": "IX_BOOKINGS_CREATOR",
+          "table": "BOOKINGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "CREATED_BY_MEMBERSHIP_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_BOOKINGS_HOLD",
+          "table": "BOOKINGS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "SOURCE_HOLD_ID"]
+        },
+        {
+          "name": "IX_BOOKING_ITEMS_RESOURCE_TIME",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "RESOURCE_ID", "STARTS_AT_UTC", "ENDS_AT_UTC"]
+        },
+        {
+          "name": "IX_BOOKING_ITEMS_BOOKING",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ID"]
+        },
+        {
+          "name": "IX_BOOKING_ITEMS_LOCATION_TIME",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "LOCATION_ID", "STARTS_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_BOOKING_ITEMS_BOOKING",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ID", "BUSINESS_ID"]
+        },
+        {
+          "name": "IX_FK_BOOKING_ITEMS_RESOURCE",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BUSINESS_ID", "LOCATION_ID", "RESOURCE_ID"]
+        },
+        {
+          "name": "IX_FK_BOOKING_ITEMS_PRICE",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "RESOURCE_ID", "PRICING_RULE_ID"]
+        },
+        {
+          "name": "IX_FK_BI_CURRENCY",
+          "table": "BOOKING_ITEMS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000016",
+      "name": "slot_reservations_and_cancellations",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/001_resource_slot_reservations.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/002_booking_cancellations.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/003_fk_slot_reservations_resource.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/004_fk_slots_booking_item.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/005_fk_slot_reservations_hold_item.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/006_fk_bc_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/007_fk_booking_cancellations_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/008_ix_slot_reservations_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/009_ix_slot_reservations_hold.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/010_ix_bc_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000016_slot_reservations_and_cancellations/011_ix_booking_cancellations_actor.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "RESOURCE_SLOT_RESERVATIONS",
+          "columns": [
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RESOURCE_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "SLOT_START_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_ITEM_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "HOLD_ITEM_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "BOOKING_CANCELLATIONS",
+          "columns": [
+            {
+              "name": "CANCELLATION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CANCELLED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CANCELLATION_REASON",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CANCELLATION_SOURCE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'STAFF'",
+              "identity": false
+            },
+            {
+              "name": "CANCELLED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_RESOURCE_SLOT_RESERVATIONS",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "type": "P",
+          "columns": ["TENANT_ID", "RESOURCE_ID", "SLOT_START_UTC"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_SLOT_RESERVATIONS_RESOURCE",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "RESOURCE_ID"],
+          "referencedTable": "RESOURCES",
+          "referencedColumns": ["TENANT_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_SLOTS_BOOKING_ITEM",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BOOKING_ITEM_ID", "RESOURCE_ID"],
+          "referencedTable": "BOOKING_ITEMS",
+          "referencedColumns": ["TENANT_ID", "BOOKING_ITEM_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_SLOT_RESERVATIONS_HOLD_ITEM",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "HOLD_ITEM_ID", "RESOURCE_ID"],
+          "referencedTable": "BOOKING_HOLD_ITEMS",
+          "referencedColumns": ["TENANT_ID", "HOLD_ITEM_ID", "RESOURCE_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_SLOT_RESERVATIONS_OWNER",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(booking_item_id IS NOT NULL AND hold_item_id IS NULL) OR (booking_item_id IS NULL AND hold_item_id IS NOT NULL)"
+        },
+        {
+          "name": "CK_SLOT_RESERVATIONS_GRID",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "MOD(EXTRACT(MINUTE FROM slot_start_utc),15) = 0 AND EXTRACT(SECOND FROM slot_start_utc) = 0"
+        },
+        {
+          "name": "PK_BOOKING_CANCELLATIONS",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "P",
+          "columns": ["CANCELLATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_BC_TENANT_ID",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "CANCELLATION_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_BC_BOOKING",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BOOKING_ID"],
+          "referencedTable": "BOOKINGS",
+          "referencedColumns": ["TENANT_ID", "BOOKING_ID"],
+          "expression": null
+        },
+        {
+          "name": "FK_BOOKING_CANCELLATIONS_ACTOR",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "R",
+          "columns": ["TENANT_ID", "CANCELLED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_BC_BOOKING",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "U",
+          "columns": ["TENANT_ID", "BOOKING_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_BC_SOURCE",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "cancellation_source IN ('STAFF','ADMIN','SYSTEM')"
+        },
+        {
+          "name": "CK_BOOKING_CANCELLATIONS_ID_POSITIVE",
+          "table": "BOOKING_CANCELLATIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "CANCELLATION_ID>0 AND CANCELLATION_ID=TRUNC(CANCELLATION_ID)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_SLOT_RESERVATIONS_BOOKING",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ITEM_ID", "RESOURCE_ID"]
+        },
+        {
+          "name": "IX_SLOT_RESERVATIONS_HOLD",
+          "table": "RESOURCE_SLOT_RESERVATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "HOLD_ITEM_ID", "RESOURCE_ID"]
+        },
+        {
+          "name": "IX_BC_BOOKING",
+          "table": "BOOKING_CANCELLATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ID", "CANCELLED_AT_UTC"]
+        },
+        {
+          "name": "IX_BOOKING_CANCELLATIONS_ACTOR",
+          "table": "BOOKING_CANCELLATIONS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "CANCELLED_BY_MEMBERSHIP_ID", "CANCELLED_AT_UTC"]
+        }
+      ],
+      "seeds": []
+    },
+    {
+      "version": "000017",
+      "name": "venue_receipts_and_refunds",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/001_payments.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/002_refunds.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/003_fk_payments_recorder.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/004_fk_payments_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/005_fk_payment_void_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/006_fk_refunds_recorder.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/007_fk_refunds_payment.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/008_ix_payments_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/009_ix_payments_recorder.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/010_ix_fk_payments_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/011_ix_fk_payment_void_actor.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/012_ix_refunds_payment.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/013_ix_refunds_recorder.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/014_ix_fk_refunds_payment.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/015_ux_payments_posted_booking.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000017_venue_receipts_and_refunds/016_ux_refunds_processed_payment.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "PAYMENTS",
+          "columns": [
+            {
+              "name": "PAYMENT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "BOOKING_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_METHOD",
+              "type": "VARCHAR2(30 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'RECEIVED'",
+              "identity": false
+            },
+            {
+              "name": "AMOUNT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_REFERENCE",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RECEIVED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RECORDED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "NOTES",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOIDED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOID_REASON",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "VOIDED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "REFUNDS",
+          "columns": [
+            {
+              "name": "REFUND_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "TENANT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PAYMENT_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "AMOUNT",
+              "type": "NUMBER(12,2)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CURRENCY_CODE",
+              "type": "CHAR(3 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REFUND_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PROCESSED'",
+              "identity": false
+            },
+            {
+              "name": "REFUND_REASON",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PROCESSED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "RECORDED_BY_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "PK_PAYMENTS",
+          "table": "PAYMENTS",
+          "type": "P",
+          "columns": ["PAYMENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_PAYMENTS_TENANT_ID",
+          "table": "PAYMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PAYMENT_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_PAYMENTS_RECORDER",
+          "table": "PAYMENTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "RECORDED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_PAYMENTS_PUBLIC_ID",
+          "table": "PAYMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_PAYMENTS_BOOKING",
+          "table": "PAYMENTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"],
+          "referencedTable": "BOOKINGS",
+          "referencedColumns": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"],
+          "expression": null
+        },
+        {
+          "name": "UQ_PAYMENT_CURRENCY",
+          "table": "PAYMENTS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PAYMENT_ID", "CURRENCY_CODE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_PAYMENT_VOID_ACTOR",
+          "table": "PAYMENTS",
+          "type": "R",
+          "columns": ["TENANT_ID", "VOIDED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "CK_PAYMENTS_STATUS",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payment_status IN ('RECEIVED','VOIDED')"
+        },
+        {
+          "name": "CK_PAYMENTS_AMOUNT",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "amount > 0"
+        },
+        {
+          "name": "CK_PAYMENTS_CURRENCY_CODE",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_PAYMENTS_UUID",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_PAYMENTS_ID_POSITIVE",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "PAYMENT_ID>0 AND PAYMENT_ID=TRUNC(PAYMENT_ID)"
+        },
+        {
+          "name": "CK_PAYMENTS_VOID",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "(payment_status='RECEIVED' AND voided_at_utc IS NULL AND void_reason IS NULL AND VOIDED_BY_MEMBERSHIP_ID IS NULL) OR (payment_status='VOIDED' AND voided_at_utc IS NOT NULL AND void_reason IS NOT NULL AND VOIDED_BY_MEMBERSHIP_ID IS NOT NULL)"
+        },
+        {
+          "name": "CK_PAYMENTS_METHOD",
+          "table": "PAYMENTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "payment_method IN ('CASH','BANK_TRANSFER','CARD_AT_VENUE')"
+        },
+        {
+          "name": "PK_REFUNDS",
+          "table": "REFUNDS",
+          "type": "P",
+          "columns": ["REFUND_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "UQ_REFUNDS_TENANT_ID",
+          "table": "REFUNDS",
+          "type": "U",
+          "columns": ["TENANT_ID", "REFUND_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_REFUNDS_RECORDER",
+          "table": "REFUNDS",
+          "type": "R",
+          "columns": ["TENANT_ID", "RECORDED_BY_MEMBERSHIP_ID"],
+          "referencedTable": "TENANT_USERS",
+          "referencedColumns": ["TENANT_ID", "MEMBERSHIP_ID"],
+          "expression": null
+        },
+        {
+          "name": "UQ_REFUNDS_PUBLIC_ID",
+          "table": "REFUNDS",
+          "type": "U",
+          "columns": ["TENANT_ID", "PUBLIC_ID"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "FK_REFUNDS_PAYMENT",
+          "table": "REFUNDS",
+          "type": "R",
+          "columns": ["TENANT_ID", "PAYMENT_ID", "CURRENCY_CODE"],
+          "referencedTable": "PAYMENTS",
+          "referencedColumns": ["TENANT_ID", "PAYMENT_ID", "CURRENCY_CODE"],
+          "expression": null
+        },
+        {
+          "name": "CK_REFUNDS_AMOUNT",
+          "table": "REFUNDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "amount > 0"
+        },
+        {
+          "name": "CK_REFUNDS_STATUS",
+          "table": "REFUNDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "refund_status IN ('REQUESTED','PROCESSED','REJECTED')"
+        },
+        {
+          "name": "CK_REFUNDS_CURRENCY_CODE",
+          "table": "REFUNDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(CURRENCY_CODE,'^[A-Z]{3}$','c')"
+        },
+        {
+          "name": "CK_REFUNDS_UUID",
+          "table": "REFUNDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(public_id,'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$','c')"
+        },
+        {
+          "name": "CK_REFUNDS_ID_POSITIVE",
+          "table": "REFUNDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REFUND_ID>0 AND REFUND_ID=TRUNC(REFUND_ID)"
+        },
+        {
+          "name": "CK_REFUND_PROCESSED",
+          "table": "REFUNDS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "refund_status<>'PROCESSED' OR processed_at_utc IS NOT NULL"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_PAYMENTS_BOOKING",
+          "table": "PAYMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ID", "RECEIVED_AT_UTC"]
+        },
+        {
+          "name": "IX_PAYMENTS_RECORDER",
+          "table": "PAYMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "RECORDED_BY_MEMBERSHIP_ID", "RECEIVED_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_PAYMENTS_BOOKING",
+          "table": "PAYMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "BOOKING_ID", "CURRENCY_CODE"]
+        },
+        {
+          "name": "IX_FK_PAYMENT_VOID_ACTOR",
+          "table": "PAYMENTS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "VOIDED_BY_MEMBERSHIP_ID"]
+        },
+        {
+          "name": "IX_REFUNDS_PAYMENT",
+          "table": "REFUNDS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "PAYMENT_ID"]
+        },
+        {
+          "name": "IX_REFUNDS_RECORDER",
+          "table": "REFUNDS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "RECORDED_BY_MEMBERSHIP_ID", "CREATED_AT_UTC"]
+        },
+        {
+          "name": "IX_FK_REFUNDS_PAYMENT",
+          "table": "REFUNDS",
+          "unique": false,
+          "expressions": ["TENANT_ID", "PAYMENT_ID", "CURRENCY_CODE"]
+        },
+        {
+          "name": "UX_PAYMENTS_POSTED_BOOKING",
+          "table": "PAYMENTS",
+          "unique": true,
+          "expressions": [
+            "CASE WHEN PAYMENT_STATUS = 'RECEIVED' THEN TENANT_ID END",
+            "CASE WHEN PAYMENT_STATUS = 'RECEIVED' THEN BOOKING_ID END"
+          ]
+        },
+        {
+          "name": "UX_REFUNDS_PROCESSED_PAYMENT",
+          "table": "REFUNDS",
+          "unique": true,
+          "expressions": [
+            "CASE WHEN REFUND_STATUS = 'PROCESSED' THEN TENANT_ID END",
+            "CASE WHEN REFUND_STATUS = 'PROCESSED' THEN PAYMENT_ID END"
+          ]
+        }
+      ],
+      "seeds": []
     }
   ]
 }

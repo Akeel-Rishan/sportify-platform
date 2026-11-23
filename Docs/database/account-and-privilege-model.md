@@ -29,3 +29,11 @@ The separately provisioned SPORTIFY_TEST_OWNER independently passed authenticati
 Actual API/worker grants remain CREATE SESSION only, no object grants or runtime lock/DDL privileges. Both real identities passed positive DUAL checks before exact migration-history read/write/DDL denials in the disposable owner. Additional SELECT/non-mutating UPDATE denials against the installed application history passed. No artificial business grant was added merely to produce a positive test. All 20 permission codes are reference rows; staff assignments still require later authorized role logic. Future reviewed per-object grants must follow actual implemented duties.
 
 [Complete execution and limits](step07-verification.md). Runtime credential separation/rotation recommendation and ADMIN PUBLIC baseline review remain separate; no secret or platform privilege was changed silently.
+
+## Step 08 separate test owner and runtime access
+
+Prepared SPORTIFY_STEP08_TEST_OWNER has the same narrow test-only prerequisites: CREATE SESSION/TABLE/SEQUENCE without admin option, finite 256 MB DATA quota and only SYS.DBMS_LOCK EXECUTE without grant option. The script initially creates it locked/NO AUTHENTICATION, refuses existing users and never resets/drops another identity. It is not provisioned yet. API/worker owner allowlists remain separate; only the operator parser admits this one exact new test identity.
+
+Actual runtime object grants remain none, since no booking/payment/cleanup functionality exists. Planned expiry-worker access must later be limited to required hold/item/slot reads and conditional state/release writes; it receives no finance, migration history or DDL authority merely because those tables exist. [Step 08 safety/evidence](step08-verification.md).
+
+D-22 verified the separate Step 08 test owner and both restricted runtime identities. API/worker still have CREATE SESSION only and no application/test object grant; migration-history read/write and test DDL denials passed after positive connectivity. The operator's test-owner provisioning did not grant runtime schema privileges. Keep migration/test secrets separate. [Actual evidence](step08-verification.md).

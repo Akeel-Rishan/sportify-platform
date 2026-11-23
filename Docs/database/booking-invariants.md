@@ -1,6 +1,8 @@
 # Booking invariants and transaction design
 
-Status: **proposed implementation design, awaiting review** (Q-04-07, Q-09-10, Q-16, Q-19). No workflow is implemented or Oracle-tested. [Dictionary](data-dictionary.md) owns columns; [constraints](relationships-and-constraints.md) owns exact checks/keys.
+Status: **Step 08 booking/hold, quote-protection and locking/maintenance policies approved under D-21.** Broader entitlement, TTL, idempotency and retention subparts remain future decisions (Q-10, Q-16, Q-19). No production workflow is implemented; Step 08 schema/integrity/A-E Oracle verification passed under D-22, while production transaction workflows remain unimplemented. [Dictionary](data-dictionary.md) owns columns; [constraints](relationships-and-constraints.md) owns exact checks/keys.
+
+Step 08 overlay: D-18 approves the 15-minute grid/configurable durations/buffers and split overnight schedules. D-21 now approves the three Step 08 policy groups, including PENDING_PAYMENT and CONFIRMED as active bookings. Ten new SQL structures and a test-only A-E race harness are now [executed and verified](step08-verification.md) under D-22. The pseudocode below remains future production work. No expiry/cleanup/availability/confirmation/cancellation service is implemented by these migrations.
 
 ## Enforcement boundaries
 
@@ -23,13 +25,13 @@ Status: **proposed implementation design, awaiting review** (Q-04-07, Q-09-10, Q
 - Snapshot BUFFER_BEFORE_MINUTES and BUFFER_AFTER_MINUTES as nonnegative multiples of 15. Occupancy is `[start-before,end+after)` and reserves every slot under the same item. Before=15/after=15 for the example reserves UTC 13:15 through 14:30 slot starts (six rows), ending 14:45. Buffers cannot overlap other occupancy and must fit allowed schedules/closures. Charge only service duration. This is the proposed Q-05 policy, not an approved UI promise.
 - Proposed Q-06 target supports cross-midnight service with OPERATING_HOURS.SEGMENT_NO, splitting overnight hours across local dates. Intersect branch hours, resource restrictions and each date's holiday policy for the entire occupied interval. Missing hours mean unavailable. Multiple segments cannot overlap; a closed day cannot also have open segments. Breaks use blocks or separated segments. HOLIDAYS has one branch/date override; complex multi-segment holiday reductions require blocks, not an invented holiday JSON structure. Current API one-entry-per-weekday contract must be deliberately amended before exposing multi-segment scheduling.
 - Minimum/maximum 60/180 minutes, 15-minute slots and zero buffers are source starting values; applicable settings remain configurable. Source advance window 30 days is a proposed initial setting, not an inferred product approval. Ten-minute hold duration is the source default; central versus tenant-specific configuration remains Q-16.
-- Proposed Q-07: select one active rate effective at service start for the full service duration, calculate decimal `ROUND_HALF_UP(hourly_rate * duration_minutes / 60,2)` once per line, and honor the committed hold quote until expiry. Copy rate, total, currency, price-rule reference, buffers and cancellation policy into the booking. An expired/reacquired hold gets a new reviewed quote. No dynamic/tier pricing is introduced.
+- D-21 accepts the recommended Q-07 quote policy: select one active rate effective at service start for the full service duration, calculate decimal `ROUND_HALF_UP(hourly_rate * duration_minutes / 60,2)` once per line, and honor the committed hold quote until expiry. Copy rate, total, currency, price-rule reference, buffers and cancellation policy into the booking. A pricing edit cannot reprice a still-valid hold. An expired/reacquired hold gets a new quote; an expired hold cannot convert. No dynamic/tier pricing is introduced.
 
 ## One locking order
 
-Hold states are ACTIVE -> CONVERTED, EXPIRED or RELEASED; each terminal state retains header/items. Booking/item mapping is CONFIRMED/ACTIVE, CANCELLED/CANCELLED, COMPLETED/COMPLETED and NO_SHOW/COMPLETED (the item means finalized occupancy; attendance is the parent status). No source item NO_SHOW enum is invented. These are service transitions with audit, not CHECK guarantees about the prior state.
+Approved hold states are ACTIVE -> CONVERTED, EXPIRED or RELEASED; only the corresponding authorized atomic conversion, expiration/release or explicit-release transaction makes that transition. Each terminal state retains header/items. Guest holds need no CUSTOMER and store only hashed ownership proof. Booking states are PENDING_PAYMENT, CONFIRMED, COMPLETED, CANCELLED and NO_SHOW, independently of payment status. Booking/item mapping is PENDING_PAYMENT/ACTIVE, CONFIRMED/ACTIVE, CANCELLED/CANCELLED, COMPLETED/COMPLETED and NO_SHOW/COMPLETED. Only the first two parent states are active for admission/maintenance; retained physical slot rows are never silently reusable. No item NO_SHOW enum is invented. These are service transitions with audit, not CHECK guarantees about the prior state.
 
-Use ordinary bounded `FOR UPDATE` waits for domain writes; do not SKIP LOCKED a resource and misreport it available. Proposed conservative MVP protocol:
+Use ordinary bounded `FOR UPDATE` waits for domain writes; do not SKIP LOCKED a resource and misreport it available. D-21 approves Tenant -> Location -> Resource -> Hold -> Booking -> Payment, sorting multiple resources numerically and retaining locks until commit/rollback. Only those existing levels are used by Step 08. The broader future protocol below illustrates where deferred subscription/idempotency levels would fit; it does not approve or implement those future tables/workflows:
 
 ```text
 0. Global plan/reference rows, if a write needs locks there (ascending internal ID).
@@ -46,7 +48,7 @@ Use ordinary bounded `FOR UPDATE` waits for domain writes; do not SKIP LOCKED a 
 
 Skip unused levels; never acquire an earlier level after a later one. Sort NUMBER identifiers numerically in SQL/exact decimal arithmetic, never lexicographically or via lossy JS Number. Do not modify multiple tenants in one domain transaction. Published plan edits/assignment take the plan lock before tenant; ordinary booking admission reads assigned immutable entitlement snapshots and does not later lock the global plan. No network calls occur while these locks are held.
 
-The tenant mutex intentionally serializes relevant writes within a tenant. It is a correctness-first proposal requiring contention/load tests, not a claim of scalable throughput. All reservation, hold release/expiry, cancellation, maintenance, schedule, pricing, resource creation/deactivation and admission/subscription changes must participate. Read-only availability stays advisory. A future finer-grained protocol requires a new reviewed race proof.
+The approved tenant mutex intentionally serializes relevant writes within a tenant. It still requires contention/load tests and makes no scalable-throughput claim. Booking/hold creation, conversion, release/expiry, cancellation, maintenance changes and payment/refund transactions must follow the same relevant lock order. Future schedule, pricing, resource and entitlement changes must coordinate with admission before they are enabled. Read-only availability stays advisory. A future finer-grained protocol requires a new reviewed race proof.
 
 Read identifiers optimistically for discovery only. After the tenant lock, re-read membership, subscription, target rows and complete affected resource set. Include every resource/location owned by any stale multi-resource hold that might be expired. Acquire the complete sorted resource set before hold/header locks; if discovery changes, roll back and restart with an expanded set. Under the tenant mutex conforming writers cannot add phantoms, but the recheck still detects stale discovery. Existing foreign keys alone do not enforce this write protocol.
 
@@ -94,7 +96,8 @@ re-read database UTC time; require expires_at_utc > now
 verify the exact owned slot set still exists and belongs to this hold's items/resources
 resolve/create customer under the tenant using reviewed matching policy (no automatic global link)
 insert booking and exactly one booking item; copy committed quote/buffers/policy without repricing
-validate enabled payment preference; set CONFIRMED, normally UNPAID (zero-value policy Q-02)
+validate enabled payment preference; set an approved booking state independently of payment
+calculate UNPAID for a positive unpaid total; PAID for a zero total without creating a receipt (D-21)
 fresh deadline comparison immediately before moving ownership; expired => no conversion
 UPDATE each owned slot SET BOOKING_ITEM_ID=new_item, HOLD_ITEM_ID=NULL atomically
 require expected count; mark hold CONVERTED and converted_at_utc; source_hold uniqueness guards retry
@@ -114,13 +117,13 @@ DELETE only slot rows joined to this tenant's hold items, preserving any convert
 mark EXPIRED or RELEASED and released_at_utc; write required audit; COMMIT
 ```
 
-All-or-nothing expiry covers the entire hold. Retain header/items. A delayed worker never authorizes treating stale physical rows as reusable without locked cleanup. Read-only availability may ignore an expired hold logically, but only the transaction above makes its slot keys reusable. Confirmation and expiry serialize on the same gates/headers and recheck state after locks.
+All-or-nothing expiry covers the entire hold. Retain header/items. A delayed worker never authorizes treating stale physical rows as reusable without locked cleanup. Read-only availability remains advisory and must not treat filtering an expired hold as releasing its physical keys; only safe transactional release makes those keys reusable. Confirmation and expiry serialize on the same gates/headers and recheck state after locks.
 
 ## Cancel booking
 
 ```text
 discover all booking item/resources; BEGIN, take gates/resources then booking lock in order
-re-authorize tenant/branch/booking.cancel; require CONFIRMED and upcoming service start
+re-authorize tenant/branch/booking.cancel; require active PENDING_PAYMENT or CONFIRMED and apply the separately authorized cancellation-eligibility policy
 same terminal cancellation retry returns history; other terminal state => conflict
 require reason; mark booking CANCELLED and items CANCELLED
 insert one BOOKING_CANCELLATIONS row (unique tenant/booking); MVP source STAFF only
@@ -137,9 +140,17 @@ discover union of old/new interval resources; for location-wide blocks include e
 BEGIN; tenant gate, location gates, complete sorted resources, relevant stale holds, related booking locks
 recheck resource set and latest block/state; expire stale holds through the same protocol
 check overlap using occupied intervals (including buffers), not service duration alone
-if any active booking or unexpired hold conflicts: ROLLBACK and return safe conflict
+if any PENDING_PAYMENT/CONFIRMED booking, active hold or unreleased expired-hold slot conflicts: ROLLBACK and return safe conflict
 insert/update/cancel AVAILABILITY_BLOCKS; never insert a maintenance-owned slot row
 write audit/outbox; COMMIT
 ```
 
-Blocking active holds as well as confirmed bookings is the proposed conservative Q-04 rule. Staff must explicitly resolve a booking first; no silent cancellation. A concurrent booking gets the tenant/resource gate either before the block (block rejects) or after it (booking rejects); both cannot succeed for overlapping intervals if all writers follow the protocol. Location-wide blocks also cover resources created later because creation uses the same tenant/location gate and future admission rechecks the block. Changes examine both old/new intervals; cancellation does not delete booking history.
+Blocking active holds and PENDING_PAYMENT/CONFIRMED bookings is the approved D-21 maintenance rule. Check occupied intervals including buffers in UTC with [start,end) semantics. An expired hold still conflicts while its reservation rows exist; only safe transactional release removes that protection. Completed/cancelled/no-show bookings are not active, but any retained physical slot keys still require authorized reconciliation rather than reuse by assumption. Reject conflicting new/updated maintenance; never automatically cancel a booking or refund a payment. A concurrent reservation gets the same tenant/resource gate either before the block (block rejects) or after it (reservation rejects), provided every future writer follows the protocol. Location-wide changes recheck all affected resources and old/new intervals; cancellation preserves history. Actual production coordination and maintenance races are not implemented by this harness.
+
+## Step 08 transaction-harness boundary
+
+Direct same-slot/rollback races test the unique key as final backstop. Separate cases follow tenant -> location -> numeric resource -> hold -> booking ordering, skip unused subscription/payment levels and never require a future table. The overlapping case uses valid full four-slot intervals, with a unique first loser insert followed by conflict; rollback must remove all loser rows. Independent resources are tested both directly and under the intentionally coarse tenant mutex. Hold ownership is changed by one UPDATE of both owner columns; rollback retains the original four held rows, while successful commit preserves the protected slot set.
+
+Database-side marker requests and the first contender insert run in one Oracle call. A separate session observes lock ownership through bounded nonblocking requests; allocation precedes DML because DBMS_LOCK.ALLOCATE_UNIQUE commits. No arbitrary sleep or runtime DDL grant. This source harness is not Oracle concurrency evidence until run and does not implement authorization, entitlement, operating-hours/maintenance admission, expiry, idempotency or complete production booking services.
+
+D-22: actual A-E tests passed with separate sessions, uncommitted-writer invisibility, complete loser rollback and atomic conversion/rollback. The marker contender waits at most five seconds for a probe briefly held by the observer; observer probes are bounded/nonblocking, not arbitrary sleeps. This is test-harness evidence, not complete production hold-expiry/cancellation/maintenance/refund concurrency or throughput proof.

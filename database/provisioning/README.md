@@ -94,3 +94,11 @@ Script paths above assume SQLcl's working directory is the repository. With a di
 - [SQL*Plus PASSWORD hidden input](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/SQL-Plus-command-reference.html).
 - [Oracle 19c schema-only accounts and enabling authentication](https://docs.oracle.com/en/database/oracle/oracle-database/19/dbseg/schema-only-accounts.html).
 - [CREATE TABLE / identity and schema prerequisites](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-TABLE.html), [CREATE SEQUENCE](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-SEQUENCE.html).
+
+## Step 08 separate disposable target (prepared, not executed)
+
+The old SPORTIFY_TEST_OWNER retains Step 07 test-only versions 000012-000015. Preserve it. New scripts provision-step08-test-owner.sql and verify-step08-test-owner.sql target only SPORTIFY_STEP08_TEST_OWNER with exact designated database/ADMIN, DISPOSABLE_STEP08_OWNER confirmation and finite owner_quota_mb binds. They create no application tables, refuse existing identities and preserve partial DDL state for explicit recovery. No account/password/grant is executed by source preparation.
+
+Use the [complete operator sequence](../../Docs/database/step08-verification.md#separate-disposable-operator-preparation). Configure the new initial password privately in Database Actions, with Password Expired/Account Locked OFF and Web/REST/Graph/OML disabled. Verify before first use. The private oracle-step08-tests.env file is prepared outside source with its new owner password empty; the tracked step08-test-migrations.env.example remains placeholders. Never reuse owner/runtime credentials for the new identity automatically or paste a password into chat/SQL/history. D-21 policy acceptance is recorded; the new test-account preparation, authentication and full preflight must precede any migration/fixture execution.
+
+D-22 current-target note: the operator completed Step 08 account creation/authentication and the full Oracle suite/application migration sequence passed. Do not rerun provisioning against that existing owner. Source scripts remain one-time preparation tools with existing-account refusal; preserve both test owners and repair histories. [Executed evidence and remaining limits](../../Docs/database/step08-verification.md).
