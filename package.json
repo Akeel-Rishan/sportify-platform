@@ -35,7 +35,8 @@
     "test:oracle:step07": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-migration-runner.mjs",
     "db:lock-check": "pnpm --filter \"@sportify/migrations...\" -r build && node infra/scripts/database-lock-check.mjs",
     "test:oracle:step08": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-step08.mjs",
-    "test:oracle:step09": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-step09.mjs"
+    "test:oracle:step09": "pnpm --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-step09.mjs",
+    "test:oracle:foundation": "pnpm --filter \"@sportify/api...\" --filter \"@sportify/worker...\" --filter \"@sportify/migrations...\" -r build && node database/tests/oracle-step10.mjs"
   },
   "devDependencies": {
     "oracledb": "26.0.0",

@@ -1,6 +1,8 @@
 # MVP development roadmap
 
-Current authorized scope: **Step 09 subscription/website/audit/outbox/job/idempotency database migrations only.** D-24 approves the three structural policy groups while excluding commercial, numeric operating, collection/retention and secret replay configuration. Oracle compatibility/test-owner, complete isolated and application apply/repeat/catalog/history-preservation gates now passed; awaiting user verification. No product website/checkout, background processing, Step 10 or deployment is authorized. [Current evidence and exact staged commands](../database/step09-verification.md). Older milestones below are historical planning references, superseded only within the explicit scoped database prompts.
+The current Step 10 scope is **Oracle foundation verification**. The live gate passed on 27 November 2026 and is awaiting user review. Application implementation requires a separate instruction. [Current evidence](../database/verification-report.md)
+
+The milestone numbering below comes from the original roadmap. The individual database prompts define the current step scope. [Step 09 migration evidence](../database/step09-verification.md)
 
 Historical Step 08 scope: the explicit Step 08 prompt authorizes database-only facilities/booking/venue-finance/reservation migrations and actual Oracle tests, superseding historical Step 08 UI scope. D-21 policies and D-22 verification are recorded. Application 000012-000017 applied/repeated/verified; the dedicated Step 08 suite passed integrity/A-E races/cleanup/runtime denials while preserving Step 07 history. See [current Step 08 status](../database/step08-verification.md). No application service, product screen or Step 09 is authorized.
 

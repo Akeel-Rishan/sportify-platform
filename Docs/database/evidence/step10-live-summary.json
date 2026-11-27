@@ -1,0 +1,2051 @@
+{
+  "testDate": "2026-11-27",
+  "baseRevision": "fbea4cb920eb14eedb6e3542c6f3b4b4bba8243b",
+  "rawLogsRetainedLocally": {
+    "step10-disposable-live.log": {
+      "sha256": "2c92a4769c560ce67041e068d07dbeb53e7284460747f99273f327c10f0ed7a6",
+      "format": "utf-16le"
+    },
+    "step10-disposable-resume.log": {
+      "sha256": "06b5f0f2ffc40af813fb8ab72282dd0312dd0ef4e71a3d13979dbc23f2f88cca",
+      "format": "utf-16le"
+    },
+    "step10-after-live-fix-quality.log": {
+      "sha256": "692253a146106456b7cb543f930575c2a0b89c6c330252d75ab6f9ad55e98a6b",
+      "format": "utf-16le"
+    }
+  },
+  "historicalQuality": {
+    "tests": 213,
+    "source": "tmp/step10-quality.log",
+    "sha256": "708a1bd1cc1f90954b1c0c1f1a8786a3dad1e2b8e681478f178ffdb5172dc3df"
+  },
+  "finalQuality": {
+    "tests": 214,
+    "files": 25,
+    "source": "tmp/step10-after-live-fix-quality.log"
+  },
+  "currentReviewReadOnly": {
+    "tables": 49,
+    "historyEntries": 26,
+    "sports": 8,
+    "permissions": 20,
+    "otherTablesWithRows": 0,
+    "installedVpdPolicies": 0,
+    "serverSessionLimit": null
+  },
+  "initialEvents": [
+    {
+      "event": "step10.verification",
+      "check": "application.read-only-catalog",
+      "result": "PASS",
+      "versions": 26,
+      "databaseVersion": "23.26.4.1.0",
+      "driverVersion": "26.0.0",
+      "thin": true,
+      "node": "v22.22.0",
+      "disposableAccountsPresent": ["SPORTIFY_STEP10_CLEAN_OWNER", "SPORTIFY_STEP10_UPGRADE_OWNER"],
+      "sports": 8,
+      "permissions": 20
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.acquire-release",
+      "result": "PASS",
+      "role": "api",
+      "cycles": 8,
+      "borrowed": 0,
+      "idleOpen": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.query-callback-failure",
+      "result": "PASS",
+      "role": "api",
+      "borrowed": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.transaction-ownership",
+      "result": "PASS",
+      "role": "api",
+      "scope": "real read-only transactions; persistent DML verified separately"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.utc-and-exact-values",
+      "result": "PASS",
+      "role": "api",
+      "sameSessionReinitialized": true,
+      "fractionalDigits": 6,
+      "nodeTimezone": "Asia/Colombo"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.controlled-exhaustion",
+      "result": "PASS",
+      "role": "api",
+      "dedicatedMaximum": 1,
+      "borrowedAfter": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.repeated-shutdown",
+      "result": "PASS",
+      "role": "api",
+      "poolsCreated": 1,
+      "poolsClosed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.failed-session-initialization",
+      "result": "PASS",
+      "role": "api",
+      "method": "test-only invalid timezone issued to actual Oracle; next checkout recovered"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.acquire-release",
+      "result": "PASS",
+      "role": "worker",
+      "cycles": 8,
+      "borrowed": 0,
+      "idleOpen": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.query-callback-failure",
+      "result": "PASS",
+      "role": "worker",
+      "borrowed": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.transaction-ownership",
+      "result": "PASS",
+      "role": "worker",
+      "scope": "real read-only transactions; persistent DML verified separately"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.utc-and-exact-values",
+      "result": "PASS",
+      "role": "worker",
+      "sameSessionReinitialized": true,
+      "fractionalDigits": 6,
+      "nodeTimezone": "Asia/Colombo"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.controlled-exhaustion",
+      "result": "PASS",
+      "role": "worker",
+      "dedicatedMaximum": 1,
+      "borrowedAfter": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.repeated-shutdown",
+      "result": "PASS",
+      "role": "worker",
+      "poolsCreated": 1,
+      "poolsClosed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.failed-session-initialization",
+      "result": "PASS",
+      "role": "worker",
+      "method": "test-only invalid timezone issued to actual Oracle; next checkout recovered"
+    },
+    {
+      "event": "step10.verification",
+      "check": "runtime.application-privileges",
+      "result": "PASS",
+      "role": "api",
+      "exactAccessDenials": 5
+    },
+    {
+      "event": "step10.verification",
+      "check": "runtime.application-privileges",
+      "result": "PASS",
+      "role": "worker",
+      "exactAccessDenials": 5
+    },
+    {
+      "event": "step10.verification",
+      "check": "api.partial-startup-release",
+      "result": "PASS",
+      "failure": "EADDRINUSE"
+    },
+    {
+      "event": "step10.verification",
+      "check": "api.readiness-and-redaction",
+      "result": "PASS",
+      "dependencyFailure": "isolated local Oracle pool closed"
+    },
+    {
+      "event": "step10.verification",
+      "check": "worker.repeated-shutdown",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "application.compiled-entrypoint",
+      "result": "PASS",
+      "role": "api",
+      "signal": "IPC-delivered SIGINT event",
+      "closed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "application.compiled-entrypoint",
+      "result": "PASS",
+      "role": "worker",
+      "signal": "IPC-delivered SIGINT event",
+      "closed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.unknown-populated-refused",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.clean-and-catalog",
+      "result": "PASS",
+      "versions": 26
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.history-protection",
+      "result": "PASS",
+      "cases": 3
+    },
+    {
+      "event": "step10.verification",
+      "check": "seeds.repeat-and-customization",
+      "result": "PASS",
+      "sports": 8,
+      "permissions": 20
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant-relationships",
+      "result": "FAIL",
+      "oracle": null,
+      "driver": null,
+      "classification": null,
+      "migration": "MIGRATION_FAILED"
+    }
+  ],
+  "continuationEvents": [
+    {
+      "event": "step10.verification",
+      "check": "application.read-only-catalog",
+      "result": "PASS",
+      "versions": 26,
+      "databaseVersion": "23.26.4.1.0",
+      "driverVersion": "26.0.0",
+      "thin": true,
+      "node": "v22.22.0",
+      "disposableAccountsPresent": ["SPORTIFY_STEP10_CLEAN_OWNER", "SPORTIFY_STEP10_UPGRADE_OWNER"],
+      "sports": 8,
+      "permissions": 20
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.acquire-release",
+      "result": "PASS",
+      "role": "api",
+      "cycles": 8,
+      "borrowed": 0,
+      "idleOpen": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.query-callback-failure",
+      "result": "PASS",
+      "role": "api",
+      "borrowed": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.transaction-ownership",
+      "result": "PASS",
+      "role": "api",
+      "scope": "real read-only transactions; persistent DML verified separately"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.utc-and-exact-values",
+      "result": "PASS",
+      "role": "api",
+      "sameSessionReinitialized": true,
+      "fractionalDigits": 6,
+      "nodeTimezone": "Asia/Colombo"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.controlled-exhaustion",
+      "result": "PASS",
+      "role": "api",
+      "dedicatedMaximum": 1,
+      "borrowedAfter": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.repeated-shutdown",
+      "result": "PASS",
+      "role": "api",
+      "poolsCreated": 1,
+      "poolsClosed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.failed-session-initialization",
+      "result": "PASS",
+      "role": "api",
+      "method": "test-only invalid timezone issued to actual Oracle; next checkout recovered"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.acquire-release",
+      "result": "PASS",
+      "role": "worker",
+      "cycles": 8,
+      "borrowed": 0,
+      "idleOpen": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.query-callback-failure",
+      "result": "PASS",
+      "role": "worker",
+      "borrowed": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.transaction-ownership",
+      "result": "PASS",
+      "role": "worker",
+      "scope": "real read-only transactions; persistent DML verified separately"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.utc-and-exact-values",
+      "result": "PASS",
+      "role": "worker",
+      "sameSessionReinitialized": true,
+      "fractionalDigits": 6,
+      "nodeTimezone": "Asia/Colombo"
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.controlled-exhaustion",
+      "result": "PASS",
+      "role": "worker",
+      "dedicatedMaximum": 1,
+      "borrowedAfter": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.repeated-shutdown",
+      "result": "PASS",
+      "role": "worker",
+      "poolsCreated": 1,
+      "poolsClosed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "pool.failed-session-initialization",
+      "result": "PASS",
+      "role": "worker",
+      "method": "test-only invalid timezone issued to actual Oracle; next checkout recovered"
+    },
+    {
+      "event": "step10.verification",
+      "check": "runtime.application-privileges",
+      "result": "PASS",
+      "role": "api",
+      "exactAccessDenials": 5
+    },
+    {
+      "event": "step10.verification",
+      "check": "runtime.application-privileges",
+      "result": "PASS",
+      "role": "worker",
+      "exactAccessDenials": 5
+    },
+    {
+      "event": "step10.verification",
+      "check": "api.partial-startup-release",
+      "result": "PASS",
+      "failure": "EADDRINUSE"
+    },
+    {
+      "event": "step10.verification",
+      "check": "api.readiness-and-redaction",
+      "result": "PASS",
+      "dependencyFailure": "isolated local Oracle pool closed"
+    },
+    {
+      "event": "step10.verification",
+      "check": "worker.repeated-shutdown",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "application.compiled-entrypoint",
+      "result": "PASS",
+      "role": "api",
+      "signal": "IPC-delivered SIGINT event",
+      "closed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "application.compiled-entrypoint",
+      "result": "PASS",
+      "role": "worker",
+      "signal": "IPC-delivered SIGINT event",
+      "closed": 1
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.clean-catalog-reconfirmed",
+      "result": "PASS",
+      "versions": 26
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.history-protection",
+      "result": "PASS",
+      "cases": 3
+    },
+    {
+      "event": "step10.verification",
+      "check": "seeds.repeat-and-customization",
+      "result": "PASS",
+      "sports": 8,
+      "permissions": 20
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.root-default-on-null-identity",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "TENANT_USERS",
+      "constraint": "FK_TENANT_USERS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_TENANT_USERS_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "TENANT_USERS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "TENANT_USERS",
+      "constraint": "FK_TENANT_USERS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_TENANT_USERS_TENANT", "FK_TENANT_USERS_INVITER"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "TENANT_USERS",
+      "constraint": "FK_TENANT_USERS_INVITER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_TENANT_USERS_INVITER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "TENANT_USERS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BUSINESSES",
+      "constraint": "FK_BUSINESSES_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BUSINESSES_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BUSINESSES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "LOCATIONS",
+      "constraint": "FK_LOCATIONS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_LOCATIONS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "LOCATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "LOCATIONS",
+      "constraint": "FK_LOCATIONS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_LOCATIONS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "LOCATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BUSINESS_SPORTS",
+      "constraint": "FK_BUSINESS_SPORTS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BUSINESS_SPORTS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BUSINESS_SPORTS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "FK_RESOURCES_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCES_BUSINESS", "FK_RESOURCES_LOCATION", "FK_RESOURCES_BUSINESS_SPORT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "FK_RESOURCES_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCES_BUSINESS", "FK_RESOURCES_LOCATION", "FK_RESOURCES_BUSINESS_SPORT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "FK_RESOURCES_BUSINESS_SPORT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCES_BUSINESS", "FK_RESOURCES_LOCATION", "FK_RESOURCES_BUSINESS_SPORT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "FK_RESOURCES_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCES_BUSINESS", "FK_RESOURCES_LOCATION", "FK_RESOURCES_BUSINESS_SPORT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "FK_RESOURCES_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCES_BUSINESS", "FK_RESOURCES_LOCATION", "FK_RESOURCES_BUSINESS_SPORT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "FK_RESOURCES_BUSINESS_SPORT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCES_BUSINESS", "FK_RESOURCES_LOCATION", "FK_RESOURCES_BUSINESS_SPORT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "RESOURCES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PRICING_RULES",
+      "constraint": "FK_PRICING_RULES_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PRICING_RULES_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "PRICING_RULES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PRICING_RULES",
+      "constraint": "FK_PRICING_RULES_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PRICING_RULES_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "PRICING_RULES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "CUSTOMERS",
+      "constraint": "FK_CUSTOMERS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_CUSTOMERS_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "CUSTOMERS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "SUBSCRIPTIONS",
+      "constraint": "FK_SUBSCRIPTIONS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SUBSCRIPTIONS_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "SUBSCRIPTIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "SUBSCRIPTION_INVOICES",
+      "constraint": "FK_SI_SUBSCRIPTION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SI_SUBSCRIPTION"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "SUBSCRIPTION_INVOICES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "ROLES",
+      "constraint": "FK_ROLES_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_ROLES_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "ROLES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "ROLE_PERMISSIONS",
+      "constraint": "FK_ROLE_PERMISSIONS_ROLE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_ROLE_PERMISSIONS_ROLE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "ROLE_PERMISSIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "USER_ROLES",
+      "constraint": "FK_USER_ROLES_MEMBERSHIP",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_USER_ROLES_MEMBERSHIP"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "USER_ROLES",
+      "constraint": "FK_USER_ROLES_ROLE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_USER_ROLES_ROLE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "USER_ROLES",
+      "constraint": "FK_USER_ROLES_ASSIGNER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_USER_ROLES_ASSIGNER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "USER_ROLES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BUSINESS_PROFILES",
+      "constraint": "FK_BUSINESS_PROFILES_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BUSINESS_PROFILES_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BUSINESS_PROFILES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AUTH_SESSIONS",
+      "constraint": "FK_SESSION_ACTIVE_MEMBER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SESSION_ACTIVE_MEMBER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "AUTH_SESSIONS",
+      "constraint": "CK_SESSION_MEMBER_PAIR",
+      "insert": true,
+      "update": true,
+      "causal": ["CK_SESSION_MEMBER_PAIR"],
+      "kind": "partial-relationship"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCE_FEATURES",
+      "constraint": "FK_RESOURCE_FEATURES_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_RESOURCE_FEATURES_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "RESOURCE_FEATURES",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "STAFF_ASSIGNMENTS",
+      "constraint": "FK_STAFF_MEMBER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_STAFF_MEMBER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "STAFF_ASSIGNMENTS",
+      "constraint": "FK_STAFF_ASSIGNMENTS_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_STAFF_ASSIGNMENTS_LOCATION"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "STAFF_ASSIGNMENTS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "TENANT_INVITATIONS",
+      "constraint": "FK_TENANT_INVITATIONS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": [
+        "FK_TENANT_INVITATIONS_TENANT",
+        "FK_TENANT_INVITATIONS_ROLE",
+        "FK_TENANT_INVITATIONS_INVITER"
+      ],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "TENANT_INVITATIONS",
+      "constraint": "FK_TENANT_INVITATIONS_ROLE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_TENANT_INVITATIONS_ROLE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "TENANT_INVITATIONS",
+      "constraint": "FK_TENANT_INVITATIONS_INVITER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_TENANT_INVITATIONS_INVITER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "TENANT_INVITATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "INVITATION_LOCATIONS",
+      "constraint": "FK_IL_INVITATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_IL_INVITATION"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "INVITATION_LOCATIONS",
+      "constraint": "FK_IL_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_IL_LOCATION"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "INVITATION_LOCATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "OPERATING_HOURS",
+      "constraint": "FK_OPERATING_HOURS_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_OPERATING_HOURS_LOCATION", "FK_OPERATING_HOURS_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "OPERATING_HOURS",
+      "constraint": "FK_OPERATING_HOURS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_OPERATING_HOURS_LOCATION", "FK_OPERATING_HOURS_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "OPERATING_HOURS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "OPERATING_HOURS",
+      "constraint": "FK_OPERATING_HOURS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_OPERATING_HOURS_RESOURCE"],
+      "kind": "same-tenant-resource-location"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "HOLIDAYS",
+      "constraint": "FK_HOLIDAYS_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_HOLIDAYS_LOCATION"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "HOLIDAYS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AVAILABILITY_BLOCKS",
+      "constraint": "FK_AVAIL_LOC",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_AVAIL_LOC", "FK_AVAIL_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AVAILABILITY_BLOCKS",
+      "constraint": "FK_AVAIL_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_AVAIL_LOC", "FK_AVAIL_RESOURCE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AVAILABILITY_BLOCKS",
+      "constraint": "FK_AVAILABILITY_BLOCKS_CREATOR",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_AVAILABILITY_BLOCKS_CREATOR"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "AVAILABILITY_BLOCKS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AVAILABILITY_BLOCKS",
+      "constraint": "FK_AVAIL_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_AVAIL_RESOURCE"],
+      "kind": "same-tenant-resource-location"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BUSINESS_PAYMENT_SETTINGS",
+      "constraint": "FK_BPS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BPS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BUSINESS_PAYMENT_SETTINGS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_HOLDS",
+      "constraint": "FK_BOOKING_HOLDS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_HOLDS_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKING_HOLDS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_CUSTOMER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_CUSTOMER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_CREATOR",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_CREATOR"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_CUSTOMER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_CUSTOMER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_HOLD",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_HOLD"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "FK_BOOKINGS_CREATOR",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKINGS_CREATOR"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKINGS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_BOOKING",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_BOOKING", "FK_BOOKING_ITEMS_RESOURCE", "FK_BI_CURRENCY"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_BOOKING", "FK_BOOKING_ITEMS_RESOURCE", "FK_BOOKING_ITEMS_PRICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_PRICE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_RESOURCE", "FK_BOOKING_ITEMS_PRICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BI_CURRENCY",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_BOOKING", "FK_BI_CURRENCY"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_RESOURCE"],
+      "kind": "same-tenant-resource-location"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_BOOKING",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_BOOKING", "FK_BOOKING_ITEMS_RESOURCE", "FK_BI_CURRENCY"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_BOOKING", "FK_BOOKING_ITEMS_RESOURCE", "FK_BOOKING_ITEMS_PRICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_PRICE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_RESOURCE", "FK_BOOKING_ITEMS_PRICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BI_CURRENCY",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_BOOKING", "FK_BI_CURRENCY"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_ITEMS",
+      "constraint": "FK_BOOKING_ITEMS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_ITEMS_RESOURCE"],
+      "kind": "same-tenant-resource-location"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "FK_PAYMENTS_RECORDER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PAYMENTS_RECORDER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "FK_PAYMENTS_BOOKING",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PAYMENTS_BOOKING"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "FK_PAYMENTS_RECORDER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PAYMENTS_RECORDER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "FK_PAYMENTS_BOOKING",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PAYMENTS_BOOKING"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "FK_PAYMENT_VOID_ACTOR",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PAYMENT_VOID_ACTOR"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "CK_PAYMENTS_VOID",
+      "insert": true,
+      "update": true,
+      "causal": ["CK_PAYMENTS_VOID"],
+      "kind": "partial-relationship"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "PAYMENTS",
+      "constraint": "FK_PAYMENTS_BOOKING",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_PAYMENTS_BOOKING"],
+      "kind": "same-tenant-currency-parent"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_HOLD_ITEMS",
+      "constraint": "FK_BOOKING_HOLD_ITEMS_HOLD",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_HOLD_ITEMS_HOLD"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_HOLD_ITEMS",
+      "constraint": "FK_BOOKING_HOLD_ITEMS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_HOLD_ITEMS_RESOURCE", "FK_BOOKING_HOLD_ITEMS_PRICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_HOLD_ITEMS",
+      "constraint": "FK_BOOKING_HOLD_ITEMS_PRICE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_HOLD_ITEMS_RESOURCE", "FK_BOOKING_HOLD_ITEMS_PRICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKING_HOLD_ITEMS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_HOLD_ITEMS",
+      "constraint": "FK_BOOKING_HOLD_ITEMS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_HOLD_ITEMS_RESOURCE"],
+      "kind": "same-tenant-resource-location"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCE_SLOT_RESERVATIONS",
+      "constraint": "FK_SLOT_RESERVATIONS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SLOT_RESERVATIONS_RESOURCE", "FK_SLOTS_BOOKING_ITEM"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCE_SLOT_RESERVATIONS",
+      "constraint": "FK_SLOTS_BOOKING_ITEM",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SLOT_RESERVATIONS_RESOURCE", "FK_SLOTS_BOOKING_ITEM"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "RESOURCE_SLOT_RESERVATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCE_SLOT_RESERVATIONS",
+      "constraint": "FK_SLOT_RESERVATIONS_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SLOT_RESERVATIONS_RESOURCE", "FK_SLOT_RESERVATIONS_HOLD_ITEM"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "RESOURCE_SLOT_RESERVATIONS",
+      "constraint": "FK_SLOT_RESERVATIONS_HOLD_ITEM",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SLOT_RESERVATIONS_RESOURCE", "FK_SLOT_RESERVATIONS_HOLD_ITEM"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "RESOURCE_SLOT_RESERVATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_CANCELLATIONS",
+      "constraint": "FK_BC_BOOKING",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BC_BOOKING"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "BOOKING_CANCELLATIONS",
+      "constraint": "FK_BOOKING_CANCELLATIONS_ACTOR",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_BOOKING_CANCELLATIONS_ACTOR"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "BOOKING_CANCELLATIONS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "REFUNDS",
+      "constraint": "FK_REFUNDS_RECORDER",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_REFUNDS_RECORDER"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "REFUNDS",
+      "constraint": "FK_REFUNDS_PAYMENT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_REFUNDS_PAYMENT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "REFUNDS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "REFUNDS",
+      "constraint": "FK_REFUNDS_PAYMENT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_REFUNDS_PAYMENT"],
+      "kind": "same-tenant-currency-parent"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+      "constraint": "FK_SFS_SUBSCRIPTION",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SFS_SUBSCRIPTION"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "SUBSCRIPTION_FEATURE_SNAPSHOTS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "SUBSCRIPTION_PAYMENTS",
+      "constraint": "FK_SP_INVOICE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_SP_INVOICE"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "SUBSCRIPTION_PAYMENTS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "WEBSITE_SETTINGS",
+      "constraint": "FK_WEBSITE_SETTINGS_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_WEBSITE_SETTINGS_BUSINESS"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "WEBSITE_SETTINGS",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "WEBSITE_MEDIA",
+      "constraint": "FK_WEBSITE_MEDIA_BUSINESS",
+      "insert": true,
+      "update": true,
+      "causal": [
+        "FK_WEBSITE_MEDIA_BUSINESS",
+        "FK_WEBSITE_MEDIA_LOCATION",
+        "FK_WEBSITE_MEDIA_RESOURCE"
+      ],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "WEBSITE_MEDIA",
+      "constraint": "FK_WEBSITE_MEDIA_LOCATION",
+      "insert": true,
+      "update": true,
+      "causal": [
+        "FK_WEBSITE_MEDIA_BUSINESS",
+        "FK_WEBSITE_MEDIA_LOCATION",
+        "FK_WEBSITE_MEDIA_RESOURCE"
+      ],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "WEBSITE_MEDIA",
+      "constraint": "FK_WEBSITE_MEDIA_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": [
+        "FK_WEBSITE_MEDIA_BUSINESS",
+        "FK_WEBSITE_MEDIA_LOCATION",
+        "FK_WEBSITE_MEDIA_RESOURCE"
+      ],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "WEBSITE_MEDIA",
+      "constraint": "CK_WEBSITE_MEDIA_OWNER",
+      "insert": true,
+      "update": true,
+      "causal": ["CK_WEBSITE_MEDIA_OWNER"],
+      "kind": "partial-relationship"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "WEBSITE_MEDIA",
+      "constraint": "TENANT_ID",
+      "insert": true,
+      "update": true,
+      "causal": [],
+      "kind": "required-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "WEBSITE_MEDIA",
+      "constraint": "FK_WEBSITE_MEDIA_RESOURCE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_WEBSITE_MEDIA_RESOURCE"],
+      "kind": "same-tenant-resource-location"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AUDIT_LOGS",
+      "constraint": "FK_AUDIT_LOGS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_AUDIT_LOGS_TENANT", "FK_AUDIT_LOGS_MEMBERSHIP_ACTOR"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "AUDIT_LOGS",
+      "constraint": "FK_AUDIT_LOGS_MEMBERSHIP_ACTOR",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_AUDIT_LOGS_MEMBERSHIP_ACTOR"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "AUDIT_LOGS",
+      "constraint": "CK_AUDIT_ACTOR",
+      "insert": true,
+      "update": true,
+      "causal": ["CK_AUDIT_ACTOR", "CK_AUDIT_LOGS_MEMBERSHIP"],
+      "kind": "partial-relationship"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "OUTBOX_EVENTS",
+      "constraint": "FK_OUTBOX_EVENTS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_OUTBOX_EVENTS_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "JOB_QUEUE",
+      "constraint": "FK_JOB_QUEUE_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_JOB_QUEUE_TENANT", "FK_JOB_EVENT_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "JOB_QUEUE",
+      "constraint": "FK_JOB_EVENT_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_JOB_EVENT_TENANT"],
+      "kind": "cross-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "JOB_QUEUE",
+      "constraint": "FK_JOB_EVENT_SCOPE",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_JOB_EVENT_SCOPE"],
+      "kind": "scope-mismatch"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.nullability",
+      "result": "PASS",
+      "table": "JOB_QUEUE",
+      "constraint": "CK_JOB_SOURCE_PAIR",
+      "insert": true,
+      "update": true,
+      "causal": ["CK_JOB_SOURCE_PAIR"],
+      "kind": "partial-relationship"
+    },
+    {
+      "event": "step10.verification",
+      "check": "tenant.foreign-key",
+      "result": "PASS",
+      "table": "IDEMPOTENCY_KEYS",
+      "constraint": "FK_IDEMPOTENCY_KEYS_TENANT",
+      "insert": true,
+      "update": true,
+      "causal": ["FK_IDEMPOTENCY_KEYS_TENANT"],
+      "kind": "missing-tenant"
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.clean-repeat-data-preservation",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "reservations.financial-and-operations",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "transactions.persist-and-cleanup",
+      "result": "PASS",
+      "role": "api",
+      "borrowedAfter": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "transactions.persist-and-cleanup",
+      "result": "PASS",
+      "role": "worker",
+      "borrowedAfter": 0
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.lock-ddl-and-session-close",
+      "result": "PASS",
+      "concurrentRunners": 2
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.upgrade-and-repeat-preservation",
+      "result": "PASS",
+      "prefix": 17,
+      "delta": 9,
+      "tenants": 2
+    },
+    {
+      "event": "step10.verification",
+      "check": "migration.ddl-failure-and-forward-repair",
+      "result": "PASS"
+    },
+    {
+      "event": "step10.verification",
+      "check": "seeds.failure-atomicity",
+      "result": "PASS",
+      "oracle": 1,
+      "retainedFailedVersion": "000030"
+    },
+    {
+      "event": "step10.verification",
+      "check": "application.read-only-catalog",
+      "result": "PASS",
+      "versions": 26,
+      "databaseVersion": "23.26.4.1.0",
+      "driverVersion": "26.0.0",
+      "thin": true,
+      "node": "v22.22.0",
+      "disposableAccountsPresent": ["SPORTIFY_STEP10_CLEAN_OWNER", "SPORTIFY_STEP10_UPGRADE_OWNER"],
+      "sports": 8,
+      "permissions": 20
+    },
+    {
+      "event": "step10.verification",
+      "check": "--continue-after-clean-install",
+      "result": "PASS"
+    }
+  ]
+}

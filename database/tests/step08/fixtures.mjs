@@ -6,8 +6,16 @@ export const TEST_OWNER = 'SPORTIFY_STEP08_TEST_OWNER';
 export const TIMESTAMP_FORMAT = 'YYYY-MM-DD"T"HH24:MI:SS.FF6"Z"';
 export const START = '2035-01-02T08:00:00.000000Z';
 export const END = '2035-01-02T09:00:00.000000Z';
-export function assertTestOwner(owner) {
-  assert.equal(owner, TEST_OWNER);
+export function assertTestOwner(owner, expectedOwner = TEST_OWNER) {
+  assert.ok(
+    [
+      TEST_OWNER,
+      'SPORTIFY_STEP09_TEST_OWNER',
+      'SPORTIFY_STEP10_CLEAN_OWNER',
+      'SPORTIFY_STEP10_UPGRADE_OWNER',
+    ].includes(expectedOwner),
+  );
+  assert.equal(owner, expectedOwner);
 }
 export const timestamp = (value) => ({ kind: 'timestamp', value });
 export const money = (value) => ({ kind: 'money', value });
@@ -64,7 +72,7 @@ export async function reject(session, number, names, work) {
   }
 }
 
-export function fixtureSql(manifest, table, values) {
+export function fixtureValues(manifest, table, values, prefix = 'v') {
   const declared = manifest.migrations
     .flatMap((entry) => entry.tables)
     .find((item) => item.name === table);
@@ -73,10 +81,15 @@ export function fixtureSql(manifest, table, values) {
   assert.ok(columns.every((name) => declared.columns.some((column) => column.name === name)));
   const binds = {},
     expressions = columns.map((column, index) => {
-      const name = 'v' + index,
+      const name = prefix + index,
         value = values[column];
       if (value && typeof value === 'object') {
-        assert.ok(['timestamp', 'money'].includes(value.kind));
+        assert.ok(['timestamp', 'money', 'date'].includes(value.kind));
+        if (value.kind === 'date') {
+          assert.match(value.value, /^\d{4}-\d\d-\d\d$/);
+          binds[name] = value.value;
+          return `TO_DATE(:${name},'YYYY-MM-DD')`;
+        }
         if (value.kind === 'timestamp') {
           assert.match(value.value, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{6}Z$/);
           binds[name] = value.value;
@@ -94,6 +107,11 @@ export function fixtureSql(manifest, table, values) {
       binds[name] = value;
       return ':' + name;
     });
+  return { columns, expressions, binds };
+}
+
+export function fixtureSql(manifest, table, values) {
+  const { columns, expressions, binds } = fixtureValues(manifest, table, values);
   return {
     sql: `INSERT INTO ${table} (${columns.join(',')}) VALUES (${expressions.join(',')})`,
     binds,
@@ -104,16 +122,17 @@ export async function createFixtures(
   session,
   owner,
   manifest,
-  { expectedOwner = TEST_OWNER, commitSetup = true } = {},
+  { expectedOwner = TEST_OWNER, commitSetup = true, capture } = {},
 ) {
   // Shared synthetic venue roots, with explicit fixed disposable identities.
   // Default/Step 08 callers retain their original single-owner boundary.
-  assert.ok([TEST_OWNER, 'SPORTIFY_STEP09_TEST_OWNER'].includes(expectedOwner));
-  assert.equal(owner, expectedOwner);
+  assertTestOwner(owner, expectedOwner);
+  if (capture) assert.equal(owner, 'SPORTIFY_STEP10_CLEAN_OWNER');
   let serial = 9007199254741000n + BigInt(randomInt(1, 1000000)) * 10000n;
   const id = () => String(++serial),
     nonce = randomUUID().replaceAll('-', '').slice(0, 12);
   const insert = async (table, values) => {
+    if (capture) return capture(table, values);
     const statement = fixtureSql(manifest, table, values);
     return session.execute(statement.sql, statement.binds, { autoCommit: false });
   };
@@ -311,8 +330,9 @@ export async function createFixtures(
     }
   };
   // Committed only inside this verified disposable owner for independent sessions.
-  if (commitSetup) await session.commit();
+  if (commitSetup && !capture) await session.commit();
   return {
+    expectedOwner,
     a,
     b,
     tenants,
@@ -330,7 +350,7 @@ export async function createFixtures(
 }
 
 export async function cleanupFixtures(session, owner, manifest, fixtures) {
-  assertTestOwner(owner);
+  assertTestOwner(owner, fixtures.expectedOwner);
   // Require the exact created root identities before deleting any fixture data.
   for (const tenant of fixtures.tenants) {
     const rows = (

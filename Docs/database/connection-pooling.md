@@ -1,5 +1,9 @@
 # Pool, session and transaction ownership
 
+## Step 10 runtime evidence
+
+Real dedicated pools returned to zero borrowed connections for both identities after successes and failures while keeping an idle session. The suite changed the session timezone and confirmed UTC upon checkout of the same Oracle session. It also verified bounded acquisition under exhaustion, cleanup after an Oracle session-initialization failure and native Windows shutdown of both compiled processes. Live persistent writes on the disposable fixture confirmed commit, atomic rollback, unfinished release cleanup and explicit connection reuse. [Evidence and limits](verification-report.md)
+
 Each application creates one process-local Oracle pool. API default maximum **8**, worker **2**. Minimum **0** avoids startup connection storms and lets liveness start while Oracle is unavailable; pool creation is not a connection claim. Increment **1**, idle shrink **60 seconds**. Validation caps maxima at 8/2 pending an explicit capacity review; minimum must not exceed maximum, and increment is positive and no larger than maximum.
 
 Default queue wait **1500ms**, queue lengths **16 API / 4 worker**; connection establishment **5s**, transport **3s**, no retries, ping after **60s idle** with **1500ms** ping timeout. Borrowed connection `callTimeout` defaults to **1500ms** per round-trip. Configurable queue/call bounds are 100–5000ms; idle 10–3600s. These are driver operation budgets, not a single overall HTTP SLA: acquisition, checkout reset, query, rollback and release are successive operations, and a database call may use multiple round-trips. Target/network failure latency must be measured; never treat a Promise.race timeout that abandons a later connection as safe cancellation. Readiness coalesces simultaneous probes and caches both outcomes for 1s after completion.

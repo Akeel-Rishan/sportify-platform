@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { START, END, timestamp, money, slotStarts, reject, assertTestOwner } from './fixtures.mjs';
 
 export async function verifyIntegrity(session, owner, manifest, f) {
-  assertTestOwner(owner);
+  assertTestOwner(owner, f.expectedOwner);
   let cases = 0,
     failed = false,
     cleanupFailed = false;

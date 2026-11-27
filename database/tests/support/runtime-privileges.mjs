@@ -23,9 +23,12 @@ export function runtimeVerificationConfigs(environment) {
 
 export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
   assert.ok(
-    ['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP08_TEST_OWNER', 'SPORTIFY_STEP09_TEST_OWNER'].includes(
-      owner,
-    ),
+    [
+      'SPORTIFY_TEST_OWNER',
+      'SPORTIFY_STEP08_TEST_OWNER',
+      'SPORTIFY_STEP09_TEST_OWNER',
+      'SPORTIFY_STEP10_CLEAN_OWNER',
+    ].includes(owner),
   );
   for (const entry of entries) {
     const database = await createDatabase(entry.config, entry.role);
@@ -84,7 +87,7 @@ export async function verifyRuntimePrivileges(entries, expectedTarget, owner) {
       phase = 'access-denials';
       await denied(`UPDATE ${owner}.SCHEMA_MIGRATIONS SET DESCRIPTION=DESCRIPTION WHERE 1=0`);
       await denied(`SELECT VERSION FROM ${owner}.SCHEMA_MIGRATIONS WHERE 1=0`);
-      if (owner === 'SPORTIFY_STEP09_TEST_OWNER') {
+      if (owner === 'SPORTIFY_STEP09_TEST_OWNER' || owner === 'SPORTIFY_STEP10_CLEAN_OWNER') {
         for (const table of [
           'SUBSCRIPTIONS',
           'SUBSCRIPTION_PAYMENTS',

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
 export async function verifySeedRepeat(session, owner, manifest) {
-  assert.equal(owner, 'SPORTIFY_TEST_OWNER');
+  assert.ok(['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP10_CLEAN_OWNER'].includes(owner));
   const entries = manifest.migrations.filter((entry) => entry.kind === 'seed');
   assert.equal(entries.length, 2);
   async function snapshot() {

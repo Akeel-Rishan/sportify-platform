@@ -77,7 +77,7 @@ const protocolBody = `
  SELECT BOOKING_ID INTO v FROM BOOKINGS WHERE TENANT_ID=:tenant AND BOOKING_ID=:booking FOR UPDATE WAIT 5;`;
 
 export async function verifyConcurrency(config, coordinator, f) {
-  assertTestOwner(config.ORACLE_MIGRATION_SCHEMA);
+  assertTestOwner(config.ORACLE_MIGRATION_SCHEMA, f.expectedOwner);
   let stage = 'connection-setup';
   await withOwnerSession(config, async (a) =>
     withOwnerSession(config, async (b) => {

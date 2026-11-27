@@ -1,6 +1,12 @@
 # SPORTIFY progress
 
-## Current Step 09: executed and verified on Oracle; awaiting user verification
+## Current Step 10 foundation verification
+
+The [Final Engineering Verification Report](../database/step10-final-engineering-review.md) recommends a conditional pass with the 49-table foundation retained. Durable onboarding resume and safe asynchronous email evidence remain owning-phase design conditions. The live engineering gate passed. Final approval is pending user review.
+
+27 November 2026. **The Step 10 Oracle foundation gate passed and is awaiting user review.** The clean apply and verified continuation covered 26 migrations, the 17-to-26 upgrade, seed replay and rollback, 69 tenant and scope foreign keys, reservation races, committed and rolled-back runtime writes, retained failure and repair, and pool and privilege checks. Both disposable owners passed the read-only cleanup audit. The application catalog and original history passed final read-only verification. [Full evidence and limits](../database/verification-report.md)
+
+## Step 09: executed and verified on Oracle; awaiting user verification
 
 23 November 2026. D-24 approvals/exclusions remain unchanged. Operator compatibility and test-owner postconditions passed; the private configuration validated. Actual existing application 17-phase catalog/history/table counts were captured before mutation. The complete isolated suite ultimately exited 0: 53 specific integrity rejections plus positive cases, outbox atomic commit/rollback/fan-out, job claim/reclaim/fencing, tenant/platform idempotency contenders/fingerprint/atomic completion, known-fixture cleanup and both runtime identity/DUAL/denial checks.
 

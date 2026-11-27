@@ -11,12 +11,16 @@ const schema = z
       'SPORTIFY_TEST_OWNER',
       'SPORTIFY_STEP08_TEST_OWNER',
       'SPORTIFY_STEP09_TEST_OWNER',
+      'SPORTIFY_STEP10_CLEAN_OWNER',
+      'SPORTIFY_STEP10_UPGRADE_OWNER',
     ]),
     ORACLE_MIGRATION_USER: z.enum([
       'SPORTIFY_SCHEMA_OWNER',
       'SPORTIFY_TEST_OWNER',
       'SPORTIFY_STEP08_TEST_OWNER',
       'SPORTIFY_STEP09_TEST_OWNER',
+      'SPORTIFY_STEP10_CLEAN_OWNER',
+      'SPORTIFY_STEP10_UPGRADE_OWNER',
     ]),
     ORACLE_MIGRATION_PASSWORD: z.string().min(1).max(1024),
     ORACLE_CONNECT_STRING: z
@@ -51,7 +55,7 @@ export function parseMigrationConfig(environment: Environment): MigrationConfig 
     ORACLE_MIGRATION_CONFIRM: 'explicit designated-development target confirmation required',
     ORACLE_MIGRATION_DB_UNIQUE_NAME: 'explicit expected development database unique name required',
     ORACLE_MIGRATION_SCHEMA:
-      'expected application owner or explicitly isolated SPORTIFY_TEST_OWNER / SPORTIFY_STEP08_TEST_OWNER / SPORTIFY_STEP09_TEST_OWNER',
+      'expected application owner or explicitly isolated SPORTIFY_TEST_OWNER / SPORTIFY_STEP08_TEST_OWNER / SPORTIFY_STEP09_TEST_OWNER / exact Step 10 CLEAN_OWNER or UPGRADE_OWNER',
     ORACLE_MIGRATION_USER: 'must be the exact selected owner schema, never ADMIN/API/worker',
     ORACLE_MIGRATION_PASSWORD: 'securely injected nonempty migration-only password required',
     ORACLE_CONNECT_STRING: 'expected option-free TCPS host:port/service from the designated target',

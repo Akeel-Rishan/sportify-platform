@@ -1,5 +1,9 @@
 # Step 07 migration guide
 
+## Step 10 verification
+
+The foundation suite runs the same migration functions in two fresh development owners. CLEAN applies all 26 versions and retains controlled failure and repair history. UPGRADE applies 17 versions, commits synthetic venue and finance fixtures, and checks that the final nine versions and a repeat preserve the fixture data and earlier checksums. Use the read-only baseline mode for the application owner. [Operator setup](step10-operator-setup.md) ? [Actual results](verification-report.md)
+
 **D-18 approves the scoped Step 07 release and all 20 permission codes.** The manifest is ready with no outstanding structural/catalog blockedBy entries. The designated owner/test identity/lock/migration/catalog/integration gates now passed; future invocations still require protected configuration and all safety checks. [Dated executed evidence](step07-verification.md) records the initial test failure and retained explicit repair. See [SQL inventory](implemented-schema.md) and [current verification record](oracle-verification.md).
 
 ## One ledger and phased artifacts

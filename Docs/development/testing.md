@@ -1,5 +1,9 @@
 # Testing and verification
 
+## Step 10 foundation verification
+
+`pnpm test:oracle:foundation` builds the compiled API, worker and migration dependencies and runs the operator-only Oracle suite. The runbook gives the equivalent commands with protected credentials loaded only by Node. Read-only `--baseline` and runtime `--lifecycle` can run independently. A missing owner prerequisite exits 1. Ordinary CI runs the standalone unit tests. [Commands](../database/step10-operator-setup.md) ? [Evidence](../database/verification-report.md)
+
 Use Node 22.22.0 and pinned pnpm 10.34.9. If pnpm is absent, replace `pnpm` below with `npx --yes pnpm@10.34.9`. No global compiler or runner is needed.
 
 | Command                             | Purpose                                                                                    |

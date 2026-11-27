@@ -1,6 +1,12 @@
 # SPORTIFY documentation
 
-Current scope: **Step 09 executed and verified on Oracle; awaiting user verification.** Application 26 APPLIED/no pending migrations and exact 49-table catalog passed after complete isolated verification. Original Step 07/08 history/data counts are preserved; retained test-only CASE recovery remains separate. No new commercial seeds/runtime grants/product services. [Exact Step 09 gates and operator commands](database/step09-verification.md), [subscription history](database/subscription-history.md), [website ownership](database/website-ownership.md), [audit/operations/idempotency](database/step09-operations.md), [scoped ERD](database/erd-step09.md). The Step 08/07 paragraphs below record earlier completed database scopes.
+## Current verification
+
+**Step 10 Oracle foundation gate passed on 27 November 2026 and is awaiting user review.** The clean install and verified continuation covered the entire live suite. [Step 10 verification report](database/verification-report.md) · [Operator setup and retained state](database/step10-operator-setup.md)
+
+The [Final Engineering Verification Report](database/step10-final-engineering-review.md) provides the [61-table reconciliation](database/step10-schema-reconciliation.md), architecture evaluation, outstanding pilot and production gates, and the conditional approval recommendation.
+
+Previous scope: **Step 09 executed and verified on Oracle; awaiting user verification.** Application 26 APPLIED/no pending migrations and exact 49-table catalog passed after complete isolated verification. Original Step 07/08 history/data counts are preserved; retained test-only CASE recovery remains separate. No new commercial seeds/runtime grants/product services. [Exact Step 09 gates and operator commands](database/step09-verification.md), [subscription history](database/subscription-history.md), [website ownership](database/website-ownership.md), [audit/operations/idempotency](database/step09-operations.md), [scoped ERD](database/erd-step09.md). The Step 08/07 paragraphs below record earlier completed database scopes.
 
 Previous scope: **Step 08 executed and verified on Oracle; awaiting user verification.** Application history has 17 APPLIED/no pending migrations; actual catalog has 36 tables/394 columns/320 named constraints/67 explicit indexes. The full isolated suite passed 40 integrity cases and A-E concurrency, cleanup and runtime denials after documented verifier/harness corrections. No application booking/payment service or Step 09. [Dated evidence and retained recovery](database/step08-verification.md).
 

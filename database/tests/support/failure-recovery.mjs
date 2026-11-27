@@ -93,7 +93,7 @@ export function failureFixtureManifest(base) {
 }
 
 export async function verifyFailureRecovery(session, owner, base) {
-  assert.equal(owner, 'SPORTIFY_TEST_OWNER');
+  assert.ok(['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP10_CLEAN_OWNER'].includes(owner));
   const { manifest, failed, later, repair } = failureFixtureManifest(base);
   let actualInvalidColumn = false;
   const observing = {

@@ -15,8 +15,9 @@ export const PAST = '2000-01-01T00:00:00.000000Z';
 export const FUTURE = '2035-01-01T00:00:00.000000Z';
 // Synthetic test data only: enough for claim + reclaim, never runtime policy.
 export const FIXTURE_MAX_ATTEMPTS = 2;
-export function assertTestOwner(owner) {
-  assert.equal(owner, TEST_OWNER);
+export function assertTestOwner(owner, expectedOwner = TEST_OWNER) {
+  assert.ok([TEST_OWNER, 'SPORTIFY_STEP10_CLEAN_OWNER'].includes(expectedOwner));
+  assert.equal(owner, expectedOwner);
 }
 
 export function canonicalFixtureJson(value) {
@@ -56,10 +57,16 @@ const globalPrimary = {
   JOB_QUEUE: 'JOB_ID',
   IDEMPOTENCY_KEYS: 'IDEMPOTENCY_ID',
 };
-export async function createFixtures(session, owner, manifest) {
-  assertTestOwner(owner);
+export async function createFixtures(
+  session,
+  owner,
+  manifest,
+  { expectedOwner = TEST_OWNER, capture } = {},
+) {
+  assertTestOwner(owner, expectedOwner);
   const f = await createVenueRoots(session, owner, manifest, {
-    expectedOwner: TEST_OWNER,
+    expectedOwner,
+    capture,
     commitSetup: false,
   });
   const originalInsert = f.insert;
@@ -233,12 +240,12 @@ export async function createFixtures(session, owner, manifest) {
       return values;
     };
   }
-  await session.commit();
+  if (!capture) await session.commit();
   return f;
 }
 
 export async function cleanupFixtures(session, owner, manifest, f) {
-  assertTestOwner(owner);
+  assertTestOwner(owner, f.expectedOwner);
   for (const tenant of f.tenants) {
     const root = (
       await session.execute(

@@ -11,7 +11,7 @@ import {
 } from './fixtures.mjs';
 
 export async function verifyIntegrity(session, owner, f) {
-  assertTestOwner(owner);
+  assertTestOwner(owner, f.expectedOwner);
   let count = 0;
   const denied = async (code, names, work) => {
     await reject(session, code, names, work);

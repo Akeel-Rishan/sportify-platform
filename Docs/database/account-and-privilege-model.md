@@ -1,5 +1,9 @@
 # Accounts and privileges
 
+## Step 10 disposable verification owners
+
+CLEAN and UPGRADE each use the same narrow migration privileges and a separate credential. Only the uniquely named CLEAN transaction fixture is eligible for temporary SELECT and INSERT grants to the runtime users. The fixture is removed after those checks and subsequent denials check that no direct object grants remain. The Step 10 application privilege checks passed for both runtimes. [Operator setup](step10-operator-setup.md) ? [Live results](verification-report.md)
+
 Step 06 provisioning scripts were initially delivered without live execution. On 22 November 2026, the user supplied a successful preparation and postcondition run after private Database Actions password setup; the owner has a 256 MB DATA quota and runtimes have none. Actual runtime identity/target connectivity and all 14 restricted-privilege metadata assertions subsequently passed; PUBLIC object-baseline review and destructive negative checks remain outside this evidence. The existing design's owner name `SPORTIFY_SCHEMA_OWNER` is retained. The prompt explicitly selects separate API and worker identities; the earlier illustrative `SPORTIFY_APP` is not used.
 
 | Identity              | Purpose and current direct system privileges                              | Quota/current object grants                                  | Future grants and secret responsibility                                                                                                       |

@@ -1,5 +1,9 @@
 # Oracle verification gates
 
+## Step 10 foundation gate
+
+The Oracle foundation gate **passed on 27 November 2026** after the successful clean install and verified continuation on both disposable owners. The final audit showed zero remaining business fixture rows and temporary runtime grants. The application catalog and installed history verification also passed. [Evidence matrix](verification-report.md) · [Operator setup and retained state](step10-operator-setup.md)
+
 ## Step 09 Oracle gate passed
 
 23 November 2026. The complete isolated suite passed 53 integrity cases, transaction/concurrency, cleanup and runtime denials after the documented narrow CASE metadata correction/retained test-only repair. Only then did application 000018-000026 apply cleanly, repeat no-op and pass standard verify/status and independent catalog/history/table-count checks. Application: 26 APPLIED/no repairs/pending, 49 tables, 569 columns, 463 constraints, 101 explicit indexes and zero invalid objects. Additional actual application denials passed for API/worker. Previous Step 07/08 records/checksums/counts remain unchanged; all excluded configuration remains unseeded. [Dated execution/failure/recovery evidence and limits](step09-verification.md). Step 09 awaiting user verification; no Step 10.

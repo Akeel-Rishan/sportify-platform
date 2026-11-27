@@ -1,5 +1,9 @@
 # Explicit Step 07 Oracle testing
 
+## Step 10 foundation suite
+
+Run the complete suite once with the two exact disposable owners and protected configuration. Use the established migration runner and keep the deliberate failure history for review. The application schema has read-only checks. [Prerequisites and commands](../../Docs/database/step10-operator-setup.md) ? [Verification matrix](../../Docs/database/verification-report.md)
+
 `pnpm test:oracle:step07` (compatibility alias: `pnpm test:oracle:runner`) is excluded from ordinary unit tests/PR CI. It requires an approved ready manifest, explicit migration-target confirmation, exact SPORTIFY_TEST_OWNER, a genuinely empty dedicated schema, its protected password/wallet settings and ORACLE_MIGRATION_TEST_CONFIRM=isolated-disposable-empty. Both real API/worker passwords must also be supplied as ORACLE_API_PASSWORD/ORACLE_WORKER_PASSWORD; validation occurs before owner mutation. Missing prerequisites fail, not skip/pass. D-18 now approves the ready manifest; target/lock/disposable identity and secret prerequisites remain mandatory.
 
 The suite is implemented to check:

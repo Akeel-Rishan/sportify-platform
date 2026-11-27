@@ -48,7 +48,7 @@ async function barrier(session, handle, finished) {
 }
 
 export async function verifyTransactions(config, coordinator, manifest, f) {
-  assertTestOwner(config.ORACLE_MIGRATION_SCHEMA);
+  assertTestOwner(config.ORACLE_MIGRATION_SCHEMA, f.expectedOwner);
   await withOwnerSession(config, async (a) =>
     withOwnerSession(config, async (b) => {
       const query = async (session, sql, binds = {}) =>

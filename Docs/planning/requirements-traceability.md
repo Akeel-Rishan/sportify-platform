@@ -1,5 +1,11 @@
 # Requirements traceability
 
+## Step 10 database foundation evidence
+
+The [final review traceability and release register](../database/step10-final-engineering-review.md#mvp-requirements-traceability) maps MVP workflows to the installed Oracle evidence and owning phases. Disputed scope is reconciled table by table in the [schema appendix](../database/step10-schema-reconciliation.md). The review leaves the application requirement statuses below in force.
+
+The Step 10 live Oracle evidence covers installed migration history, catalog and seeds, disposable replay and upgrade, tenant relationships, reservation races, persistent transactions, runtime least privilege and compiled API and worker shutdown. Requirement status for application behavior stays governed by the corresponding service tests. [Verification matrix](../database/verification-report.md)
+
 Status: **scoped database evidence through Step 08 is Oracle-verified under D-22; broader application requirements retain their recorded status.** Source codes link to the [source register](../README.md#source-register). Section numbers refer to the document's numbered headings, not PDF page numbers. SQL sources identify tables; OAS sources identify schemas or routes.
 
 IDs `REQ-001` onward are permanent: do not reuse or renumber them. Business behavior remains **Not started**. REQ-047 has scaffold evidence from Step 02; broader deployment, security and API requirements are not complete. Intended verification is a future gate unless evidence is linked. Statuses may be In progress, Blocked (with reason), Verified (with evidence), or Deferred (only with explicit scope decision). Q-IDs resolve in the [decision register](decision-register.md). Owners are logical modules.

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 
 export async function verifyIntegrity(session, owner, manifest) {
-  assert.equal(owner, 'SPORTIFY_TEST_OWNER');
+  assert.ok(['SPORTIFY_TEST_OWNER', 'SPORTIFY_STEP10_CLEAN_OWNER'].includes(owner));
   const tables = new Map(
     manifest.migrations.flatMap((entry) => entry.tables).map((table) => [table.name, table]),
   );
