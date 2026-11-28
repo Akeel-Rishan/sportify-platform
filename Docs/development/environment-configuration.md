@@ -1,5 +1,9 @@
 # Environment configuration
 
+## Step 12 account authentication
+
+`AUTH_ACCOUNT_ENABLED` defaults to disabled independently of Step 11 registration. The enable path requires the exact dashboard origin, independent CSRF and reset keys, reset key version, shared source counter key, local compromised-password corpus, login pair and session source limits, and reset outbox budget. The example lists the approved configurable defaults for session/reset timings and login/reset source limits. Production requires HTTPS. The separate loopback HTTP exception is valid only in test or development mode. [API environment example](../../apps/api/.env.example) · [Browser and proxy contract](../auth/browser-security.md)
+
 Step 11 adds opt-in API registration settings, externally supplied versioned verification keys, a distinct source-counter key and a local compromised-password corpus. Startup validates the configured corpus before enabling routes. See the [Step 11 configuration](../auth/registration.md#configuration-and-checks) and [delivery key rotation](../auth/email-verification.md#dispatch-and-key-operations).
 
 Step 06 adds required Oracle runtime configuration to API and worker. Email, OCI, authentication and frontend API URL configuration remain deferred. Configuration errors name the variable and its rule, without echoing values or dumping environment objects.

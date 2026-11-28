@@ -4,10 +4,12 @@ import type { AddressInfo } from 'node:net';
 import type { Database } from '@sportify/database';
 import { expect, it, vi } from 'vitest';
 import {
+  createPasswordResetDelivery,
   createVerificationDelivery,
   decodeKeyring,
   decodeSecret,
   deriveVerificationToken,
+  derivePasswordResetToken,
   tokenDigest,
   tokenPattern,
   type VerificationMail,
@@ -21,6 +23,40 @@ const context = {
   expiresAt: '2026-11-27T10:00:00.123456',
 };
 const token = deriveVerificationToken(context, key);
+
+it('binds reset links to their own purpose and rejects a verification digest', async () => {
+  const reset = derivePasswordResetToken(context, key);
+  expect(reset).toMatch(tokenPattern);
+  expect(reset).not.toBe(token);
+  const query = vi.fn<Database['query']>();
+  const send = vi.fn<(mail: VerificationMail) => Promise<void>>().mockResolvedValue(undefined);
+  const options = {
+    database: { query: query as Database['query'] },
+    owner: 'SPORTIFY_STEP12_TEST_OWNER' as const,
+    origin: 'https://app.example.test',
+    keys: new Map([['v1', key]]),
+    send,
+    report: vi.fn(),
+  };
+  const deliver = createPasswordResetDelivery(options);
+  const row = {
+    USER_PUBLIC_ID: context.userId,
+    EMAIL: 'synthetic@example.test',
+    EXPIRES_AT: context.expiresAt,
+  };
+  query.mockResolvedValueOnce({ rows: [{ ...row, TOKEN_HASH: tokenDigest(token) }] });
+  expect(await deliver(reference)).toBe('record_mismatch');
+  expect(send).not.toHaveBeenCalled();
+  query.mockResolvedValueOnce({ rows: [{ ...row, TOKEN_HASH: tokenDigest(reset) }] });
+  expect(await deliver(reference)).toBe('sent');
+  expect(send.mock.calls[0]?.[0].text).toContain(
+    `https://app.example.test/reset-password#token=${reset}`,
+  );
+  expect(query.mock.calls[0]?.[0]).toContain('VW_AUTH_PASSWORD_RESET_MAIL');
+  query.mockResolvedValueOnce({ rows: [] });
+  expect(await deliver(reference)).toBe('ineligible');
+  expect(options.report.mock.calls.flat()).toEqual(['record_mismatch', 'sent', 'ineligible']);
+});
 
 it('derives canonical verification bearers bound to the record, user, expiry and version', () => {
   expect(token).toMatch(tokenPattern);
@@ -84,54 +120,64 @@ it('reports only redacted delivery results and places the bearer in a trusted UR
   ]);
 });
 
-it('passes a reconstructed verification message through a controlled loopback sink', async () => {
-  const inbox: string[] = [];
-  const server = createServer((request, response) => {
-    const chunks: Buffer[] = [];
-    request.on('data', (chunk: Buffer) => chunks.push(chunk));
-    request.on('end', () => {
-      inbox.push(Buffer.concat(chunks).toString());
-      response.writeHead(204).end();
+it.each([
+  { create: createVerificationDelivery, path: '/verify-email', bearer: token },
+  {
+    create: createPasswordResetDelivery,
+    path: '/reset-password',
+    bearer: derivePasswordResetToken(context, key),
+  },
+])(
+  'passes a reconstructed $path message through a controlled loopback sink',
+  async ({ create, path, bearer }) => {
+    const inbox: string[] = [];
+    const server = createServer((request, response) => {
+      const chunks: Buffer[] = [];
+      request.on('data', (chunk: Buffer) => chunks.push(chunk));
+      request.on('end', () => {
+        inbox.push(Buffer.concat(chunks).toString());
+        response.writeHead(204).end();
+      });
     });
-  });
-  await new Promise<void>((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(0, '127.0.0.1', resolve);
-  });
-  try {
-    const query = vi.fn().mockResolvedValue({
-      rows: [
-        {
-          USER_PUBLIC_ID: context.userId,
-          EMAIL: 'synthetic@example.test',
-          EXPIRES_AT: context.expiresAt,
-          TOKEN_HASH: tokenDigest(token),
+    await new Promise<void>((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', resolve);
+    });
+    try {
+      const query = vi.fn().mockResolvedValue({
+        rows: [
+          {
+            USER_PUBLIC_ID: context.userId,
+            EMAIL: 'synthetic@example.test',
+            EXPIRES_AT: context.expiresAt,
+            TOKEN_HASH: tokenDigest(bearer),
+          },
+        ],
+      });
+      const deliver = create({
+        database: { query },
+        owner: 'SPORTIFY_STEP11_TEST_OWNER',
+        keys: new Map([['v1', key]]),
+        origin: 'https://sportify.example.test',
+        report: () => {},
+        async send(mail, signal) {
+          const port = (server.address() as AddressInfo).port;
+          const result = await fetch(`http://127.0.0.1:${port}`, {
+            method: 'POST',
+            body: JSON.stringify(mail),
+            signal,
+          });
+          if (result.status !== 204) throw new Error('Loopback sink failed.');
         },
-      ],
-    });
-    const deliver = createVerificationDelivery({
-      database: { query },
-      owner: 'SPORTIFY_STEP11_TEST_OWNER',
-      keys: new Map([['v1', key]]),
-      origin: 'https://sportify.example.test',
-      report: () => {},
-      async send(mail, signal) {
-        const port = (server.address() as AddressInfo).port;
-        const result = await fetch(`http://127.0.0.1:${port}`, {
-          method: 'POST',
-          body: JSON.stringify(mail),
-          signal,
-        });
-        if (result.status !== 204) throw new Error('Loopback sink failed.');
-      },
-    });
-    expect(await deliver(reference)).toBe('sent');
-    expect(inbox).toHaveLength(1);
-    expect(inbox[0]).toContain('synthetic@example.test');
-    expect(inbox[0]).toContain(`/verify-email#token=${token}`);
-  } finally {
-    await new Promise<void>((resolve, reject) =>
-      server.close((error) => (error ? reject(error) : resolve())),
-    );
-  }
-});
+      });
+      expect(await deliver(reference)).toBe('sent');
+      expect(inbox).toHaveLength(1);
+      expect(inbox[0]).toContain('synthetic@example.test');
+      expect(inbox[0]).toContain(`${path}#token=${bearer}`);
+    } finally {
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+  },
+);

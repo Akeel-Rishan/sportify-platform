@@ -662,7 +662,8 @@ try {
   assert.equal(config.ORACLE_MIGRATION_SCHEMA, owner);
   assert.equal(process.env.ORACLE_MIGRATION_TEST_CONFIRM, 'isolated-disposable-empty');
   const runtimes = runtimeVerificationConfigs(process.env);
-  const manifest = await loadManifest(fileURLToPath(new URL('../', import.meta.url)));
+  const release = await loadManifest(fileURLToPath(new URL('../', import.meta.url)));
+  const manifest = { ...release, migrations: release.migrations.slice(0, 27) };
   assert.equal(manifest.migrations.at(-1).version, '000027');
   const folder = await mkdtemp(join(tmpdir(), 'sportify-step11-oracle-'));
   const corpus = join(folder, 'synthetic-hashes.txt');

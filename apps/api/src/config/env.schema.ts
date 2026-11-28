@@ -2,6 +2,8 @@ import { parseDatabaseConfig, type DatabaseConfig } from '@sportify/database';
 import { nodeEnvSchema, parseEnvironment, type Environment } from '@sportify/validation';
 import { z } from 'zod';
 import { parseRegistrationConfig, type RegistrationConfig } from '../modules/auth/auth-config.js';
+import { parseSessionConfig, type SessionConfig } from '../modules/auth/session-config.js';
+import { EnvironmentError } from '@sportify/validation';
 
 export const apiEnvSchema = z.object({
   NODE_ENV: nodeEnvSchema,
@@ -22,13 +24,31 @@ export function parseApiEnv(environment: Environment): ApiEnv {
   });
 }
 
-export type ApiConfig = ApiEnv & { database: DatabaseConfig; registration?: RegistrationConfig };
+export type ApiConfig = ApiEnv & {
+  database: DatabaseConfig;
+  registration?: RegistrationConfig;
+  account?: SessionConfig;
+};
 export function parseApiConfig(environment: Environment): ApiConfig {
   const config: ApiConfig = {
     ...parseApiEnv(environment),
     database: parseDatabaseConfig(environment, 'api'),
   };
   const registration = parseRegistrationConfig(environment);
+  const account = parseSessionConfig(environment, config.NODE_ENV);
+  if (
+    registration &&
+    account &&
+    [...registration.keys.values()].some(
+      (key) =>
+        key.equals(account.csrfKey) ||
+        [...account.resetKeys.values()].some((reset) => reset.equals(key)),
+    )
+  )
+    throw new EnvironmentError([
+      'Account reset and CSRF keys must be distinct from verification keys.',
+    ]);
   if (registration) config.registration = registration;
+  if (account) config.account = account;
   return config;
 }

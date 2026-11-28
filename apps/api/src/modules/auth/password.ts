@@ -1,10 +1,26 @@
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { open } from 'node:fs/promises';
-import { argon2id, hash } from 'argon2';
+import { argon2id, hash, verify } from 'argon2';
 import { ApplicationError } from '../../common/errors/application-error.js';
 
 const stride = 41;
 const settings = { type: argon2id, memoryCost: 19 * 1024, timeCost: 2, parallelism: 1 };
+const storedHashPattern =
+  /^\$argon2id\$v=19\$m=19456,t=2,p=1\$[A-Za-z0-9+/]{22}\$[A-Za-z0-9+/]{43}$/;
+let inProgress = 0;
+
+async function bounded<T>(work: () => Promise<T>): Promise<T> {
+  if (inProgress >= 2) throw new ApplicationError('RATE_LIMITED', { 'Retry-After': '1' });
+  inProgress++;
+  try {
+    return await work();
+  } catch (error) {
+    if (error instanceof ApplicationError) throw error;
+    throw new ApplicationError('SERVICE_UNAVAILABLE');
+  } finally {
+    inProgress--;
+  }
+}
 
 export function passwordIsValid(password: string): boolean {
   if (password.length < 15 || password.length > 256 || /\p{Surrogate}/u.test(password))
@@ -49,21 +65,25 @@ async function containsCompromisedPassword(path: string, password?: string): Pro
 }
 
 export function createPasswordEncoder(path: string): (password: string) => Promise<string> {
-  let inProgress = 0;
   return async (password) => {
     if (!passwordIsValid(password)) throw new ApplicationError('BAD_REQUEST');
-    if (inProgress >= 2) throw new ApplicationError('RATE_LIMITED', { 'Retry-After': '1' });
-    inProgress++;
-    try {
+    return bounded(async () => {
       if (await containsCompromisedPassword(path, password))
         throw new ApplicationError('BUSINESS_RULE_VIOLATION');
       return await hash(password, settings);
-    } catch (error) {
-      if (error instanceof ApplicationError) throw error;
-      throw new ApplicationError('SERVICE_UNAVAILABLE');
-    } finally {
-      inProgress--;
-    }
+    });
+  };
+}
+
+export async function createPasswordVerifier() {
+  const dummy = await bounded(() => hash(randomBytes(32), settings));
+  return async (password: string, encoded: string | null): Promise<boolean> => {
+    const usable = encoded !== null && storedHashPattern.test(encoded);
+    return bounded(async () => {
+      // Restrict the stored format to the approved work factor before invoking native code.
+      const matches = await verify(usable ? encoded : dummy, password);
+      return usable && matches;
+    });
   };
 }
 

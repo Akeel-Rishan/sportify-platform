@@ -1,5 +1,9 @@
 # Accounts and privileges
 
+## Step 12 account authentication
+
+The Step 12 grant matrix gives the API access to dashboard session columns, a limited cross-audience revocation view and the existing reset-token table. It builds on Step 11's user, membership, rate-limit, audit and outbox grants. The worker reads reset mail through a restricted view. The isolated suite checks both identities, grants and denied base-table reads on the dedicated disposable schema. [Grant matrix](../../database/provisioning/step12-runtime-grants.mjs) · [Verification](../auth/step12-verification.md)
+
 ## Step 11 registration verification
 
 The disposable Step 11 owner uses `CREATE VIEW` for the read-only mail projection. Its suite applies the [explicit grants](../../database/provisioning/step11-runtime-grants.mjs) temporarily. The application owner received direct `CREATE VIEW` and independently applied the approved grant set under D-31 on 28 November 2026. API has specific read, insert and update permissions. The worker has `READ` on the eligible mail view. Database metadata and read-only runtime checks verified the exact grant set in development. [Step 11 isolated setup](../auth/registration.md#isolated-oracle-verification) · [Development verification](../auth/step11-development-integration.md#integration-checkpoint)

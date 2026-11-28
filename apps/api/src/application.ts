@@ -10,11 +10,13 @@ import { configureApp } from './bootstrap/configure-app.js';
 import type { LogSink } from './common/logging/request-logger.js';
 import { verifyPasswordCorpus } from './modules/auth/password.js';
 import type { RegistrationOwner } from './modules/auth/registration.service.js';
+import type { AccountOwner } from './modules/auth/account.service.js';
 export async function createApiApplication(
   config: ApiConfig,
   sink?: LogSink,
   databaseFactory: DatabaseFactory = createDatabase,
   registrationOwner?: RegistrationOwner,
+  accountOwner?: AccountOwner,
 ): Promise<INestApplication> {
   const validated = parseApiConfig({
     NODE_ENV: config.NODE_ENV,
@@ -24,11 +26,28 @@ export async function createApiApplication(
     ),
   });
   if (config.registration) await verifyPasswordCorpus(config.registration.passwordBlocklist);
+  if (config.account) {
+    if (
+      config.NODE_ENV === 'production' &&
+      (!config.account.secureCookies || config.account.dashboardOrigin.protocol !== 'https:')
+    )
+      throw new Error('Production account authentication requires HTTPS cookies.');
+    if (config.NODE_ENV !== 'test' && accountOwner === 'SPORTIFY_STEP12_TEST_OWNER')
+      throw new Error('The disposable authentication owner is test-only.');
+    if (config.account.passwordBlocklist !== config.registration?.passwordBlocklist)
+      await verifyPasswordCorpus(config.account.passwordBlocklist);
+  }
   const database = await databaseFactory(validated.database, 'api');
   try {
     // abortOnError:false lets us release the pool on Nest construction failure.
     const app = await NestFactory.create<NestExpressApplication>(
-      AppModule.register(database, config.registration, registrationOwner),
+      AppModule.register(
+        database,
+        config.registration,
+        registrationOwner,
+        config.account,
+        accountOwner,
+      ),
       {
         logger: false,
         abortOnError: false,

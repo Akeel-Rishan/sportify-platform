@@ -1,5 +1,9 @@
 # MVP data dictionary
 
+## Step 12 account authentication overlay
+
+Forward migration `000028` adds nullable `AUTH_SESSIONS.IDLE_EXPIRES_AT_UTC` and `REVOKE_REASON`, validates idle and revocation consistency, and extends `AUTH_SOURCE_WINDOWS.ACTION_SCOPE` for login, session lookup and reset admission. Three views scope dashboard access, account-wide revocation and eligible reset mail. `PASSWORD_RESET_TOKENS` retains its existing hash, version and lifecycle fields. [Session storage](../auth/server-side-sessions.md#policy-and-storage) · [Verification](../auth/step12-verification.md)
+
 ## Step 11 registration overlay
 
 `000027_owner_registration` adds `PENDING_ONBOARDING` to `TENANTS.STATUS`. A pending `USERS` row may have a null `PASSWORD_HASH`. Other states require one. Signup includes no password, and the confirmation transition sets it. `AUTH_SOURCE_WINDOWS` keys `SOURCE_HASH` and `ACTION_SCOPE` and holds a bounded `REQUEST_COUNT` and `WINDOW_END_UTC`. A keyed digest represents the socket peer. `VW_AUTH_VERIFICATION_MAIL` exposes only the pending token context, recipient and digest needed for delivery. [Migration and grants](../auth/initial-owner-membership.md#forward-migration-and-grants)

@@ -1,6 +1,7 @@
 import { Catch, HttpException, type ArgumentsHost, type ExceptionFilter } from '@nestjs/common';
 import type { Response } from 'express';
 import type { ApiErrorCode, ApiErrorResponse } from '@sportify/api-contracts';
+import { DatabaseError } from '@sportify/database';
 import { ApplicationError, publicErrors } from '../errors/application-error.js';
 import type { RequestLogger } from '../logging/request-logger.js';
 import { requestId, type ApiRequest } from '../middleware/request-context.js';
@@ -43,7 +44,12 @@ export class ApiExceptionFilter implements ExceptionFilter {
     const request = http.getRequest<ApiRequest>();
     const response = http.getResponse<Response>();
     const id = requestId(request);
-    const candidate = error instanceof HttpException ? error.getStatus() : parserStatus(error);
+    const candidate =
+      error instanceof HttpException
+        ? error.getStatus()
+        : error instanceof DatabaseError && error.classification === 'unavailable'
+          ? 503
+          : parserStatus(error);
     const status =
       candidate !== undefined && Number.isInteger(candidate) && candidate >= 400 && candidate <= 599
         ? candidate

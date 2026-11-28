@@ -7,7 +7,7 @@ import type {
 } from '@sportify/api-contracts';
 import { passwordIsValid } from './password.js';
 
-const email = z
+export const authEmail = z
   .string()
   .max(320)
   .trim()
@@ -30,14 +30,14 @@ const name = (limit: number) =>
     .refine((value) => [...value].length <= limit && !/[\p{Cc}\p{Surrogate}]/u.test(value));
 
 export class RegisterDto implements RegisterAccountRequest {
-  static readonly schema = z.strictObject({ email, fullName: name(160), mobile });
+  static readonly schema = z.strictObject({ email: authEmail, fullName: name(160), mobile });
   declare email: string;
   declare fullName: string;
   declare mobile: string;
 }
 
 export class ResendDto implements ResendVerificationRequest {
-  static readonly schema = z.strictObject({ email });
+  static readonly schema = z.strictObject({ email: authEmail });
   declare email: string;
 }
 

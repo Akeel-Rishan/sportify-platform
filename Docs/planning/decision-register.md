@@ -18,6 +18,29 @@ The owner authorized migration `000027`, direct `CREATE VIEW` for `SPORTIFY_SCHE
 
 The owner subsequently authorized the development maintenance window and accepted a verified rebuild of the seed-only, 26-migration baseline as fallback recovery. Prefer forward recovery. A destructive operation requires separate explicit approval. The verified recovery inputs and ledger are archived outside the checkout. The guarded ADMIN check confirmed zero application sessions and jobs, then issued direct `CREATE VIEW`. On 28 November the application owner applied `000027` and all 21 reviewed runtime grants. Catalog, replay, seed preservation and read-only runtime checks passed. Public registration remains disabled. [Development verification](../auth/step11-development-integration.md#integration-checkpoint)
 
+## D-32 — Step 12 account authentication implementation
+
+The user authorized login, current account lookup, current-device logout, password reset and server-side dashboard sessions, with scoped verification. The approved Argon2id policy and separate Oracle session audiences are inherited. The browser implementation is same-origin by construction. D-33 supplies the subsequent host and operating policy approvals. [Account contract](../auth/login-and-logout.md) · [Browser boundary](../auth/browser-security.md) · [Session policy](../auth/server-side-sessions.md)
+
+## D-33 — Step 12 policy approval and isolated Oracle verification
+
+28 November 2026. The owner conditionally accepted the implementation and historical local evidence. Final Step 12 approval requires successful live Oracle migration, workflow, rollback, concurrency and privilege verification.
+
+- **Browser architecture (Q-08).** Intended dashboard `https://app.sportify.lk` and same-origin API `https://app.sportify.lk/api/v1`. Use secure HttpOnly host-only `__Host-` cookies with `Path=/`, no Domain and `SameSite=Lax`, exact-origin verification and signed CSRF. Keep platform-admin and local HTTP sessions separate. Proxy trust stays disabled until verified ingress configuration.
+- **Sessions and reset (Q-23 scope).** Configurable initial session defaults are 12 hours absolute and 30 minutes idle with at most one persisted touch per minute. Separate devices keep their sessions. Logout revokes the current session. Reset links last 30 minutes with a 60-second cooldown and at most three issuances per account in a rolling 15-minute window. Replacement revokes previous live links. Confirmation invalidates outstanding links, revokes all sessions and requires a fresh login. An eligible verified owner with an active membership can sign in during onboarding without commercial access.
+- **Abuse controls.** Approved source defaults are 30 login attempts, 10 reset requests and 30 reset confirmations per 15 minutes. The deployed login-pair and session-source budgets and reset job budget remain explicit settings. Retention, ingress and scoped email dispatch/provider evidence remain separate.
+- **Oracle authorization.** Apply and verify `000028` only in the disposable `SPORTIFY_STEP12_TEST_OWNER` schema on `fce953xa`, with at most 256 MB DATA quota. Preserve the application and prior disposable schemas. Application integration, deployment and route enablement await separate authorization. [Verification](../auth/step12-verification.md) · [Proposed development integration](../auth/step12-development-integration.md)
+
+The isolated live suite passed on 28 November 2026. The read-only postchecks confirmed the disposable 28-migration catalog and cleanup, and the normal application owner's unchanged 27-migration catalog. Engineering verification is ready for final owner approval. [Live evidence](../auth/step12-verification.md#live-oracle-evidence)
+
+## D-34 — Step 12 final approval and development integration authorization
+
+28 November 2026. The owner gave final approval for the Step 12 engineering scope. They accepted D-33, the 238 passing tests, 92.67% overall line coverage, 93.39% auth module line coverage, the live Chromium evidence and the complete isolated Oracle suite.
+
+The owner authorized the controlled maintenance window, migration `000028` and the nine exact reviewed runtime grants for `SPORTIFY_SCHEMA_OWNER` on development ATP `fce953xa`. Before application DDL, verify the target, the original 27-entry ledger, grant and aggregate data baselines, disabled account flags, no conflicting writers and a usable recovery strategy. The verified rebuild fallback applies only if development remains seed-only. Forward recovery is preferred, and destructive recovery requires separate approval. Public rollout, deployment and Step 13 remain separately authorized work. [Verification evidence](../auth/step12-verification.md) · [Application integration and release gates](../auth/step12-development-integration.md)
+
+The controlled development run passed on 28 November 2026. ADMIN confirmed zero application sessions and jobs. The migration runner applied only `000028`, replay was a no-op, and the nine reviewed grants and read-only runtime checks passed. All original history and reference rows matched the private preflight snapshot. [Application verification](../auth/step12-development-integration.md#application-verification-results)
+
 ## Earlier decisions and reviews
 
 Status: **D-18 and D-21 scoped decisions approved; remaining unscoped questions retain their review/verification gates.** Source codes resolve in the [source register](../README.md#source-register). Requirement IDs resolve in [traceability](requirements-traceability.md); step numbers resolve in the [roadmap](development-roadmap.md).

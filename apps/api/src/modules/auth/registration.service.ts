@@ -1,5 +1,4 @@
-import { createHmac, randomUUID } from 'node:crypto';
-import { isIP } from 'node:net';
+import { randomUUID } from 'node:crypto';
 import type { Database, SqlConnection } from '@sportify/database';
 import {
   deriveVerificationToken,
@@ -10,6 +9,7 @@ import { ApplicationError } from '../../common/errors/application-error.js';
 import type { RegistrationConfig } from './auth-config.js';
 import type { ConfirmDto, RegisterDto } from './auth.dto.js';
 import { createPasswordEncoder } from './password.js';
+import { createAbuseControls, uniqueViolation } from './abuse-controls.js';
 
 export type RegistrationOwner = 'SPORTIFY_SCHEMA_OWNER' | 'SPORTIFY_STEP11_TEST_OWNER';
 export type RegistrationSourceScope = 'ISSUE' | 'CONFIRM';
@@ -51,24 +51,8 @@ interface Verification extends PendingUser {
   TOKEN_KEY_VERSION: string;
 }
 
-function uniqueViolation(error: unknown, owner: string, constraint: string): boolean {
-  if (!(error instanceof Error) || !('errorNum' in error) || error.errorNum !== 1) return false;
-  return (
-    error.message.includes(`(${owner}.${constraint})`) ||
-    error.message.includes(`("${owner}"."${constraint}")`)
-  );
-}
-
-function sourceIdentity(address: string | undefined): string {
-  if (!address) throw new ApplicationError('SERVICE_UNAVAILABLE');
-  const family = isIP(address);
-  if (family === 0) throw new ApplicationError('SERVICE_UNAVAILABLE');
-  // Normalize IPv4 and IPv4-mapped IPv6 to the same rate-limit identity.
-  const ip = family === 4 ? `::ffff:${address}` : address.split('%')[0];
-  return new URL(`http://[${ip}]`).hostname;
-}
-
 export class RegistrationService {
+  private readonly counter: ReturnType<typeof createAbuseControls>;
   private readonly encodePassword: (password: string) => Promise<string>;
 
   constructor(
@@ -80,37 +64,12 @@ export class RegistrationService {
     if (owner !== 'SPORTIFY_SCHEMA_OWNER' && owner !== 'SPORTIFY_STEP11_TEST_OWNER')
       throw new Error('An approved registration schema is required.');
     this.encodePassword = encodePassword;
+    this.counter = createAbuseControls(db, owner, config.sourceKey);
   }
 
-  async admit(address: string | undefined, scope: RegistrationSourceScope): Promise<void> {
-    const source = createHmac('sha256', this.config.sourceKey)
-      .update('sportify.auth-source.v1\0' + sourceIdentity(address))
-      .digest('hex');
+  admit(address: string | undefined, scope: RegistrationSourceScope): Promise<void> {
     const limit = scope === 'ISSUE' ? this.config.issueLimit : this.config.confirmLimit;
-    const accepted = await this.db.transaction(async (connection) => {
-      const update = () =>
-        connection.execute(
-          `UPDATE ${this.owner}.AUTH_SOURCE_WINDOWS SET
-          REQUEST_COUNT=CASE WHEN WINDOW_END_UTC<=LOCALTIMESTAMP THEN 1 ELSE REQUEST_COUNT+1 END,
-          WINDOW_END_UTC=CASE WHEN WINDOW_END_UTC<=LOCALTIMESTAMP THEN LOCALTIMESTAMP+INTERVAL '15' MINUTE ELSE WINDOW_END_UTC END
-         WHERE SOURCE_HASH=:source AND ACTION_SCOPE=:scope
-           AND (WINDOW_END_UTC<=LOCALTIMESTAMP OR REQUEST_COUNT<:limit)`,
-          { source, scope, limit },
-        );
-      if ((await update()).rowsAffected === 1) return true;
-      try {
-        await connection.execute(
-          `INSERT INTO ${this.owner}.AUTH_SOURCE_WINDOWS (SOURCE_HASH,ACTION_SCOPE,WINDOW_END_UTC,REQUEST_COUNT)
-           VALUES (:source,:scope,LOCALTIMESTAMP+INTERVAL '15' MINUTE,1)`,
-          { source, scope },
-        );
-        return true;
-      } catch (error) {
-        if (!uniqueViolation(error, this.owner, 'PK_AUTH_SOURCE_WINDOWS')) throw error;
-      }
-      return (await update()).rowsAffected === 1;
-    });
-    if (!accepted) throw new ApplicationError('RATE_LIMITED', { 'Retry-After': '900' });
+    return this.counter(address, scope, limit);
   }
 
   async register(input: RegisterDto, request: string): Promise<void> {

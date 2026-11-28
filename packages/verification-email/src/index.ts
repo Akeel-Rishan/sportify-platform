@@ -2,6 +2,7 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import type { Database } from '@sportify/database';
 
 export const verificationEvent = 'auth.email-verification.requested';
+export const passwordResetEvent = 'auth.password-reset.requested';
 export const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 export const keyVersionPattern = /^[A-Za-z0-9_-]{1,30}$/;
 export const tokenPattern = /^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$/;
@@ -50,10 +51,18 @@ export interface VerificationContext extends VerificationReference {
 }
 
 export function deriveVerificationToken(context: VerificationContext, key: Buffer): string {
+  return deriveToken('sportify.email-verification.v1', context, key);
+}
+
+export function derivePasswordResetToken(context: VerificationContext, key: Buffer): string {
+  return deriveToken('sportify.password-reset.v1', context, key);
+}
+
+function deriveToken(purpose: string, context: VerificationContext, key: Buffer): string {
   return createHmac('sha256', key)
     .update(
       JSON.stringify([
-        'sportify.email-verification.v1',
+        purpose,
         context.keyVersion,
         context.tokenId,
         context.userId,
@@ -77,14 +86,47 @@ type DeliveryResult =
   'sent' | 'ineligible' | 'key_unavailable' | 'record_mismatch' | 'delivery_failed';
 export type SendVerificationMail = (mail: VerificationMail, signal: AbortSignal) => Promise<void>;
 
-export function createVerificationDelivery(options: {
+interface DeliveryOptions {
   readonly database: Pick<Database, 'query'>;
-  readonly owner: 'SPORTIFY_SCHEMA_OWNER' | 'SPORTIFY_STEP11_TEST_OWNER';
+  readonly owner:
+    'SPORTIFY_SCHEMA_OWNER' | 'SPORTIFY_STEP11_TEST_OWNER' | 'SPORTIFY_STEP12_TEST_OWNER';
   readonly origin: string;
   readonly keys: VerificationKeys;
   readonly send: SendVerificationMail;
   readonly report: (result: DeliveryResult) => void;
-}): (reference: VerificationReference) => Promise<DeliveryResult> {
+}
+
+export function createVerificationDelivery(options: DeliveryOptions) {
+  return createDelivery(options, {
+    view: 'VW_AUTH_VERIFICATION_MAIL',
+    path: '/verify-email',
+    derive: deriveVerificationToken,
+    subject: 'Verify your SPORTIFY email address',
+    instructions:
+      'Open this link and confirm your SPORTIFY email address within 60 minutes of the request:',
+  });
+}
+
+export function createPasswordResetDelivery(options: DeliveryOptions) {
+  return createDelivery(options, {
+    view: 'VW_AUTH_PASSWORD_RESET_MAIL',
+    path: '/reset-password',
+    derive: derivePasswordResetToken,
+    subject: 'Reset your SPORTIFY password',
+    instructions: 'Open this link to choose a new SPORTIFY password before the link expires:',
+  });
+}
+
+function createDelivery(
+  options: DeliveryOptions,
+  mail: {
+    readonly view: string;
+    readonly path: string;
+    readonly derive: typeof deriveVerificationToken;
+    readonly subject: string;
+    readonly instructions: string;
+  },
+): (reference: VerificationReference) => Promise<DeliveryResult> {
   if (!URL.canParse(options.origin)) throw new Error('Invalid email verification frontend origin.');
   const origin = new URL(options.origin);
   if (
@@ -96,7 +138,11 @@ export function createVerificationDelivery(options: {
     origin.pathname !== '/'
   )
     throw new Error('Email verification requires a configured HTTPS frontend origin.');
-  if (!['SPORTIFY_SCHEMA_OWNER', 'SPORTIFY_STEP11_TEST_OWNER'].includes(options.owner))
+  if (
+    !['SPORTIFY_SCHEMA_OWNER', 'SPORTIFY_STEP11_TEST_OWNER', 'SPORTIFY_STEP12_TEST_OWNER'].includes(
+      options.owner,
+    )
+  )
     throw new Error('An approved verification schema is required.');
 
   return async (reference) => {
@@ -120,13 +166,13 @@ export function createVerificationDelivery(options: {
         EXPIRES_AT: string;
         TOKEN_HASH: string;
       }>(
-        `SELECT USER_PUBLIC_ID, EMAIL, EXPIRES_AT, TOKEN_HASH FROM ${options.owner}.VW_AUTH_VERIFICATION_MAIL
+        `SELECT USER_PUBLIC_ID, EMAIL, EXPIRES_AT, TOKEN_HASH FROM ${options.owner}.${mail.view}
          WHERE PUBLIC_ID=:id AND TOKEN_KEY_VERSION=:version`,
         { id: reference.tokenId, version: reference.keyVersion },
       );
       const row = rows?.[0];
       if (!row) return finish('ineligible');
-      const token = deriveVerificationToken(
+      const token = mail.derive(
         { ...reference, userId: row.USER_PUBLIC_ID, expiresAt: row.EXPIRES_AT },
         key,
       );
@@ -135,13 +181,13 @@ export function createVerificationDelivery(options: {
         !timingSafeEqual(Buffer.from(row.TOKEN_HASH, 'hex'), Buffer.from(tokenDigest(token), 'hex'))
       )
         return finish('record_mismatch');
-      const link = new URL('/verify-email', origin);
+      const link = new URL(mail.path, origin);
       link.hash = new URLSearchParams({ token }).toString();
       await options.send(
         {
           to: row.EMAIL,
-          subject: 'Verify your SPORTIFY email address',
-          text: `Open this link and confirm your SPORTIFY email address within 60 minutes of the request:\n\n${link.href}\n\nIf you did not request this, you can ignore this message.`,
+          subject: mail.subject,
+          text: `${mail.instructions}\n\n${link.href}\n\nIf you did not request this, you can ignore this message.`,
         },
         AbortSignal.timeout(5000),
       );

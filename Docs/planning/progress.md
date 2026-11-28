@@ -1,5 +1,9 @@
 # SPORTIFY progress
 
+## Step 12 account authentication
+
+28 November 2026. **Step 12 engineering is owner-approved and development integration passed under D-34.** The disposable Oracle suite verified the full account workflows and cleanup. After the ADMIN write-pause check, the application owner applied only `000028` and the nine reviewed grants. Catalog, no-op replay, original history, seed identities and read-only runtime checks passed. Public account routes stay disabled. [Isolated evidence](../auth/step12-verification.md#live-oracle-evidence) · [Development verification](../auth/step12-development-integration.md#application-verification-results)
+
 ## Step 11 registration and initial owner
 
 28 November 2026. **Step 11 engineering is owner-approved and development integration passed.** D-31 records the maintenance window and accepted seed-only fallback. The operator verified the Oracle write pause and issued direct `CREATE VIEW`. The application owner applied only `000027`, verified the 50-table catalog and repeated with no changes. The exact 21 grants and read-only API and worker access checks passed. The original ledger and reference seeds were preserved. Registration stays disabled. [Development verification](../auth/step11-development-integration.md#integration-checkpoint)

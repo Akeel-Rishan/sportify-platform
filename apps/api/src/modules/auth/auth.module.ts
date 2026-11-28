@@ -14,15 +14,13 @@ import {
   type ExecutionContext,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { randomInt } from 'node:crypto';
-import { performance } from 'node:perf_hooks';
-import { setTimeout as delay } from 'node:timers/promises';
 import type { Database } from '@sportify/database';
 import type { RegistrationAccepted, RegistrationVerified } from '@sportify/api-contracts';
 import type { Response } from 'express';
 import { requestId, type ApiRequest } from '../../common/middleware/request-context.js';
 import type { RegistrationConfig } from './auth-config.js';
 import { ConfirmDto, RegisterDto, ResendDto } from './auth.dto.js';
+import { acknowledge } from './abuse-controls.js';
 import {
   RegistrationService,
   type RegistrationOwner,
@@ -30,16 +28,6 @@ import {
 } from './registration.service.js';
 
 const sourceScope = Symbol('auth-source-scope');
-
-async function acknowledge(work: () => Promise<void>): Promise<RegistrationAccepted> {
-  // Keep fast duplicate/ineligible paths closer to paths that write multiple rows.
-  // Slow database operations can still exceed this latency floor.
-  const deadline = performance.now() + 250 + randomInt(50);
-  await work();
-  const remaining = deadline - performance.now();
-  if (remaining > 0) await delay(remaining);
-  return { status: 'accepted' };
-}
 
 @Injectable()
 class RegistrationRateGuard implements CanActivate {

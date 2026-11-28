@@ -1,5 +1,9 @@
 # Requirements traceability
 
+## Step 12 account authentication
+
+REQ-006–008 cover eligibility, session and reset lifecycle, and the browser boundary. The isolated Oracle suite verified active onboarding-owner eligibility, reset and session revocation, transaction rollback and the exact runtime privileges under REQ-048. D-33 approves the intended origin and operating defaults. D-34 records final owner approval and the controlled development run, which verified `000028`, no-op replay and the exact runtime grant set with both routes disabled. Tenant authorization and platform-admin authentication remain separate requirements under REQ-001–004. Browser and deployed ingress evidence stay distinct for REQ-058. [Account API](../auth/login-and-logout.md) · [Step 12 verification](../auth/step12-verification.md) · [Development integration](../auth/step12-development-integration.md#application-verification-results)
+
 ## Step 11 registration scope
 
 D-31 records final owner approval of the Step 11 engineering evidence. Migration `000027` and the reviewed runtime grants passed on the designated development application owner with registration disabled. REQ-005 is approved within the registration scope. The isolated Step 11 checks for REQ-003 and REQ-006–008 verify the initial owner, verification token, credential and abuse-control behavior. Future login must reject pending users and require an eligible `ACTIVE` account, verified credentials and authorized tenant access. Staff authorization, login/session behavior, the dispatcher and public rollout retain their separate gates. [D-31](decision-register.md#d-31--step-11-final-approval-and-development-integration-authorization) · [Engineering verification](../auth/step11-final-engineering-review.md) · [Development verification](../auth/step11-development-integration.md#integration-checkpoint)

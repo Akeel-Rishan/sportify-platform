@@ -1,5 +1,17 @@
 # Testing and verification
 
+## Step 12 account authentication
+
+The account HTTP tests use the actual Nest request pipeline and a database double. The Chromium fixture uses real HTTPS, the compiled browser boundary and two sibling hosts. The separate Oracle suite exercises the compiled API, scoped grants, a local reset-mail sink, committed writes and coordinated races. [Exact Oracle setup and verification](../auth/step12-verification.md)
+
+```powershell
+npx --yes pnpm@10.34.9 test:http
+npx --yes pnpm@10.34.9 build
+node database/tests/step12-browser.mjs 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+```
+
+The browser fixture needs OpenSSL on PATH. `SPORTIFY_OPENSSL` can supply its absolute executable path. The test certificate is trusted only by the disposable browser instance through its public-key pin.
+
 ## Step 11 registration
 
 `pnpm test:coverage` covers the API routes, Argon2id and compromised-password handling, source admission, and a loopback email sink. The compiled real-Oracle suite uses a distinct disposable Step 11 owner, drives concurrency and rollback, and grants only reviewed temporary privileges. [Exact verification commands](../auth/registration.md#isolated-oracle-verification)

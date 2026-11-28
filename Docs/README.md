@@ -2,6 +2,8 @@
 
 ## Current verification
 
+**Step 12 account authentication is owner-approved and development integration passed.** The application owner has 28 verified migrations and the exact reviewed runtime grants. Public account routes remain disabled. See the [account API](auth/login-and-logout.md), [sessions](auth/server-side-sessions.md), [password reset](auth/password-reset.md), [browser boundary](auth/browser-security.md), [isolated verification](auth/step12-verification.md) and [development verification](auth/step12-development-integration.md#application-verification-results).
+
 **Step 10 Oracle foundation passed and received final owner approval on 27 November 2026.** The clean install and verified continuation covered the entire live suite. [Step 10 verification report](database/verification-report.md) · [Operator setup and retained state](database/step10-operator-setup.md)
 
 The [Final Engineering Verification Report](database/step10-final-engineering-review.md) provides the [61-table reconciliation](database/step10-schema-reconciliation.md), architecture evaluation, outstanding pilot and production gates, and the conditional approval recommendation.

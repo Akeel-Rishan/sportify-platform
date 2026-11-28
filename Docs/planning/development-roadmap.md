@@ -146,7 +146,11 @@ All steps follow the [definition of done](../quality/definition-of-done.md), [pr
 - **Requirements:** REQ-004, REQ-010, REQ-040–044.
 - **Status:** Not started.
 
-## Step 12 — Deployment, operations and recovery
+## Step 12 — Account authentication
+
+The current Step 12 prompt scopes this increment to login, logout, password reset and server-side sessions. Infrastructure work remains separately authorized. [Account scope and evidence](../auth/step12-verification.md)
+
+### Deployment, operations and recovery scope from the original roadmap
 
 - **Objective:** Establish a repeatable ARM64 deployment and verified operational recovery.
 - **Dependencies:** Steps 02–11; selected OCI tenancy/region/service capabilities verified at provisioning time; Q-08, Q-11, Q-13, Q-23 operational decisions.

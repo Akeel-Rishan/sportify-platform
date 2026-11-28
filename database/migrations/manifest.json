@@ -10669,6 +10669,186 @@
         }
       ],
       "seeds": []
+    },
+    {
+      "version": "000028",
+      "name": "account_sessions",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000028_account_sessions/001_session_fields.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/002_session_idle_check.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/003_session_revocation_check.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/004_widen_source_scope.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/005_drop_old_source_scope.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/006_rename_source_scope.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/007_dashboard_sessions.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/008_session_revocation.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000028_account_sessions/009_reset_mail_view.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "AUTH_SESSIONS",
+          "columns": [
+            {
+              "name": "SESSION_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "TOKEN_HASH",
+              "type": "VARCHAR2(128 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REVOKED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LAST_SEEN_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IP_ADDRESS",
+              "type": "VARCHAR2(45 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "USER_AGENT",
+              "type": "VARCHAR2(1000 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "AUDIENCE",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTIVE_TENANT_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTIVE_MEMBERSHIP_ID",
+              "type": "NUMBER",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "IDLE_EXPIRES_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REVOKE_REASON",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "CK_AUTH_SESSION_IDLE",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "idle_expires_at_utc IS NULL OR (idle_expires_at_utc>created_at_utc AND idle_expires_at_utc<=expires_at_utc)"
+        },
+        {
+          "name": "CK_AUTH_SESSION_REVOKE_REASON",
+          "table": "AUTH_SESSIONS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "revoke_reason IS NULL OR (revoked_at_utc IS NOT NULL AND revoke_reason IN ('LOGOUT','ROTATED','PASSWORD_RESET'))"
+        },
+        {
+          "name": "CK_AUTH_SOURCE_SCOPE",
+          "table": "AUTH_SOURCE_WINDOWS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ACTION_SCOPE IN ('ISSUE','CONFIRM','LOGIN','LOGIN_PAIR','SESSION','RESET_REQ','RESET_OK')"
+        }
+      ],
+      "indexes": [],
+      "seeds": []
     }
   ]
 }
