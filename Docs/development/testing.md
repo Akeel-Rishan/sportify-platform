@@ -1,5 +1,9 @@
 # Testing and verification
 
+## Step 11 registration
+
+`pnpm test:coverage` covers the API routes, Argon2id and compromised-password handling, source admission, and a loopback email sink. The compiled real-Oracle suite uses a distinct disposable Step 11 owner, drives concurrency and rollback, and grants only reviewed temporary privileges. [Exact verification commands](../auth/registration.md#isolated-oracle-verification)
+
 ## Step 10 foundation verification
 
 `pnpm test:oracle:foundation` builds the compiled API, worker and migration dependencies and runs the operator-only Oracle suite. The runbook gives the equivalent commands with protected credentials loaded only by Node. Read-only `--baseline` and runtime `--lifecycle` can run independently. A missing owner prerequisite exits 1. Ordinary CI runs the standalone unit tests. [Commands](../database/step10-operator-setup.md) ? [Evidence](../database/verification-report.md)

@@ -30,7 +30,8 @@ try {
     reconcile ? 3 : 2,
     'Only the specific observed CASE-catalog recovery flag is supported.',
   );
-  let manifest = await loadManifest(fileURLToPath(new URL('../', import.meta.url)));
+  const release = await loadManifest(fileURLToPath(new URL('../', import.meta.url)));
+  let manifest = { ...release, migrations: release.migrations.slice(0, 26) };
   assertReady(manifest); // Before reading credentials or opening any connection.
   assert.equal(manifest.migrations.length, 26);
   const config = parseMigrationConfig(process.env);

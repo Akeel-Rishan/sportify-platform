@@ -1,5 +1,9 @@
 # Accounts and privileges
 
+## Step 11 registration verification
+
+The disposable Step 11 owner uses `CREATE VIEW` for the read-only mail projection. Its suite applies the [explicit grants](../../database/provisioning/step11-runtime-grants.mjs) temporarily. The application owner received direct `CREATE VIEW` and independently applied the approved grant set under D-31 on 28 November 2026. API has specific read, insert and update permissions. The worker has `READ` on the eligible mail view. Database metadata and read-only runtime checks verified the exact grant set in development. [Step 11 isolated setup](../auth/registration.md#isolated-oracle-verification) · [Development verification](../auth/step11-development-integration.md#integration-checkpoint)
+
 ## Step 10 disposable verification owners
 
 CLEAN and UPGRADE each use the same narrow migration privileges and a separate credential. Only the uniquely named CLEAN transaction fixture is eligible for temporary SELECT and INSERT grants to the runtime users. The fixture is removed after those checks and subsequent denials check that no direct object grants remain. The Step 10 application privilege checks passed for both runtimes. [Operator setup](step10-operator-setup.md) ? [Live results](verification-report.md)

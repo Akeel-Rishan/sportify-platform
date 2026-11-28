@@ -125,7 +125,9 @@ export function validateStatement(sql: string, format: 'sql' | 'plsql'): void {
   if (format === 'sql') {
     if (
       text.includes(';') ||
-      !/^(CREATE TABLE|CREATE (?:UNIQUE )?INDEX|ALTER TABLE|MERGE INTO|INSERT INTO)\s/i.test(text)
+      !/^(CREATE TABLE|CREATE VIEW|CREATE (?:UNIQUE )?INDEX|ALTER TABLE|MERGE INTO|INSERT INTO)\s/i.test(
+        text,
+      )
     )
       throw new MigrationError('INVALID_ARTIFACT');
   } else if (!/^(BEGIN|DECLARE)\b/i.test(text) || !/END;$/i.test(text) || /^\s*\/\s*$/m.test(text))

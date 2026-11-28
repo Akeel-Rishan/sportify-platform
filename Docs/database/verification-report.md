@@ -1,6 +1,6 @@
 # Step 10 Oracle foundation verification
 
-**Oracle foundation gate: PASS. Step 10 is awaiting user review.** The 27 November 2026 clean install and verified continuation together completed all required live checks.
+**Oracle foundation gate: PASS. Step 10 received final owner approval.** The 27 November 2026 clean install and verified continuation together completed all required live checks. [D-29](../planning/decision-register.md#d-29--step-10-final-owner-approval)
 
 The [Final Engineering Verification Report](step10-final-engineering-review.md) reconciles the full original schema catalog and records the conditional approval recommendation. This report preserves the live execution record.
 
@@ -54,7 +54,7 @@ The new operator suite calls the existing migration runner and established fixtu
 
 The owner script allows only the exact designated target and the fixed fresh owner names. It grants the minimum migration capabilities with a finite 256 MB DATA quota each. Installed test history is retained after a run. CLEAN retained the deliberate DDL and seed failures with the verified repair link. UPGRADE retained the original 26 applied versions.
 
-The engineering gate is complete. User review is the next step. The verified disposable schemas contain migration history, so a new empty-schema run requires separately designated empty owners. [Operator commands and retained history](step10-operator-setup.md)
+The engineering gate and owner review are complete. The verified disposable schemas contain migration history, so a new empty-schema run requires separately designated empty owners. [Operator commands and retained history](step10-operator-setup.md)
 
 Driver documentation distinguishes borrowed connections from open idle ones and provides bounded pool acquisition. Oracle's advisory lock with `release_on_commit => FALSE` is held until release or session end. Oracle documents DML RETURNING for the affected ROWID and separate null insertion and update error codes. [node-oracledb 26 connection handling](https://node-oracledb.readthedocs.io/en/v26.0.0/user_guide/connection_handling.html) · [pool API](https://node-oracledb.readthedocs.io/en/latest/api_manual/pool.html) · [Oracle DBMS_LOCK](https://docs.oracle.com/en/database/oracle/oracle-database/19/arpls/DBMS_LOCK.html) · [Oracle INSERT](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/INSERT.html) · [Oracle ORA-01400](https://docs.oracle.com/en/error-help/db/ora-01400/) · [Oracle ORA-01407](https://docs.oracle.com/en/error-help/db/ora-01407/)
 

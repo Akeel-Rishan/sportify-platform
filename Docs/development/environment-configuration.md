@@ -1,5 +1,7 @@
 # Environment configuration
 
+Step 11 adds opt-in API registration settings, externally supplied versioned verification keys, a distinct source-counter key and a local compromised-password corpus. Startup validates the configured corpus before enabling routes. See the [Step 11 configuration](../auth/registration.md#configuration-and-checks) and [delivery key rotation](../auth/email-verification.md#dispatch-and-key-operations).
+
 Step 06 adds required Oracle runtime configuration to API and worker. Email, OCI, authentication and frontend API URL configuration remain deferred. Configuration errors name the variable and its rule, without echoing values or dumping environment objects.
 
 | Application | Variable                   | Absent default              | Accepted explicit values                                    |

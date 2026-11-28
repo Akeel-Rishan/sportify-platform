@@ -1,5 +1,9 @@
 # MVP data dictionary
 
+## Step 11 registration overlay
+
+`000027_owner_registration` adds `PENDING_ONBOARDING` to `TENANTS.STATUS`. A pending `USERS` row may have a null `PASSWORD_HASH`. Other states require one. Signup includes no password, and the confirmation transition sets it. `AUTH_SOURCE_WINDOWS` keys `SOURCE_HASH` and `ACTION_SCOPE` and holds a bounded `REQUEST_COUNT` and `WINDOW_END_UTC`. A keyed digest represents the socket peer. `VW_AUTH_VERIFICATION_MAIL` exposes only the pending token context, recipient and digest needed for delivery. [Migration and grants](../auth/initial-owner-membership.md#forward-migration-and-grants)
+
 ## Step 09 executed storage overlay
 
 The approved scoped Step 09 definitions now match the actual application catalog: total 49 installed tables/569 columns. All 26 original migration definitions/239 SQL-seed bytes are preserved. The complete isolated suite passed 53 specific integrity rejections and test-only transaction/concurrency protocols; original application apply/repeat/catalog and old history/table-count preservation passed. Source/proposed labels still describe provenance, not unapproved status of D-24 structures. Excluded commercial/operating/collection/retention/secret replay values remain unset. [Actual evidence and limits](step09-verification.md). Earlier pending overlays are historical.

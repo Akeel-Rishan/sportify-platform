@@ -6,7 +6,10 @@ import {
   reconcileCaseCatalogFailure,
 } from '../step09/catalog-recovery.mjs';
 
-const source = () => loadManifest(fileURLToPath(new URL('../../', import.meta.url)));
+async function source() {
+  const release = await loadManifest(fileURLToPath(new URL('../../', import.meta.url)));
+  return { ...release, migrations: release.migrations.slice(0, 26) };
+}
 describe('Step 09 exact CASE recovery (unit only; not Oracle evidence)', () => {
   it('retains all 26 source entries and creates only deterministic test-local repair metadata', async () => {
     const base = await source(),

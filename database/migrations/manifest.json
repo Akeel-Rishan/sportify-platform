@@ -10423,6 +10423,252 @@
         }
       ],
       "seeds": []
+    },
+    {
+      "version": "000027",
+      "name": "owner_registration",
+      "kind": "schema",
+      "repairOf": null,
+      "files": [
+        {
+          "path": "migrations/000027_owner_registration/001_widen_tenant_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/002_drop_old_tenant_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/003_rename_tenant_status.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/004_require_final_password.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/005_allow_pending_without_password.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/006_auth_source_windows.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/007_ix_auth_source_expiry.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/008_ix_email_verify_issuance.sql",
+          "format": "sql"
+        },
+        {
+          "path": "migrations/000027_owner_registration/009_verification_mail_view.sql",
+          "format": "sql"
+        }
+      ],
+      "tables": [
+        {
+          "name": "USERS",
+          "columns": [
+            {
+              "name": "USER_ID",
+              "type": "NUMBER",
+              "nullable": false,
+              "default": null,
+              "identity": true
+            },
+            {
+              "name": "PUBLIC_ID",
+              "type": "VARCHAR2(36 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "FULL_NAME",
+              "type": "VARCHAR2(160 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "EMAIL_NORMALIZED",
+              "type": "VARCHAR2(320 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "MOBILE_E164",
+              "type": "VARCHAR2(16 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PASSWORD_HASH",
+              "type": "VARCHAR2(500 CHAR)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACCOUNT_STATUS",
+              "type": "VARCHAR2(20 CHAR)",
+              "nullable": false,
+              "default": "'PENDING'",
+              "identity": false
+            },
+            {
+              "name": "EMAIL_VERIFIED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "PHONE_VERIFIED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "LAST_LOGIN_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": true,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "CREATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            },
+            {
+              "name": "UPDATED_AT_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": "LOCALTIMESTAMP",
+              "identity": false
+            }
+          ]
+        },
+        {
+          "name": "AUTH_SOURCE_WINDOWS",
+          "columns": [
+            {
+              "name": "SOURCE_HASH",
+              "type": "VARCHAR2(64 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "ACTION_SCOPE",
+              "type": "VARCHAR2(10 CHAR)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "WINDOW_END_UTC",
+              "type": "TIMESTAMP(6)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            },
+            {
+              "name": "REQUEST_COUNT",
+              "type": "NUMBER(5)",
+              "nullable": false,
+              "default": null,
+              "identity": false
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "CK_TENANTS_STATUS",
+          "table": "TENANTS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "status IN ('TRIAL','ACTIVE','SUSPENDED','CLOSED','PENDING_ONBOARDING')"
+        },
+        {
+          "name": "CK_USERS_FINAL_PASSWORD",
+          "table": "USERS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "account_status='PENDING' OR password_hash IS NOT NULL"
+        },
+        {
+          "name": "PK_AUTH_SOURCE_WINDOWS",
+          "table": "AUTH_SOURCE_WINDOWS",
+          "type": "P",
+          "columns": ["SOURCE_HASH", "ACTION_SCOPE"],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": null
+        },
+        {
+          "name": "CK_AUTH_SOURCE_HASH",
+          "table": "AUTH_SOURCE_WINDOWS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REGEXP_LIKE(SOURCE_HASH,'^[0-9a-f]{64}$','c')"
+        },
+        {
+          "name": "CK_AUTH_SOURCE_SCOPE",
+          "table": "AUTH_SOURCE_WINDOWS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "ACTION_SCOPE IN ('ISSUE','CONFIRM')"
+        },
+        {
+          "name": "CK_AUTH_SOURCE_COUNT",
+          "table": "AUTH_SOURCE_WINDOWS",
+          "type": "C",
+          "columns": [],
+          "referencedTable": null,
+          "referencedColumns": [],
+          "expression": "REQUEST_COUNT>0"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "IX_AUTH_SOURCE_EXPIRY",
+          "table": "AUTH_SOURCE_WINDOWS",
+          "unique": false,
+          "expressions": ["WINDOW_END_UTC"]
+        },
+        {
+          "name": "IX_EMAIL_VERIFY_ISSUANCE",
+          "table": "EMAIL_VERIFICATION_TOKENS",
+          "unique": false,
+          "expressions": ["USER_ID", "CREATED_AT_UTC"]
+        }
+      ],
+      "seeds": []
     }
   ]
 }

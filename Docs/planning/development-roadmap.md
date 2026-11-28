@@ -1,6 +1,6 @@
 # MVP development roadmap
 
-The current Step 10 scope is **Oracle foundation verification**. The live gate passed on 27 November 2026 and is awaiting user review. Application implementation requires a separate instruction. [Current evidence](../database/verification-report.md)
+Step 10 Oracle foundation verification passed and received final owner approval on 27 November 2026. The current Step 11 authorization covers registration, email verification and the first tenant-owner membership. [Step 10 evidence](../database/verification-report.md) · [Current Step 11 contract](../auth/registration.md)
 
 The milestone numbering below comes from the original roadmap. The individual database prompts define the current step scope. [Step 09 migration evidence](../database/step09-verification.md)
 

@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-28",
+  "workingTreeBase": "dbf3251",
+  "scope": "isolated Oracle test owner",
+  "command": "node --env-file=<protected Step 11 env> database/tests/oracle-step11.mjs --resume-after-install",
+  "checksPassedInEveryRun": [
+    "installed-schema-repeat-catalog",
+    "runtime-identity-and-restricted-grants",
+    "parallel-signup-evidence",
+    "canonical-duplicate-prehijack-concurrent-confirm-redacted-delivery",
+    "resend-wins-invalidates-old-token-rollback-retry-two-scoped-owners",
+    "oracle-clock-account-source-limits-and-log-redaction",
+    "complete"
+  ],
+  "runs": [
+    {
+      "run": 1,
+      "signup": {
+        "attempts": 2,
+        "statuses": [202, 202],
+        "canonicalConflicts": 1,
+        "accounts": 1,
+        "issued": 1,
+        "outbox": 1,
+        "borrowedConnections": 0
+      },
+      "unexpectedDatabaseErrors": 0,
+      "result": "PASS"
+    },
+    {
+      "run": 2,
+      "signup": {
+        "attempts": 2,
+        "statuses": [202, 202],
+        "canonicalConflicts": 1,
+        "accounts": 1,
+        "issued": 1,
+        "outbox": 1,
+        "borrowedConnections": 0
+      },
+      "unexpectedDatabaseErrors": 0,
+      "result": "PASS"
+    },
+    {
+      "run": 3,
+      "signup": {
+        "attempts": 2,
+        "statuses": [202, 202],
+        "canonicalConflicts": 1,
+        "accounts": 1,
+        "issued": 1,
+        "outbox": 1,
+        "borrowedConnections": 0
+      },
+      "unexpectedDatabaseErrors": 0,
+      "result": "PASS"
+    }
+  ]
+}

@@ -2,9 +2,11 @@
 
 ## Current verification
 
-**Step 10 Oracle foundation gate passed on 27 November 2026 and is awaiting user review.** The clean install and verified continuation covered the entire live suite. [Step 10 verification report](database/verification-report.md) · [Operator setup and retained state](database/step10-operator-setup.md)
+**Step 10 Oracle foundation passed and received final owner approval on 27 November 2026.** The clean install and verified continuation covered the entire live suite. [Step 10 verification report](database/verification-report.md) · [Operator setup and retained state](database/step10-operator-setup.md)
 
 The [Final Engineering Verification Report](database/step10-final-engineering-review.md) provides the [61-table reconciliation](database/step10-schema-reconciliation.md), architecture evaluation, outstanding pilot and production gates, and the conditional approval recommendation.
+
+**Step 11 engineering is owner-approved and development integration passed.** The application owner has 27 applied migrations and the exact reviewed runtime grants. Public registration remains disabled. See the [engineering review](auth/step11-final-engineering-review.md), [development verification](auth/step11-development-integration.md#integration-checkpoint), [registration](auth/registration.md), [verification email and operations](auth/email-verification.md), [initial owner membership](auth/initial-owner-membership.md) and [original decision review](auth/step11-decision-review.md).
 
 Previous scope: **Step 09 executed and verified on Oracle; awaiting user verification.** Application 26 APPLIED/no pending migrations and exact 49-table catalog passed after complete isolated verification. Original Step 07/08 history/data counts are preserved; retained test-only CASE recovery remains separate. No new commercial seeds/runtime grants/product services. [Exact Step 09 gates and operator commands](database/step09-verification.md), [subscription history](database/subscription-history.md), [website ownership](database/website-ownership.md), [audit/operations/idempotency](database/step09-operations.md), [scoped ERD](database/erd-step09.md). The Step 08/07 paragraphs below record earlier completed database scopes.
 

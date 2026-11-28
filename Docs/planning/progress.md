@@ -1,6 +1,14 @@
 # SPORTIFY progress
 
-## Current Step 10 foundation verification
+## Step 11 registration and initial owner
+
+28 November 2026. **Step 11 engineering is owner-approved and development integration passed.** D-31 records the maintenance window and accepted seed-only fallback. The operator verified the Oracle write pause and issued direct `CREATE VIEW`. The application owner applied only `000027`, verified the 50-table catalog and repeated with no changes. The exact 21 grants and read-only API and worker access checks passed. The original ledger and reference seeds were preserved. Registration stays disabled. [Development verification](../auth/step11-development-integration.md#integration-checkpoint)
+
+28 November 2026 closure review. Three consecutive Oracle continuations passed after checking distinct sessions, exact canonical constraint handling, outbox cardinality, the approved owner permission codes, and idle pools. The original isolated signup failure did not recur and its cause remains unconfirmed. The closure review preceded the owner approval and development integration. [Final review](../auth/step11-final-engineering-review.md)
+
+28 November 2026. D-29 records final owner approval of the tested Oracle foundation. D-30 authorizes registration, explicit email confirmation and atomic initial tenant-owner creation. Local checks, 226 automated tests, compiled API smoke and loopback delivery passed. The disposable Oracle owner applied all 27 migrations, passed catalog verification and repeated with no pending changes. The complete isolated continuation passed registration and confirmation races, worker delivery to the local sink, resend, rollback, role isolation, rate limits and runtime restrictions. It left zero fixtures and temporary grants. [Verification record and operator steps](../auth/registration.md#verification-record)
+
+## Step 10 foundation verification checkpoint
 
 The [Final Engineering Verification Report](../database/step10-final-engineering-review.md) recommends a conditional pass with the 49-table foundation retained. Durable onboarding resume and safe asynchronous email evidence remain owning-phase design conditions. The live engineering gate passed. Final approval is pending user review.
 

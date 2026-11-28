@@ -1,6 +1,7 @@
 import { parseDatabaseConfig, type DatabaseConfig } from '@sportify/database';
 import { nodeEnvSchema, parseEnvironment, type Environment } from '@sportify/validation';
 import { z } from 'zod';
+import { parseRegistrationConfig, type RegistrationConfig } from '../modules/auth/auth-config.js';
 
 export const apiEnvSchema = z.object({
   NODE_ENV: nodeEnvSchema,
@@ -21,7 +22,13 @@ export function parseApiEnv(environment: Environment): ApiEnv {
   });
 }
 
-export type ApiConfig = ApiEnv & { database: DatabaseConfig };
+export type ApiConfig = ApiEnv & { database: DatabaseConfig; registration?: RegistrationConfig };
 export function parseApiConfig(environment: Environment): ApiConfig {
-  return { ...parseApiEnv(environment), database: parseDatabaseConfig(environment, 'api') };
+  const config: ApiConfig = {
+    ...parseApiEnv(environment),
+    database: parseDatabaseConfig(environment, 'api'),
+  };
+  const registration = parseRegistrationConfig(environment);
+  if (registration) config.registration = registration;
+  return config;
 }

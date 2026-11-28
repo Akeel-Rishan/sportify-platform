@@ -1,5 +1,7 @@
 # MVP scope
 
+Step 11 refines owner registration. Global signup collects the owner's name, email and mobile. The mailbox holder confirms the profile and tenant name and sets the final password. This transition creates the pending-onboarding tenant and initial owner role. Legal profile, address and primary sport are collected during onboarding. [D-30](decision-register.md#d-30--step-11-registration-and-email-verification)
+
 Status: **awaiting user review**. This is a documentation baseline, not an implementation claim. Source codes resolve through the [source register](../README.md#source-register); conflicts and recommendations are in the [decision register](decision-register.md).
 
 ## Product and actors

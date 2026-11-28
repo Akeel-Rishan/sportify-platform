@@ -1,5 +1,25 @@
 # Decision register
 
+## D-29 — Step 10 final owner approval
+
+27 November 2026. The owner explicitly approved the Step 10 Oracle database foundation, including the 49-table schema, 26 migrations, 214 automated tests, live evidence, schema reconciliation and retained Git checkpoint. Outstanding items remain assigned to their owning phases. MVP completion and production readiness have separate acceptance gates. [Final review](../database/step10-final-engineering-review.md)
+
+## D-30 — Step 11 registration and email verification
+
+27 November 2026. Approve Q-15 for global pending signup, explicit verification POST and atomic initial tenant and membership creation. The mailbox holder establishes the only password and provides the final owner profile and tenant name. The transition creates a `PENDING_ONBOARDING` tenant, assigns only its scoped `BUSINESS_OWNER` role and issues no session. Legal profile, location and primary sport are collected in onboarding. `BUSINESS_OWNER` receives the reviewed 19-code allowlist, excluding `subscription.manage`. Manager and Receptionist defaults remain inactive with zero assignments and mappings. Public requests never supply ownership or platform privileges.
+
+Approve the Q-09/Q-11 HMAC-SHA-256 design for verification email only, with external versioned keys, digests and reference-only outbox intent. Approve the Q-23 password and rate limits for this workflow, including compromised-password screening, a 60-minute token, a 60-second resend cooldown, three issuance events per 15 minutes per account and configurable initial source limits of ten issuance requests and 30 confirmations per 15 minutes. Permit forward migration `000027` and minimal reviewed runtime grants. The remaining commercial and operating policies have their existing decisions and owning phases. [Registration contract](../auth/registration.md) · [Delivery procedure](../auth/email-verification.md)
+
+## D-31 — Step 11 final approval and development integration authorization
+
+28 November 2026. The owner approved Step 11 engineering after the final review, including D-30 security decisions, the 226 automated tests, three consecutive isolated Oracle runs, migration `000027` and local verification email delivery. The owner accepted that the original intermittent signup failure was not reproduced and its cause remains unconfirmed. [Final engineering review](../auth/step11-final-engineering-review.md)
+
+The owner authorized migration `000027`, direct `CREATE VIEW` for `SPORTIFY_SCHEMA_OWNER` if required, and the exact reviewed Step 11 runtime grants on the designated development ATP `fce953xa`. Apply only after the documented baseline, maintenance, write-pause and recovery preconditions pass. Development workflow writes, corrective migrations, restore operations, public registration, deployment and Step 12 have separate authorization. The next login implementation must require an eligible `ACTIVE` user with verified credentials and authorized tenant access. [Development integration plan](../auth/step11-development-integration.md)
+
+The owner subsequently authorized the development maintenance window and accepted a verified rebuild of the seed-only, 26-migration baseline as fallback recovery. Prefer forward recovery. A destructive operation requires separate explicit approval. The verified recovery inputs and ledger are archived outside the checkout. The guarded ADMIN check confirmed zero application sessions and jobs, then issued direct `CREATE VIEW`. On 28 November the application owner applied `000027` and all 21 reviewed runtime grants. Catalog, replay, seed preservation and read-only runtime checks passed. Public registration remains disabled. [Development verification](../auth/step11-development-integration.md#integration-checkpoint)
+
+## Earlier decisions and reviews
+
 Status: **D-18 and D-21 scoped decisions approved; remaining unscoped questions retain their review/verification gates.** Source codes resolve in the [source register](../README.md#source-register). Requirement IDs resolve in [traceability](requirements-traceability.md); step numbers resolve in the [roadmap](development-roadmap.md).
 
 Established D-IDs record the user's confirmed direction and later scoped approvals. D-18 and D-21 supersede the corresponding historical proposals; unrelated Q-ID subparts remain open for their stated policy/implementation or verification gates. Approval does not establish implementation or Oracle evidence. To resolve a Q-ID, record the user's decision, date, affected contracts/migrations/requirements and actual verification separately.

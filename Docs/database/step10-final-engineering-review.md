@@ -1,5 +1,7 @@
 # SPORTIFY Step 10 Final Engineering Verification Report
 
+**Final owner disposition:** Step 10 is approved as the Oracle database foundation. The engineering recommendation below remains the record presented for review. [D-29](../planning/decision-register.md#d-29--step-10-final-owner-approval)
+
 **Recommendation: CONDITIONAL PASS.** The installed 49-table Oracle foundation passed its live verification. Retain it. Two MVP storage mappings still need a decision before their owning implementations: durable onboarding resume and safe asynchronous email delivery evidence. They do not justify adding tables during this review. Step 10 awaits explicit user approval.
 
 ## MVP scope and schema reconciliation

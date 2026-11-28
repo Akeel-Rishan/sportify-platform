@@ -8,10 +8,13 @@ import type { Environment } from '@sportify/validation';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { configureApp } from './bootstrap/configure-app.js';
 import type { LogSink } from './common/logging/request-logger.js';
+import { verifyPasswordCorpus } from './modules/auth/password.js';
+import type { RegistrationOwner } from './modules/auth/registration.service.js';
 export async function createApiApplication(
   config: ApiConfig,
   sink?: LogSink,
   databaseFactory: DatabaseFactory = createDatabase,
+  registrationOwner?: RegistrationOwner,
 ): Promise<INestApplication> {
   const validated = parseApiConfig({
     NODE_ENV: config.NODE_ENV,
@@ -20,13 +23,17 @@ export async function createApiApplication(
       Object.entries(config.database).map(([key, value]) => [key, String(value)]),
     ),
   });
+  if (config.registration) await verifyPasswordCorpus(config.registration.passwordBlocklist);
   const database = await databaseFactory(validated.database, 'api');
   try {
     // abortOnError:false lets us release the pool on Nest construction failure.
-    const app = await NestFactory.create<NestExpressApplication>(AppModule.register(database), {
-      logger: false,
-      abortOnError: false,
-    });
+    const app = await NestFactory.create<NestExpressApplication>(
+      AppModule.register(database, config.registration, registrationOwner),
+      {
+        logger: false,
+        abortOnError: false,
+      },
+    );
     configureApp(app, sink);
     app.enableShutdownHooks(['SIGINT', 'SIGTERM']);
     return app;

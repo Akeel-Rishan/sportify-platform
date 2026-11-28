@@ -1,5 +1,11 @@
 # Requirements traceability
 
+## Step 11 registration scope
+
+D-31 records final owner approval of the Step 11 engineering evidence. Migration `000027` and the reviewed runtime grants passed on the designated development application owner with registration disabled. REQ-005 is approved within the registration scope. The isolated Step 11 checks for REQ-003 and REQ-006–008 verify the initial owner, verification token, credential and abuse-control behavior. Future login must reject pending users and require an eligible `ACTIVE` account, verified credentials and authorized tenant access. Staff authorization, login/session behavior, the dispatcher and public rollout retain their separate gates. [D-31](decision-register.md#d-31--step-11-final-approval-and-development-integration-authorization) · [Engineering verification](../auth/step11-final-engineering-review.md) · [Development verification](../auth/step11-development-integration.md#integration-checkpoint)
+
+The owner accepted Step 10 as the database foundation milestone on 27 November 2026. D-30 refines REQ-003 and REQ-005–008 for Step 11. Register a global pending account, confirm its email and final profile in an explicit POST, then create the onboarding tenant and scoped owner atomically. The password is set during confirmation. Legal profile, address and primary sport move to onboarding under REQ-009. Tenant Manager and Receptionist policy, session authentication, password reset and general authorization have separate implementation gates. [Decision register](decision-register.md#d-30--step-11-registration-and-email-verification) · [Contract and evidence](../auth/registration.md)
+
 ## Step 10 database foundation evidence
 
 The [final review traceability and release register](../database/step10-final-engineering-review.md#mvp-requirements-traceability) maps MVP workflows to the installed Oracle evidence and owning phases. Disputed scope is reconciled table by table in the [schema appendix](../database/step10-schema-reconciliation.md). The review leaves the application requirement statuses below in force.
@@ -16,7 +22,7 @@ IDs `REQ-001` onward are permanent: do not reuse or renumber them. Business beha
 | REQ-002 | MVP §3.1; ARCH §§7.1, 8.1–8.2 | Shared database; trusted tenant resolution, filtered queries and composite tenant FKs | Tenants / Database | Two-tenant read/write denial and cross-tenant FK failure on Oracle | Not started |
 | REQ-003 | MVP §§3.12, 5.3; API §3 | Owner, Manager, Receptionist permissions and branch scope enforced on backend | Authorization / Staff | Role/action matrix, unassigned branch rejection and counts filtered before pagination | Not started |
 | REQ-004 | MVP §3.13; ARCH §8.3; API §3.5 | Platform administration has separate controlled access | Admin / Auth | Tenant sessions cannot access admin; least-privilege platform tests | Not started |
-| REQ-005 | MVP §3.2; API §§4.1, 5.1 | Registration validates required business/owner fields and provisions recoverably | Auth / Onboarding | Invalid/duplicate requests and transaction failure rollback; Q-15 | Not started |
+| REQ-005 | MVP §3.2; API §§4.1, 5.1; D-30 | Pending global registration, explicit email confirmation and atomic first tenant-owner provisioning | Auth / Onboarding | Strict HTTP validation, generic duplicate response and Oracle atomicity/concurrency | Step 11 implementation; see linked verification evidence |
 | REQ-006 | MVP §3.2; ARCH §8.4 | Email verification before dashboard access; validate mobile; OTP deferred | Auth | Unverified login restrictions, one-use expiring token and valid/invalid mobile cases | Not started |
 | REQ-007 | ARCH §8.4; API §2.4 | Argon2id passwords, hashed session/reset tokens, rotation, expiry and revocation | Auth | Hash/expiry/replay/logout/deactivation tests; password policy Q-23 | Not started |
 | REQ-008 | ARCH §8.5; API §§2.4, 7.1, 9 | Secure cookies, CSRF, input validation, rate limiting and safe errors | Security / API | CSRF and origin tests, invalid DTOs, rate-limit response, sanitized failure output; Q-08 | Not started |
