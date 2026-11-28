@@ -41,6 +41,14 @@ The owner authorized the controlled maintenance window, migration `000028` and t
 
 The controlled development run passed on 28 November 2026. ADMIN confirmed zero application sessions and jobs. The migration runner applied only `000028`, replay was a no-op, and the nine reviewed grants and read-only runtime checks passed. All original history and reference rows matched the private preflight snapshot. [Application verification](../auth/step12-development-integration.md#application-verification-results)
 
+## D-35 — Step 13 tenant resolution and scoped repositories
+
+The explicit Step 13 prompt authorizes the tenant boundary implementation and isolated verification. D-24 remains the authority for the Oracle website slug mapping. D-33 remains the authority for the same-origin dashboard and the separate session audiences. Use a per-request tenant public UUID with a fresh membership check, and keep a website lookup separate from member authority. Accept only the preserved wire Host, with Express proxy trust disabled. The route matrix and resource admission behavior are recorded for owner review. Commercial admission, action and branch authorization, custom domains, production grants and deployment have separate acceptance gates. [Tenant and host decisions](../security/tenant-resolution.md) · [Step 13 verification](../security/step13-verification.md)
+
+## D-36 — Step 13 final owner approval
+
+28 November 2026. The owner approved Step 13 as verified and passed for the application-level and development Oracle scope. Deployed Nginx and Cloudflare behavior, trusted ingress and direct-origin restrictions, TLS and cache isolation are mandatory pre-production gates. The Step 11 and Step 12 authentication, email delivery and deployment security prerequisites still govern public route activation. Both public route flags remain disabled. Step 14 requires a separate scope approval. [Final Step 13 evidence](../security/step13-verification.md) · [Ingress acceptance](../security/host-and-proxy-trust.md#deployment-acceptance) · [Authentication release prerequisites](../auth/step12-development-integration.md#release-prerequisites)
+
 ## Earlier decisions and reviews
 
 Status: **D-18 and D-21 scoped decisions approved; remaining unscoped questions retain their review/verification gates.** Source codes resolve in the [source register](../README.md#source-register). Requirement IDs resolve in [traceability](requirements-traceability.md); step numbers resolve in the [roadmap](development-roadmap.md).

@@ -2,6 +2,8 @@
 
 ## Current verification
 
+**Step 13 tenant resolution passed and is owner-approved for application-level and development Oracle scope.** Mandatory pre-production ingress and authentication activation gates remain open. See [request surfaces](security/tenant-resolution.md), [host and proxy trust](security/host-and-proxy-trust.md), [tenant-scoped repositories](security/tenant-scoped-repositories.md) and [final verification](security/step13-verification.md).
+
 **Step 12 account authentication is owner-approved and development integration passed.** The application owner has 28 verified migrations and the exact reviewed runtime grants. Public account routes remain disabled. See the [account API](auth/login-and-logout.md), [sessions](auth/server-side-sessions.md), [password reset](auth/password-reset.md), [browser boundary](auth/browser-security.md), [isolated verification](auth/step12-verification.md) and [development verification](auth/step12-development-integration.md#application-verification-results).
 
 **Step 10 Oracle foundation passed and received final owner approval on 27 November 2026.** The clean install and verified continuation covered the entire live suite. [Step 10 verification report](database/verification-report.md) · [Operator setup and retained state](database/step10-operator-setup.md)

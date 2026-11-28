@@ -16,7 +16,8 @@ import { newSessionSecret } from './browser-security.js';
 import { createPasswordEncoder, type createPasswordVerifier } from './password.js';
 import type { SessionConfig } from './session-config.js';
 
-export type AccountOwner = 'SPORTIFY_SCHEMA_OWNER' | 'SPORTIFY_STEP12_TEST_OWNER';
+export type AccountOwner =
+  'SPORTIFY_SCHEMA_OWNER' | 'SPORTIFY_STEP12_TEST_OWNER' | 'SPORTIFY_STEP13_TEST_OWNER';
 type AccountRow = { USER_ID: string; PUBLIC_ID: string; FULL_NAME: string };
 type LoginRow = AccountRow & { PASSWORD_HASH: string };
 type ResetRow = AccountRow & { RESET_ID: string; TOKEN_KEY_VERSION: string };
@@ -40,7 +41,13 @@ export class AccountService {
     private readonly verifyPassword: VerifyPassword,
     encodePassword = createPasswordEncoder(config.passwordBlocklist),
   ) {
-    if (!['SPORTIFY_SCHEMA_OWNER', 'SPORTIFY_STEP12_TEST_OWNER'].includes(owner))
+    if (
+      ![
+        'SPORTIFY_SCHEMA_OWNER',
+        'SPORTIFY_STEP12_TEST_OWNER',
+        'SPORTIFY_STEP13_TEST_OWNER',
+      ].includes(owner)
+    )
       throw new Error('An approved account authentication schema is required.');
     this.counter = createAbuseControls(db, owner, config.sourceKey);
     this.encodePassword = encodePassword;

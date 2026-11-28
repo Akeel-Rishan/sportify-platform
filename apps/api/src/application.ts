@@ -29,10 +29,13 @@ export async function createApiApplication(
   if (config.account) {
     if (
       config.NODE_ENV === 'production' &&
-      (!config.account.secureCookies || config.account.dashboardOrigin.protocol !== 'https:')
+      (!config.account.secureCookies ||
+        config.account.dashboardOrigin.origin !== 'https://app.sportify.lk')
     )
-      throw new Error('Production account authentication requires HTTPS cookies.');
-    if (config.NODE_ENV !== 'test' && accountOwner === 'SPORTIFY_STEP12_TEST_OWNER')
+      throw new Error(
+        'Production account authentication requires the canonical HTTPS dashboard origin.',
+      );
+    if (config.NODE_ENV !== 'test' && accountOwner && accountOwner !== 'SPORTIFY_SCHEMA_OWNER')
       throw new Error('The disposable authentication owner is test-only.');
     if (config.account.passwordBlocklist !== config.registration?.passwordBlocklist)
       await verifyPasswordCorpus(config.account.passwordBlocklist);
@@ -53,7 +56,11 @@ export async function createApiApplication(
         abortOnError: false,
       },
     );
-    configureApp(app, sink);
+    configureApp(app, sink, {
+      environment: config.NODE_ENV,
+      port: config.PORT,
+      localDashboard: config.account?.dashboardOrigin,
+    });
     app.enableShutdownHooks(['SIGINT', 'SIGTERM']);
     return app;
   } catch (error) {

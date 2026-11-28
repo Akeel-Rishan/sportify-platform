@@ -1,5 +1,9 @@
 # Requirements traceability
 
+## Step 13 tenant resolution
+
+D-36 records final owner approval for the verified application and development Oracle scope. REQ-002 has isolated Oracle evidence for membership and repository isolation, including concurrent tenant reads, cross-tenant write denials, rollback and pool reuse. REQ-036 has host parsing, local proxy and published Oracle mapping evidence. Deployed ingress, direct-origin restrictions, TLS and cache isolation remain mandatory under REQ-036 and REQ-058. REQ-003, REQ-004 and REQ-011 retain their separate role, administrator and resource product workflows. REQ-059 has request IDs and safe resolved tenant identifiers for the tested paths. Authentication and email activation retain the Step 11 and Step 12 release gates. [D-36](decision-register.md#d-36--step-13-final-owner-approval) · [Final verification](../security/step13-verification.md)
+
 ## Step 12 account authentication
 
 REQ-006–008 cover eligibility, session and reset lifecycle, and the browser boundary. The isolated Oracle suite verified active onboarding-owner eligibility, reset and session revocation, transaction rollback and the exact runtime privileges under REQ-048. D-33 approves the intended origin and operating defaults. D-34 records final owner approval and the controlled development run, which verified `000028`, no-op replay and the exact runtime grant set with both routes disabled. Tenant authorization and platform-admin authentication remain separate requirements under REQ-001–004. Browser and deployed ingress evidence stay distinct for REQ-058. [Account API](../auth/login-and-logout.md) · [Step 12 verification](../auth/step12-verification.md) · [Development integration](../auth/step12-development-integration.md#application-verification-results)

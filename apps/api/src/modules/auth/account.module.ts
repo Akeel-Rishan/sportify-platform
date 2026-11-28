@@ -195,6 +195,7 @@ export class AccountModule {
         BrowserBoundaryGuard,
         CurrentSessionGuard,
       ],
+      exports: [BrowserAuth, AccountService],
     };
   }
 }

@@ -157,10 +157,15 @@ export async function httpFixture(
     },
     { logger: false },
   );
-  configureApp(app, (record) => {
-    records.push(record);
-    events.emit('record', record);
-  });
+  const localDashboard = new URL('http://127.0.0.1');
+  configureApp(
+    app,
+    (record) => {
+      records.push(record);
+      events.emit('record', record);
+    },
+    { environment: 'test', port: 4000, localDashboard },
+  );
   try {
     await app.listen(0, '127.0.0.1');
   } catch (error) {
@@ -168,6 +173,7 @@ export async function httpFixture(
     throw error;
   }
   const url = await app.getUrl();
+  localDashboard.port = new URL(url).port;
   function completion(id: string): Promise<RequestLogRecord> {
     const existing = records.find(
       (r) => r.requestId === id && r.event === 'http.request.completed',

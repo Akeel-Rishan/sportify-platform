@@ -1,5 +1,9 @@
 # Environment configuration
 
+## Step 13 authority and local testing
+
+`NODE_ENV` selects the host policy, and `PORT` determines the allowed direct development probe port. The canonical dashboard account origin is `https://app.sportify.lk`. `AUTH_DASHBOARD_ORIGIN` and `AUTH_ALLOW_LOOPBACK_HTTP` retain the documented local account behavior. The tenant suffix and reserved labels are fixed in the application. Express proxy trust stays disabled. [Host and local setup](../security/host-and-proxy-trust.md)
+
 ## Step 12 account authentication
 
 `AUTH_ACCOUNT_ENABLED` defaults to disabled independently of Step 11 registration. The enable path requires the exact dashboard origin, independent CSRF and reset keys, reset key version, shared source counter key, local compromised-password corpus, login pair and session source limits, and reset outbox budget. The example lists the approved configurable defaults for session/reset timings and login/reset source limits. Production requires HTTPS. The separate loopback HTTP exception is valid only in test or development mode. [API environment example](../../apps/api/.env.example) · [Browser and proxy contract](../auth/browser-security.md)

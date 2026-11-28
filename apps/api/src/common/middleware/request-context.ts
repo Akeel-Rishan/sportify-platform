@@ -7,6 +7,11 @@ const contextKey = Symbol('sportify.request-context');
 interface RequestContext {
   readonly requestId: string;
 }
+const tenants = new WeakMap<Request, string>();
+
+export function recordTenant(request: ApiRequest, verifiedPublicId: string): void {
+  tenants.set(request, verifiedPublicId);
+}
 export interface ApiRequest extends Request {
   [contextKey]?: RequestContext;
 }
@@ -41,6 +46,7 @@ export function requestContext(logger: RequestLogger): RequestHandler {
       response.removeListener('close', complete);
       const completed = response.writableFinished;
       const status = completed || response.headersSent ? response.statusCode : null;
+      const tenantPublicId = tenants.get(request);
       logger.write({
         timestamp: new Date().toISOString(),
         service: 'sportify-api',
@@ -52,6 +58,7 @@ export function requestContext(logger: RequestLogger): RequestHandler {
               : 'info',
         event: 'http.request.completed',
         requestId: id,
+        ...(tenantPublicId === undefined ? {} : { tenantPublicId }),
         method: /^[A-Z]{1,20}$/.test(request.method) ? request.method : 'OTHER',
         route: matchedRoute(request),
         status,

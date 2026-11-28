@@ -4,6 +4,7 @@ export interface RequestCompletionRecord {
   service: 'sportify-api';
   event: 'http.request.completed';
   requestId: string;
+  tenantPublicId?: string;
   method: string;
   route: string;
   status: number | null;

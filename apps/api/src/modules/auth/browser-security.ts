@@ -26,9 +26,15 @@ export class BrowserAuth {
 
   checkOrigin(request: Request, requireOrigin: boolean): void {
     const origin = request.get('origin');
+    const host = request.get('host')?.toLowerCase();
+    const trustedHost = this.config.dashboardOrigin.host;
+    const defaultHttpsPort =
+      this.config.dashboardOrigin.protocol === 'https:' &&
+      this.config.dashboardOrigin.port === '' &&
+      host === trustedHost + ':443';
     // Compare Host to configuration. Never use it or forwarding headers to derive trust.
     if (
-      request.get('host') !== this.config.dashboardOrigin.host ||
+      (host !== trustedHost && !defaultHttpsPort) ||
       ((origin !== undefined || requireOrigin) && origin !== this.config.dashboardOrigin.origin) ||
       ['same-site', 'cross-site'].includes(request.get('sec-fetch-site') ?? '')
     )

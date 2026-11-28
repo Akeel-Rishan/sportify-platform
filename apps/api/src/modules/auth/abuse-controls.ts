@@ -7,7 +7,10 @@ import { ApplicationError } from '../../common/errors/application-error.js';
 import type { RegistrationAccepted } from '@sportify/api-contracts';
 
 export type AuthOwner =
-  'SPORTIFY_SCHEMA_OWNER' | 'SPORTIFY_STEP11_TEST_OWNER' | 'SPORTIFY_STEP12_TEST_OWNER';
+  | 'SPORTIFY_SCHEMA_OWNER'
+  | 'SPORTIFY_STEP11_TEST_OWNER'
+  | 'SPORTIFY_STEP12_TEST_OWNER'
+  | 'SPORTIFY_STEP13_TEST_OWNER';
 type CounterScope =
   'ISSUE' | 'CONFIRM' | 'LOGIN' | 'LOGIN_PAIR' | 'SESSION' | 'RESET_REQ' | 'RESET_OK';
 

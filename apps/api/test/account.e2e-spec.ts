@@ -208,12 +208,12 @@ async function login() {
   expect(sessions.has(token)).toBe(false);
   const body = await response.text();
   expect(body).not.toContain(token);
-  expect(body).not.toContain(identity.USER_ID + '"');
-  expect(JSON.parse(body)).toMatchObject({
+  expect(JSON.parse(body)).toEqual({
     success: true,
     data: {
       account: { publicId: identity.PUBLIC_ID, fullName: identity.FULL_NAME, emailVerified: true },
     },
+    requestId: response.headers.get('x-request-id'),
   });
   return { token, pair, agent };
 }
@@ -296,7 +296,7 @@ describe('account HTTP boundary', () => {
       );
       request.on('error', reject).end(JSON.stringify(data));
     });
-    expect(spoofedHost).toBe(403);
+    expect(spoofedHost).toBe(400);
     expect((await http('csrf')).status).toBe(403);
     const preflight = await http('login', {
       method: 'OPTIONS',

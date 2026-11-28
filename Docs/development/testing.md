@@ -1,5 +1,11 @@
 # Testing and verification
 
+## Step 13 tenant resolution
+
+On Windows, repository-wide Prettier enumeration can stop with `EPERM` in the ignored `tmp/step05-python/pypdf` directory. Use `git ls-files --cached --others --exclude-standard -z` to enumerate tracked and unignored new source paths. Pass those paths to `prettier --check --ignore-unknown` in batches within the Windows argument limit, using the repository's existing Prettier ignore rules. The closeout checked 584 paths with this method.
+
+Run `npx --yes pnpm@10.34.9 test:coverage` to exercise the tenant module with the standard suite. The host unit cases cover structural parsing. The Nest HTTP fixtures use raw TCP for duplicate, omitted and malformed Host and a real loopback Node proxy for Host preservation. The fixture controllers are test-only. The [isolated Oracle harness](../security/step13-verification.md) runs the compiled guards and repositories with actual Oracle sessions and a bounded concurrency rendezvous. See the [host contract](../security/host-and-proxy-trust.md) for deployed ingress acceptance.
+
 ## Step 12 account authentication
 
 The account HTTP tests use the actual Nest request pipeline and a database double. The Chromium fixture uses real HTTPS, the compiled browser boundary and two sibling hosts. The separate Oracle suite exercises the compiled API, scoped grants, a local reset-mail sink, committed writes and coordinated races. [Exact Oracle setup and verification](../auth/step12-verification.md)

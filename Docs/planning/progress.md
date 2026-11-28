@@ -1,5 +1,9 @@
 # SPORTIFY progress
 
+## Step 13 tenant resolution and scoped repositories
+
+28 November 2026. **Verified, passed and owner-approved for application-level and development Oracle scope.** The scoped suite passed on the designated disposable owner, covering separate Oracle sessions for parallel tenant requests, scoped reads and writes, cross-tenant denials, rollback, privilege checks and pool reuse. Both owners passed the 28-migration catalog checks, and the disposable schema retained zero fixtures or temporary grants. Deployed ingress, TLS, cache separation and the prior authentication and delivery release gates are mandatory before production. Step 14 awaits separate scope approval. [D-36](decision-register.md#d-36--step-13-final-owner-approval) · [Final verification](../security/step13-verification.md)
+
 ## Step 12 account authentication
 
 28 November 2026. **Step 12 engineering is owner-approved and development integration passed under D-34.** The disposable Oracle suite verified the full account workflows and cleanup. After the ADMIN write-pause check, the application owner applied only `000028` and the nine reviewed grants. Catalog, no-op replay, original history, seed identities and read-only runtime checks passed. Public account routes stay disabled. [Isolated evidence](../auth/step12-verification.md#live-oracle-evidence) · [Development verification](../auth/step12-development-integration.md#application-verification-results)
